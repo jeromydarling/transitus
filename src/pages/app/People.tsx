@@ -7,19 +7,14 @@
 
 import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { Users, Search, Filter, MapPin } from 'lucide-react';
-import { MOCK_STAKEHOLDERS, MOCK_ORGS } from '@/lib/mockData';
+import { Users, Search, Filter, MapPin, Plus } from 'lucide-react';
 import { useTransitusData } from '@/contexts/TransitusDataContext';
+import { CreateStakeholderForm } from '@/components/forms/CreateStakeholderForm';
+import { CreateOrganizationForm } from '@/components/forms/CreateOrganizationForm';
 import { ROLE_LABELS } from '@/types/transitus';
 import type { Stakeholder, TransitusRole } from '@/types/transitus';
 
 // ── Helpers ──
-
-function orgNameById(orgId?: string): string | undefined {
-  if (!orgId) return undefined;
-  const org = MOCK_ORGS.find((o) => o.id === orgId);
-  return org?.name;
-}
 
 function formatDate(iso?: string): string {
   if (!iso) return 'N/A';
@@ -69,9 +64,7 @@ function RoleBadge({ role }: { role: TransitusRole }) {
 
 // ── Stakeholder Card ──
 
-function StakeholderCard({ stakeholder }: { stakeholder: Stakeholder }) {
-  const orgName = orgNameById(stakeholder.organization_id);
-
+function StakeholderCard({ stakeholder, orgName }: { stakeholder: Stakeholder; orgName?: string }) {
   return (
     <Link
       to={`/app/people/${stakeholder.id}`}
@@ -114,11 +107,18 @@ function StakeholderCard({ stakeholder }: { stakeholder: Stakeholder }) {
 const ALL_ROLES = Object.keys(ROLE_LABELS) as TransitusRole[];
 
 export default function People() {
+  const { stakeholders, organizations } = useTransitusData();
   const [searchQuery, setSearchQuery] = useState('');
   const [activeRole, setActiveRole] = useState<TransitusRole | null>(null);
 
+  const orgNameById = (orgId?: string): string | undefined => {
+    if (!orgId) return undefined;
+    const org = organizations.find((o) => o.id === orgId);
+    return org?.name;
+  };
+
   const filteredStakeholders = useMemo(() => {
-    let results = MOCK_STAKEHOLDERS;
+    let results = stakeholders;
 
     if (activeRole) {
       results = results.filter((s) => s.role === activeRole);
@@ -130,18 +130,38 @@ export default function People() {
     }
 
     return results;
-  }, [searchQuery, activeRole]);
+  }, [searchQuery, activeRole, stakeholders]);
 
   return (
     <div className="min-h-screen bg-[hsl(38_30%_95%)]">
       <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
         {/* Page header */}
         <div className="mb-8">
-          <div className="flex items-center gap-2 mb-1">
-            <Users className="h-4 w-4 text-[hsl(16_65%_48%)]" />
-            <span className="text-[11px] font-semibold uppercase tracking-[0.15em] text-[hsl(16_65%_48%)]">
-              Stakeholder Directory
-            </span>
+          <div className="flex items-center justify-between mb-1">
+            <div className="flex items-center gap-2">
+              <Users className="h-4 w-4 text-[hsl(16_65%_48%)]" />
+              <span className="text-[11px] font-semibold uppercase tracking-[0.15em] text-[hsl(16_65%_48%)]">
+                Stakeholder Directory
+              </span>
+            </div>
+            <div className="hidden sm:flex items-center gap-2">
+              <CreateStakeholderForm
+                trigger={
+                  <button className="inline-flex items-center gap-1.5 rounded-full bg-[hsl(16_65%_48%)] px-4 py-2 text-sm font-medium text-white hover:bg-[hsl(12_55%_35%)] transition-colors">
+                    <Plus className="h-4 w-4" />
+                    New Person
+                  </button>
+                }
+              />
+              <CreateOrganizationForm
+                trigger={
+                  <button className="inline-flex items-center gap-1.5 rounded-full border border-[hsl(16_65%_48%)] px-4 py-2 text-sm font-medium text-[hsl(16_65%_48%)] hover:bg-[hsl(16_65%_48%)] hover:text-white transition-colors">
+                    <Plus className="h-4 w-4" />
+                    New Organization
+                  </button>
+                }
+              />
+            </div>
           </div>
           <h1 className="font-serif text-3xl tracking-tight text-[hsl(20_28%_15%)]">
             People &amp; Organizations
@@ -183,10 +203,10 @@ export default function People() {
                   : 'bg-[hsl(30_18%_90%)] text-[hsl(30_18%_40%)] hover:bg-[hsl(30_18%_85%)]'
               }`}
             >
-              All ({MOCK_STAKEHOLDERS.length})
+              All ({stakeholders.length})
             </button>
             {ALL_ROLES.map((role) => {
-              const count = MOCK_STAKEHOLDERS.filter((s) => s.role === role).length;
+              const count = stakeholders.filter((s) => s.role === role).length;
               if (count === 0) return null;
               return (
                 <button
@@ -207,13 +227,13 @@ export default function People() {
 
         {/* Results count */}
         <p className="mb-4 text-xs text-[hsl(30_10%_50%)]">
-          Showing {filteredStakeholders.length} of {MOCK_STAKEHOLDERS.length} stakeholders
+          Showing {filteredStakeholders.length} of {stakeholders.length} stakeholders
         </p>
 
         {/* Stakeholder cards grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredStakeholders.map((s) => (
-            <StakeholderCard key={s.id} stakeholder={s} />
+            <StakeholderCard key={s.id} stakeholder={s} orgName={orgNameById(s.organization_id)} />
           ))}
         </div>
 
@@ -225,6 +245,15 @@ export default function People() {
           </div>
         )}
       </div>
+
+      {/* Mobile FAB */}
+      <CreateStakeholderForm
+        trigger={
+          <button className="sm:hidden fixed bottom-20 right-4 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-[hsl(16_65%_48%)] text-white shadow-lg hover:bg-[hsl(12_55%_35%)] transition-colors">
+            <Plus className="h-6 w-6" />
+          </button>
+        }
+      />
     </div>
   );
 }

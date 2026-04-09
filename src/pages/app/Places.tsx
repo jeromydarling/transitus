@@ -6,9 +6,9 @@
  */
 
 import { Link } from 'react-router-dom';
-import { MapPin, Globe, Briefcase } from 'lucide-react';
-import { MOCK_PLACES } from '@/lib/mockData';
+import { MapPin, Globe, Briefcase, Plus } from 'lucide-react';
 import { useTransitusData } from '@/contexts/TransitusDataContext';
+import { CreatePlaceForm } from '@/components/forms/CreatePlaceForm';
 import type { EnvironmentalBurden, Place } from '@/types/transitus';
 
 // ── Severity badge styles ──
@@ -112,16 +112,28 @@ function PlaceCard({ place }: { place: Place }) {
 // ── Main page ──
 
 export default function Places() {
+  const { places } = useTransitusData();
+
   return (
     <div className="min-h-screen bg-[hsl(38_30%_95%)]">
       <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
         {/* Page header */}
         <div className="mb-8">
-          <div className="flex items-center gap-2 mb-1">
-            <MapPin className="h-4 w-4 text-[hsl(152_45%_30%)]" />
-            <span className="text-[11px] font-semibold uppercase tracking-[0.15em] text-[hsl(30_10%_50%)]">
-              Places
-            </span>
+          <div className="flex items-center justify-between mb-1">
+            <div className="flex items-center gap-2">
+              <MapPin className="h-4 w-4 text-[hsl(152_45%_30%)]" />
+              <span className="text-[11px] font-semibold uppercase tracking-[0.15em] text-[hsl(30_10%_50%)]">
+                Places
+              </span>
+            </div>
+            <CreatePlaceForm
+              trigger={
+                <button className="hidden sm:inline-flex items-center gap-1.5 rounded-full bg-[hsl(16_65%_48%)] px-4 py-2 text-sm font-medium text-white hover:bg-[hsl(12_55%_35%)] transition-colors">
+                  <Plus className="h-4 w-4" />
+                  New Place
+                </button>
+              }
+            />
           </div>
           <h1 className="font-serif text-3xl tracking-tight text-[hsl(20_28%_15%)]">
             Tracked Places
@@ -135,11 +147,20 @@ export default function Places() {
 
         {/* Place cards grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {MOCK_PLACES.map((place) => (
+          {places.map((place) => (
             <PlaceCard key={place.id} place={place} />
           ))}
         </div>
       </div>
+
+      {/* Mobile FAB */}
+      <CreatePlaceForm
+        trigger={
+          <button className="sm:hidden fixed bottom-20 right-4 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-[hsl(16_65%_48%)] text-white shadow-lg hover:bg-[hsl(12_55%_35%)] transition-colors">
+            <Plus className="h-6 w-6" />
+          </button>
+        }
+      />
     </div>
   );
 }

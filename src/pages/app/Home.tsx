@@ -17,14 +17,8 @@ import {
   Clock,
 } from 'lucide-react';
 
-import {
-  MOCK_DASHBOARD,
-  MOCK_PLACES,
-  MOCK_SIGNALS,
-  MOCK_COMMITMENTS,
-  MOCK_FIELD_NOTES,
-  MOCK_STAKEHOLDERS,
-} from '@/lib/mockData';
+import { MOCK_DASHBOARD } from '@/lib/mockData';
+import { useTransitusData } from '@/contexts/TransitusDataContext';
 
 import {
   ROLE_LABELS,
@@ -52,15 +46,6 @@ const FIELD_NOTE_TYPE_LABELS: Record<FieldNoteType, string> = {
   corridor_observation: 'Corridor Observation',
   quick_note: 'Quick Note',
 };
-
-function placeNameById(id: string): string {
-  const place = MOCK_PLACES.find((p) => p.id === id);
-  return place ? place.name : id;
-}
-
-function stakeholderById(id: string): Stakeholder | undefined {
-  return MOCK_STAKEHOLDERS.find((s) => s.id === id);
-}
 
 function formatDate(iso: string): string {
   const d = new Date(iso);
@@ -141,7 +126,7 @@ function SectionHeader({
   );
 }
 
-function SignalCard({ signal }: { signal: Signal }) {
+function SignalCard({ signal, placeNameById }: { signal: Signal; placeNameById: (id: string) => string }) {
   return (
     <Link
       to="/app/signals"
@@ -181,7 +166,7 @@ function SignalCard({ signal }: { signal: Signal }) {
   );
 }
 
-function CommitmentRow({ commitment }: { commitment: Commitment }) {
+function CommitmentRow({ commitment, placeNameById }: { commitment: Commitment; placeNameById: (id: string) => string }) {
   return (
     <Link
       to="/app/commitments"
@@ -217,8 +202,7 @@ function CommitmentRow({ commitment }: { commitment: Commitment }) {
   );
 }
 
-function FieldNoteCard({ note }: { note: FieldNote }) {
-  const author = stakeholderById(note.author_id);
+function FieldNoteCard({ note, authorName, placeNameById }: { note: FieldNote; authorName: string; placeNameById: (id: string) => string }) {
   return (
     <Link
       to="/app/field-notes"
@@ -240,7 +224,7 @@ function FieldNoteCard({ note }: { note: FieldNote }) {
       </p>
       <div className="mt-3 flex items-center justify-between">
         <span className="text-xs font-medium text-[hsl(20_10%_35%)]">
-          {author?.name ?? 'Unknown'}
+          {authorName}
         </span>
         <span className="text-[10px] text-[hsl(20_8%_52%)]">
           {formatDate(note.created_at)}
@@ -279,8 +263,24 @@ function QuietStakeholderRow({ stakeholder }: { stakeholder: Stakeholder }) {
 // ── Main page ──
 
 export default function Home() {
-  const { weekly_brief, recent_signals, upcoming_renewals, recent_field_notes, quiet_stakeholders } =
-    MOCK_DASHBOARD;
+  const { places, signals, commitments, fieldNotes, stakeholders, isSignalRead } = useTransitusData();
+  const { weekly_brief } = MOCK_DASHBOARD;
+
+  const placeNameById = (id: string): string => {
+    const place = places.find((p) => p.id === id);
+    return place ? place.name : id;
+  };
+
+  const stakeholderById = (id: string): Stakeholder | undefined => {
+    return stakeholders.find((s) => s.id === id);
+  };
+
+  // Derived dashboard data from live context
+  const recent_signals = signals.filter(s => !isSignalRead(s.id)).slice(0, 4);
+  const upcoming_renewals = commitments.filter(c => c.renewal_date);
+  const recent_field_notes = fieldNotes.slice(0, 3);
+  const quiet_stakeholders = stakeholders.filter(s => s.last_contact && s.last_contact < '2026-02-01');
+  const active_commitments = commitments.filter(c => c.status !== 'completed').length;
 
   return (
     <div className="min-h-screen bg-[hsl(38_30%_95%)]">
@@ -300,14 +300,14 @@ export default function Home() {
           <div className="flex items-center gap-2 rounded-md border border-[hsl(30_18%_82%)] bg-white px-3 py-2">
             <MapPin className="h-3.5 w-3.5 text-[hsl(20_8%_48%)]" />
             <span className="text-xs text-[hsl(20_8%_48%)]">
-              <span className="font-semibold text-[hsl(20_10%_20%)]">{MOCK_DASHBOARD.places_count}</span>{' '}
+              <span className="font-semibold text-[hsl(20_10%_20%)]">{places.length}</span>{' '}
               places
             </span>
           </div>
           <div className="flex items-center gap-2 rounded-md border border-[hsl(30_18%_82%)] bg-white px-3 py-2">
             <Handshake className="h-3.5 w-3.5 text-[hsl(20_8%_48%)]" />
             <span className="text-xs text-[hsl(20_8%_48%)]">
-              <span className="font-semibold text-[hsl(20_10%_20%)]">{MOCK_DASHBOARD.active_commitments}</span>{' '}
+              <span className="font-semibold text-[hsl(20_10%_20%)]">{active_commitments}</span>{' '}
               active commitments
             </span>
           </div>
@@ -318,7 +318,7 @@ export default function Home() {
           <SectionHeader icon={Radio} label="New Signals" linkTo="/app/signals" />
           <div className="grid gap-3 sm:grid-cols-2">
             {recent_signals.map((signal) => (
-              <SignalCard key={signal.id} signal={signal} />
+              <SignalCard key={signal.id} signal={signal} placeNameById={placeNameById} />
             ))}
           </div>
           {recent_signals.length === 0 && (
@@ -335,7 +335,7 @@ export default function Home() {
           />
           <div className="flex flex-col gap-2">
             {upcoming_renewals.map((commitment) => (
-              <CommitmentRow key={commitment.id} commitment={commitment} />
+              <CommitmentRow key={commitment.id} commitment={commitment} placeNameById={placeNameById} />
             ))}
           </div>
           {upcoming_renewals.length === 0 && (
@@ -350,7 +350,7 @@ export default function Home() {
           <SectionHeader icon={NotebookPen} label="Recent Field Notes" linkTo="/app/field-notes" />
           <div className="grid gap-3 sm:grid-cols-3">
             {recent_field_notes.slice(0, 3).map((note) => (
-              <FieldNoteCard key={note.id} note={note} />
+              <FieldNoteCard key={note.id} note={note} authorName={stakeholderById(note.author_id)?.name ?? 'Unknown'} placeNameById={placeNameById} />
             ))}
           </div>
           {recent_field_notes.length === 0 && (

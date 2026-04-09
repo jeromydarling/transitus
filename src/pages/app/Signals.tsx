@@ -7,19 +7,13 @@
 
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Radio, MapPin, ExternalLink } from 'lucide-react';
+import { Radio, MapPin, ExternalLink, Eye, EyeOff, CheckCheck } from 'lucide-react';
 
-import { MOCK_SIGNALS, MOCK_PLACES } from '@/lib/mockData';
 import { useTransitusData } from '@/contexts/TransitusDataContext';
 import { SIGNAL_SOURCE_LABELS } from '@/types/transitus';
 import type { Signal, SignalSource, SignalCategory } from '@/types/transitus';
 
 // ── Helpers ──
-
-function placeName(placeId: string): string {
-  const p = MOCK_PLACES.find((pl) => pl.id === placeId);
-  return p ? p.name : placeId;
-}
 
 function formatDate(iso: string): string {
   const d = new Date(iso);
@@ -74,11 +68,11 @@ function severityLabel(severity?: Signal['severity']): string {
 
 // ── Components ──
 
-function SignalCard({ signal }: { signal: Signal }) {
+function SignalCard({ signal, isRead, placeName, onToggleRead }: { signal: Signal; isRead: boolean; placeName: (id: string) => string; onToggleRead: () => void }) {
   return (
     <div
       className={`rounded-lg bg-white p-4 border border-[hsl(30_18%_82%)] transition-shadow hover:shadow-md ${
-        !signal.is_read ? 'border-l-4 border-l-[hsl(16_65%_48%)]' : ''
+        !isRead ? 'border-l-4 border-l-[hsl(16_65%_48%)]' : 'opacity-75'
       }`}
     >
       <div className="flex items-start gap-3">
@@ -120,6 +114,16 @@ function SignalCard({ signal }: { signal: Signal }) {
                 Source
               </a>
             )}
+            {/* Mark read/unread toggle */}
+            <button
+              type="button"
+              onClick={onToggleRead}
+              className="ml-auto inline-flex items-center gap-1 text-[10px] text-[hsl(20_8%_52%)] hover:text-[hsl(16_65%_48%)] transition-colors"
+              title={isRead ? 'Mark as unread' : 'Mark as read'}
+            >
+              {isRead ? <EyeOff className="h-3 w-3" /> : <Eye className="h-3 w-3" />}
+              {isRead ? 'Unread' : 'Read'}
+            </button>
           </div>
 
           {/* Places and date */}
@@ -145,15 +149,21 @@ function SignalCard({ signal }: { signal: Signal }) {
 // ── Main page ──
 
 export default function Signals() {
+  const { signals, places, markSignalRead, markSignalUnread, markAllSignalsRead, isSignalRead } = useTransitusData();
   const [sourceFilter, setSourceFilter] = useState<SignalSource | null>(null);
   const [categoryFilter, setCategoryFilter] = useState<SignalCategory | null>(null);
   const [severityFilter, setSeverityFilter] = useState<Signal['severity'] | null>(null);
 
-  const allSources = Array.from(new Set(MOCK_SIGNALS.map((s) => s.source))) as SignalSource[];
-  const allCategories = Array.from(new Set(MOCK_SIGNALS.map((s) => s.category))) as SignalCategory[];
+  const getPlaceName = (placeId: string): string => {
+    const p = places.find((pl) => pl.id === placeId);
+    return p ? p.name : placeId;
+  };
+
+  const allSources = Array.from(new Set(signals.map((s) => s.source))) as SignalSource[];
+  const allCategories = Array.from(new Set(signals.map((s) => s.category))) as SignalCategory[];
   const severities: Signal['severity'][] = ['urgent', 'notable', 'informational'];
 
-  const filtered = MOCK_SIGNALS.filter((s) => {
+  const filtered = signals.filter((s) => {
     if (sourceFilter && s.source !== sourceFilter) return false;
     if (categoryFilter && s.category !== categoryFilter) return false;
     if (severityFilter && (s.severity ?? 'informational') !== severityFilter) return false;
@@ -162,17 +172,29 @@ export default function Signals() {
     (a, b) => new Date(b.published_at).getTime() - new Date(a.published_at).getTime(),
   );
 
-  const unreadCount = filtered.filter((s) => !s.is_read).length;
+  const unreadCount = filtered.filter((s) => !isSignalRead(s.id)).length;
 
   return (
     <div className="min-h-screen bg-[hsl(38_30%_95%)]">
       <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6 lg:px-8">
         {/* Section header */}
-        <div className="flex items-center gap-2 mb-1">
-          <Radio className="h-4 w-4 text-[hsl(16_65%_48%)]" />
-          <span className="font-sans text-xs font-semibold uppercase tracking-widest text-[hsl(16_65%_48%)]">
-            Signals
-          </span>
+        <div className="flex items-center justify-between mb-1">
+          <div className="flex items-center gap-2">
+            <Radio className="h-4 w-4 text-[hsl(16_65%_48%)]" />
+            <span className="font-sans text-xs font-semibold uppercase tracking-widest text-[hsl(16_65%_48%)]">
+              Signals
+            </span>
+          </div>
+          {unreadCount > 0 && (
+            <button
+              type="button"
+              onClick={markAllSignalsRead}
+              className="inline-flex items-center gap-1.5 rounded-full bg-[hsl(16_65%_48%)] px-4 py-2 text-sm font-medium text-white hover:bg-[hsl(12_55%_35%)] transition-colors"
+            >
+              <CheckCheck className="h-4 w-4" />
+              Mark all read
+            </button>
+          )}
         </div>
         <h1 className="font-serif text-3xl tracking-tight text-[hsl(20_28%_15%)] mb-2">
           Signals
@@ -300,7 +322,19 @@ export default function Signals() {
         {/* Signal feed */}
         <div className="flex flex-col gap-3">
           {filtered.map((signal) => (
-            <SignalCard key={signal.id} signal={signal} />
+            <SignalCard
+              key={signal.id}
+              signal={signal}
+              isRead={isSignalRead(signal.id)}
+              placeName={getPlaceName}
+              onToggleRead={() => {
+                if (isSignalRead(signal.id)) {
+                  markSignalUnread(signal.id);
+                } else {
+                  markSignalRead(signal.id);
+                }
+              }}
+            />
           ))}
           {filtered.length === 0 && (
             <p className="text-sm text-[hsl(20_8%_52%)] italic">
