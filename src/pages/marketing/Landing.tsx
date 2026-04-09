@@ -247,11 +247,11 @@ export default function Landing() {
             <h2 className="marketing-heading text-[hsl(var(--marketing-earth))] mb-4">Simple, place-based pricing</h2>
             <p className="marketing-subheading text-[hsl(var(--marketing-earth)/0.6)]">Pay by the places you steward, not the seats you fill.</p>
           </div>
-          <div className="grid md:grid-cols-3 gap-5 max-w-4xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-5 max-w-4xl mx-auto pt-4">
             {pricingTiers.map((tier) => (
-              <div key={tier.key} className={`editorial-card text-center pt-8 ${tier.highlighted ? 'ring-2 ring-[hsl(var(--transitus-terracotta))] border-[hsl(var(--transitus-terracotta)/0.3)]' : ''}`}>
+              <div key={tier.key} className={`relative rounded-lg bg-card p-6 shadow-sm border border-border/60 transition-all duration-300 hover:shadow-lg text-center pt-8 ${tier.highlighted ? 'ring-2 ring-[hsl(var(--transitus-terracotta))] border-[hsl(var(--transitus-terracotta)/0.3)]' : ''}`}>
                 {tier.highlighted && (
-                  <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 px-4 py-1 rounded-full bg-[hsl(var(--transitus-terracotta))] text-white text-xs font-semibold whitespace-nowrap shadow-sm">
+                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full bg-[hsl(var(--transitus-terracotta))] text-white text-xs font-semibold whitespace-nowrap shadow-md z-10">
                     Most popular
                   </div>
                 )}
@@ -276,7 +276,7 @@ export default function Landing() {
                   )}
                 </ul>
                 <Link to="/pricing">
-                  <Button variant={tier.highlighted ? 'default' : 'outline'} className={`rounded-full w-full text-sm ${tier.highlighted ? 'bg-[hsl(var(--transitus-forest))] text-white hover:bg-[hsl(var(--transitus-green))]' : 'border-[hsl(var(--marketing-earth)/0.2)] text-[hsl(var(--marketing-earth))]'}`}>{tier.cta}</Button>
+                  <Button variant={tier.key === 'network' ? 'outline' : 'default'} className={`rounded-full w-full text-sm ${tier.highlighted ? 'bg-[hsl(var(--transitus-forest))] text-white hover:bg-[hsl(var(--transitus-green))]' : tier.key === 'network' ? 'border-[hsl(var(--marketing-earth)/0.2)] text-[hsl(var(--marketing-earth))]' : 'bg-[hsl(var(--transitus-terracotta))] text-white hover:bg-[hsl(var(--transitus-terracotta)/0.85)]'}`}>{tier.key === 'network' ? tier.cta : 'Sign up now'}</Button>
                 </Link>
               </div>
             ))}

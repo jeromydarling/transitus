@@ -34,7 +34,7 @@ export const pricingTiers: PricingTier[] = [
       'Community stories with consent management',
       'Steward\u2019s Journal for private reflection',
     ],
-    cta: 'Start with one place',
+    cta: 'Sign up now',
   },
   {
     key: 'region',
@@ -58,7 +58,7 @@ export const pricingTiers: PricingTier[] = [
       'Priority support and onboarding',
     ],
     highlighted: true,
-    cta: 'Talk to us about your region',
+    cta: 'Sign up now',
   },
   {
     key: 'network',

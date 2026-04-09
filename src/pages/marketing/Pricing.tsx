@@ -31,10 +31,10 @@ export default function Pricing() {
       {/* Pricing Cards */}
       <section className="bg-[hsl(var(--transitus-sand))]">
         <div className="marketing-section">
-          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto pt-4">
             {pricingTiers.map((tier) => (
-              <div key={tier.key} className={`editorial-card flex flex-col pt-8 ${tier.highlighted ? 'ring-2 ring-[hsl(var(--transitus-terracotta))] border-[hsl(var(--transitus-terracotta)/0.3)] relative' : ''}`}>
-                {tier.highlighted && <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 px-4 py-1 rounded-full bg-[hsl(var(--transitus-terracotta))] text-white text-xs font-semibold whitespace-nowrap shadow-sm">Most popular</div>}
+              <div key={tier.key} className={`relative rounded-lg bg-card p-6 shadow-sm border border-border/60 transition-all duration-300 hover:shadow-lg flex flex-col pt-8 ${tier.highlighted ? 'ring-2 ring-[hsl(var(--transitus-terracotta))] border-[hsl(var(--transitus-terracotta)/0.3)]' : ''}`}>
+                {tier.highlighted && <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full bg-[hsl(var(--transitus-terracotta))] text-white text-xs font-semibold whitespace-nowrap shadow-md z-10">Most popular</div>}
                 <div className="text-center mb-6">
                   <h2 className="font-sans text-base font-semibold text-[hsl(var(--marketing-earth))] mb-1">{tier.name}</h2>
                   <p className="text-xs text-[hsl(var(--marketing-earth)/0.5)] mb-4">{tier.tagline}</p>
@@ -52,9 +52,9 @@ export default function Pricing() {
                     </li>
                   ))}
                 </ul>
-                <Link to="/contact" className="mt-auto">
-                  <Button className={`rounded-full w-full ${tier.highlighted ? 'bg-[hsl(var(--transitus-forest))] text-white hover:bg-[hsl(var(--transitus-green))]' : 'border-[hsl(var(--marketing-earth)/0.2)] text-[hsl(var(--marketing-earth))] bg-transparent hover:bg-[hsl(var(--transitus-sand))]'}`} variant={tier.highlighted ? 'default' : 'outline'}>
-                    {tier.cta} <ArrowRight className="ml-2 h-4 w-4" />
+                <Link to={tier.key === 'network' ? '/contact' : '/signup'} className="mt-auto">
+                  <Button className={`rounded-full w-full ${tier.highlighted ? 'bg-[hsl(var(--transitus-forest))] text-white hover:bg-[hsl(var(--transitus-green))]' : tier.key === 'network' ? 'border-[hsl(var(--marketing-earth)/0.2)] text-[hsl(var(--marketing-earth))] bg-transparent hover:bg-[hsl(var(--transitus-sand))]' : 'bg-[hsl(var(--transitus-terracotta))] text-white hover:bg-[hsl(var(--transitus-terracotta)/0.85)]'}`} variant={tier.key === 'network' ? 'outline' : 'default'}>
+                    {tier.key === 'network' ? tier.cta : 'Sign up now'} <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </Link>
               </div>
