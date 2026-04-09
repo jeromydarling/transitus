@@ -24,6 +24,9 @@ import NotFound from '@/pages/NotFound';
 // App layout
 import { TransitusLayout } from '@/components/layout/TransitusLayout';
 
+// Gardener layout
+import { GardenerLayout } from '@/components/layout/GardenerLayout';
+
 // App pages (lazy loaded for code splitting)
 const AppHome = lazy(() => import('@/pages/app/Home'));
 const AppCompass = lazy(() => import('@/pages/app/Compass'));
@@ -47,6 +50,15 @@ const Participation = lazy(() => import('@/pages/app/Participation'));
 const CommunityBenefits = lazy(() => import('@/pages/app/CommunityBenefits'));
 const CommunityStories = lazy(() => import('@/pages/app/CommunityStories'));
 const StakeholderGraph = lazy(() => import('@/components/graphs/StakeholderGraph'));
+
+// Gardener pages (lazy loaded)
+const GardenerOverview = lazy(() => import('@/pages/gardener/Overview'));
+const GardenerTenants = lazy(() => import('@/pages/gardener/Tenants'));
+const GardenerAnalytics = lazy(() => import('@/pages/gardener/Analytics'));
+const GardenerContentStudio = lazy(() => import('@/pages/gardener/ContentStudio'));
+const GardenerSystemHealth = lazy(() => import('@/pages/gardener/SystemHealth'));
+const GardenerSupportInbox = lazy(() => import('@/pages/gardener/SupportInbox'));
+const GardenerSettings = lazy(() => import('@/pages/gardener/GardenerSettings'));
 
 function AppFallback() {
   return (
@@ -113,6 +125,17 @@ export function AppRouter() {
         <Route path="feedback" element={<Suspense fallback={<AppFallback />}><AppFeedback /></Suspense>} />
         <Route path="seasons" element={<Suspense fallback={<AppFallback />}><Seasons /></Suspense>} />
         <Route path="settings" element={<Suspense fallback={<AppFallback />}><AppSettings /></Suspense>} />
+      </Route>
+
+      {/* ═══ Gardener Console ═══ */}
+      <Route path="/gardener" element={<GardenerLayout />}>
+        <Route index element={<Suspense fallback={<AppFallback />}><GardenerOverview /></Suspense>} />
+        <Route path="tenants" element={<Suspense fallback={<AppFallback />}><GardenerTenants /></Suspense>} />
+        <Route path="analytics" element={<Suspense fallback={<AppFallback />}><GardenerAnalytics /></Suspense>} />
+        <Route path="content" element={<Suspense fallback={<AppFallback />}><GardenerContentStudio /></Suspense>} />
+        <Route path="system" element={<Suspense fallback={<AppFallback />}><GardenerSystemHealth /></Suspense>} />
+        <Route path="support" element={<Suspense fallback={<AppFallback />}><GardenerSupportInbox /></Suspense>} />
+        <Route path="settings" element={<Suspense fallback={<AppFallback />}><GardenerSettings /></Suspense>} />
       </Route>
 
       {/* Catch-all */}
