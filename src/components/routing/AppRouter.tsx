@@ -41,6 +41,7 @@ const Journal = lazy(() => import('@/pages/app/Journal'));
 const CoalitionNetwork = lazy(() => import('@/pages/app/CoalitionNetwork'));
 const Participation = lazy(() => import('@/pages/app/Participation'));
 const CommunityBenefits = lazy(() => import('@/pages/app/CommunityBenefits'));
+const CommunityStories = lazy(() => import('@/pages/app/CommunityStories'));
 const StakeholderGraph = lazy(() => import('@/components/graphs/StakeholderGraph'));
 
 function AppFallback() {
@@ -102,6 +103,7 @@ export function AppRouter() {
         <Route path="coalition" element={<Suspense fallback={<AppFallback />}><CoalitionNetwork /></Suspense>} />
         <Route path="participation" element={<Suspense fallback={<AppFallback />}><Participation /></Suspense>} />
         <Route path="community-benefits" element={<Suspense fallback={<AppFallback />}><CommunityBenefits /></Suspense>} />
+        <Route path="community-stories" element={<Suspense fallback={<AppFallback />}><CommunityStories /></Suspense>} />
         <Route path="graph" element={<Suspense fallback={<AppFallback />}><StakeholderGraph /></Suspense>} />
       </Route>
 

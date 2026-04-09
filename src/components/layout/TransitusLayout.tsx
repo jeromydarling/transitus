@@ -14,7 +14,7 @@ import {
   Home, MapPin, Users, Handshake, NotebookPen,
   Radio, BookOpen, Library, FileText, Globe,
   ArrowLeft, Menu, X, MoreHorizontal, ChevronRight,
-  PenLine, Network, Heart, Target, Search,
+  PenLine, Network, Heart, Target, Search, Quote,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -44,6 +44,7 @@ const NAV_ITEMS: NavItem[] = [
   { label: 'Coalition',     shortLabel: 'Coalition', href: '/app/coalition',    icon: Network },
   { label: 'Participation', shortLabel: 'Engage',   href: '/app/participation', icon: Heart },
   { label: 'Benefits',      shortLabel: 'Benefits', href: '/app/community-benefits', icon: Target },
+  { label: 'Stories',       shortLabel: 'Stories',  href: '/app/community-stories',  icon: Quote },
 ];
 
 // Bottom tab bar shows first 4 + More
