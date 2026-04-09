@@ -15,6 +15,7 @@ import {
   Radio, BookOpen, Library, FileText, Globe,
   ArrowLeft, Menu, X, MoreHorizontal, ChevronRight,
   PenLine, Network, Heart, Target, Search, Quote,
+  Compass,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -32,6 +33,7 @@ export interface TransitusLayoutProps {
 
 const NAV_ITEMS: NavItem[] = [
   { label: 'Home',          shortLabel: 'Home',     href: '/app',              icon: Home },
+  { label: 'Compass',       shortLabel: 'Compass',  href: '/app/compass',      icon: Compass },
   { label: 'Places',        shortLabel: 'Places',   href: '/app/places',       icon: MapPin },
   { label: 'People & Orgs', shortLabel: 'People',   href: '/app/people',       icon: Users },
   { label: 'Commitments',   shortLabel: 'Commits',  href: '/app/commitments',  icon: Handshake },

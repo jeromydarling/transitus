@@ -26,6 +26,7 @@ import { TransitusLayout } from '@/components/layout/TransitusLayout';
 
 // App pages (lazy loaded for code splitting)
 const AppHome = lazy(() => import('@/pages/app/Home'));
+const AppCompass = lazy(() => import('@/pages/app/Compass'));
 const Places = lazy(() => import('@/pages/app/Places'));
 const PlaceDetail = lazy(() => import('@/pages/app/PlaceDetail'));
 const People = lazy(() => import('@/pages/app/People'));
@@ -88,6 +89,7 @@ export function AppRouter() {
       {/* ═══ Transitus App ═══ */}
       <Route path="/app" element={<TransitusLayout />}>
         <Route index element={<Suspense fallback={<AppFallback />}><AppHome /></Suspense>} />
+        <Route path="compass" element={<Suspense fallback={<AppFallback />}><AppCompass /></Suspense>} />
         <Route path="places" element={<Suspense fallback={<AppFallback />}><Places /></Suspense>} />
         <Route path="places/:id" element={<Suspense fallback={<AppFallback />}><PlaceDetail /></Suspense>} />
         <Route path="people" element={<Suspense fallback={<AppFallback />}><People /></Suspense>} />

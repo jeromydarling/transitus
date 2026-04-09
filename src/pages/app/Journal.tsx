@@ -8,6 +8,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { NotebookPen, MapPin, X } from 'lucide-react';
 import { useTransitusData } from '@/contexts/TransitusDataContext';
+import { getCurrentSeason, getDayMoment } from '@/lib/transitionCalendar';
 
 // ── Types ──
 
@@ -69,6 +70,8 @@ function formatDate(iso: string): string {
 
 export default function Journal() {
   const { places } = useTransitusData();
+  const season = getCurrentSeason();
+  const moment = getDayMoment();
   const [entries, setEntries] = useState<JournalEntry[]>(loadEntries);
 
   // Form state
@@ -133,9 +136,11 @@ export default function Journal() {
           </p>
         </header>
 
-        {/* ── Reflection prompts ── */}
+        {/* ── Reflection prompts (seasonal) ── */}
         <div className="mb-6 rounded-xl bg-[hsl(198_55%_42%/0.06)] border border-[hsl(198_55%_42%/0.15)] p-4">
-          <p className="text-xs font-semibold text-[hsl(198_55%_42%)] uppercase tracking-widest mb-2">Before you write, reflect:</p>
+          <p className="text-sm font-medium text-[hsl(198_55%_42%)] mb-2">{season.label} Reflection</p>
+          <p className="text-xs text-[hsl(20_25%_12%/0.65)] italic mb-3">{season.journalPrompt}</p>
+          <p className="text-xs text-[hsl(20_25%_12%/0.45)] mb-2">Also consider:</p>
           <ul className="text-xs text-[hsl(20_25%_12%/0.6)] space-y-1.5">
             <li>• Who did you meet today? What's their story?</li>
             <li>• What burden did you witness someone carrying?</li>

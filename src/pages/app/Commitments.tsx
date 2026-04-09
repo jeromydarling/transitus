@@ -14,6 +14,19 @@ import { EditCommitmentStatusForm } from '@/components/forms/EditCommitmentStatu
 import { COMMITMENT_STATUS_LABELS } from '@/types/transitus';
 import type { Commitment, CommitmentStatus, Place } from '@/types/transitus';
 
+// ── Accompaniment language for display ──
+
+const ACCOMPANIMENT_STATUS: Record<CommitmentStatus, string> = {
+  delayed: 'Conversation needed',
+  breached: 'Repair ready',
+  in_motion: 'Being honored',
+  proposed: 'Offered',
+  acknowledged: 'Received',
+  accepted: 'Embraced',
+  repaired: 'Restored',
+  completed: 'Fulfilled',
+};
+
 // ── Helpers ──
 
 function formatDate(iso?: string): string {
@@ -212,7 +225,7 @@ export default function Commitments() {
                       : 'bg-[hsl(30_18%_90%)] text-[hsl(30_18%_40%)] hover:bg-[hsl(30_18%_85%)]'
                   }`}
                 >
-                  {COMMITMENT_STATUS_LABELS[status]} ({count})
+                  {ACCOMPANIMENT_STATUS[status]} ({count})
                 </button>
               );
             })}

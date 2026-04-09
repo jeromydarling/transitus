@@ -20,6 +20,7 @@ import { getMockNriResponse } from '@/lib/nri/mockNriResponses';
 import { TRANSITUS_QUICK_PROMPTS } from '@/types/nri';
 import type { NRIChatMessage } from '@/types/nri';
 import { useTransitusData } from '@/contexts/TransitusDataContext';
+import { getCurrentSeason, getDayMoment } from '@/lib/transitionCalendar';
 
 const ICON_MAP: Record<string, React.ElementType> = {
   Radio, NotebookPen, Handshake, Users, MapPin, Leaf, FileText, BookOpen, Sparkles,
@@ -30,15 +31,21 @@ interface NRIChatDrawerProps {
   onClose: () => void;
 }
 
-const WELCOME_MSG: NRIChatMessage = {
-  id: 'welcome',
-  role: 'assistant',
-  content: 'Welcome to Transitus. I\'m NRI — your stewardship companion.\n\nI can help you understand what\'s shifting in your places, check on commitments, prepare for hearings, and draft reports from your field work.\n\nWhat would you like to work on?',
-  timestamp: new Date().toISOString(),
-};
-
 export function NRIChatDrawer({ open, onClose }: NRIChatDrawerProps) {
   const { nriMessages, addNriMessage } = useTransitusData();
+
+  const season = getCurrentSeason();
+  const dayMoment = getDayMoment();
+
+  const welcomeContent = `${dayMoment.greeting} It's ${season.label} — a season of ${season.posture.toLowerCase()}.\n\n${season.description}\n\nHow can I help with your stewardship work today?`;
+
+  const WELCOME_MSG: NRIChatMessage = {
+    id: 'welcome',
+    role: 'assistant',
+    content: welcomeContent,
+    timestamp: new Date().toISOString(),
+  };
+
   const messages = nriMessages.length > 0 ? nriMessages : [WELCOME_MSG];
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);

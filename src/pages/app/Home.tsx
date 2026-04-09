@@ -13,13 +13,15 @@ import {
   Users,
   MapPin,
   ChevronRight,
-  AlertTriangle,
   Clock,
   Heart,
+  Compass,
+  Sparkles,
 } from 'lucide-react';
 
 import { MOCK_DASHBOARD, MOCK_COMMUNITY_STORIES } from '@/lib/mockData';
 import { useTransitusData } from '@/contexts/TransitusDataContext';
+import { getCurrentSeason, getDayMoment, getWeekRhythm, getNearbyMilestones } from '@/lib/transitionCalendar';
 
 import {
   ROLE_LABELS,
@@ -31,6 +33,7 @@ import type {
   Commitment,
   FieldNote,
   Stakeholder,
+  CommunityStory,
   CommitmentStatus,
   FieldNoteType,
 } from '@/types/transitus';
@@ -252,7 +255,7 @@ function QuietStakeholderRow({ stakeholder }: { stakeholder: Stakeholder }) {
       <div className="shrink-0 text-right">
         {days !== null && (
           <span className="flex items-center gap-1 text-xs text-[hsl(16_50%_48%)]">
-            <AlertTriangle className="h-3 w-3" />
+            <Heart className="h-3 w-3" />
             {days}d ago
           </span>
         )}
@@ -264,8 +267,13 @@ function QuietStakeholderRow({ stakeholder }: { stakeholder: Stakeholder }) {
 // ── Main page ──
 
 export default function Home() {
-  const { places, signals, commitments, fieldNotes, stakeholders, isSignalRead } = useTransitusData();
+  const { places, signals, commitments, fieldNotes, stakeholders, communityStories, isSignalRead } = useTransitusData();
   const { weekly_brief } = MOCK_DASHBOARD;
+
+  const season = getCurrentSeason();
+  const moment = getDayMoment();
+  const rhythm = getWeekRhythm();
+  const milestones = getNearbyMilestones();
 
   const placeNameById = (id: string): string => {
     const place = places.find((p) => p.id === id);
@@ -286,15 +294,50 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-[hsl(38_30%_95%)]">
       <div className="mx-auto max-w-4xl px-4 py-10 sm:px-6 lg:px-8">
-        {/* ── Welcome header ── */}
-        <header className="mb-10">
-          <h1 className="font-serif text-2xl font-normal text-[hsl(20_10%_18%)] sm:text-3xl">
-            Today in your places
-          </h1>
-          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-[hsl(20_8%_40%)]">
+        {/* ── Welcome header (seasonal + time-of-day aware) ── */}
+        <header className="mb-8">
+          <div className="mb-8">
+            <h1 className="font-serif text-2xl text-[hsl(20_25%_12%)]">
+              {moment.greeting} <span className="text-[hsl(20_25%_12%/0.5)]">{season.label}.</span>
+            </h1>
+            <p className="font-serif-body text-sm text-[hsl(20_25%_12%/0.55)] mt-1 italic">
+              {moment.prompt}
+            </p>
+            {rhythm.compassDirection && (
+              <p className="text-xs text-[hsl(16_65%_48%)] mt-2">
+                {rhythm.day.charAt(0).toUpperCase() + rhythm.day.slice(1)} focus: {rhythm.focus}
+              </p>
+            )}
+          </div>
+          <p className="max-w-2xl text-sm leading-relaxed text-[hsl(20_8%_40%)]">
             {weekly_brief}
           </p>
         </header>
+
+        {/* ── Nearby Milestones ── */}
+        {milestones.length > 0 && milestones.map(m => (
+          <div key={m.date} className="rounded-lg bg-[hsl(38_80%_55%/0.08)] border border-[hsl(38_80%_55%/0.2)] p-3 mb-4">
+            <p className="text-xs font-semibold text-[hsl(38_70%_40%)]">{m.name}</p>
+            <p className="text-xs text-[hsl(20_25%_12%/0.55)]">{m.relevance}</p>
+          </div>
+        ))}
+
+        {/* ── Compass This Week mini-widget ── */}
+        <Link
+          to="/app/compass"
+          className="mb-10 flex items-center gap-3 rounded-lg bg-white border border-[hsl(30_18%_82%)] p-4 hover:shadow-md transition-shadow"
+        >
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[hsl(16_65%_48%/0.1)]">
+            <Compass className="h-5 w-5 text-[hsl(16_65%_48%)]" />
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-medium text-[hsl(20_10%_20%)]">Compass This Week</p>
+            <p className="text-xs text-[hsl(20_8%_48%)]">
+              {season.weeklyFocus}
+            </p>
+          </div>
+          <ChevronRight className="h-4 w-4 shrink-0 text-[hsl(20_8%_52%)]" />
+        </Link>
 
         {/* ── Quick stats (small, editorial, not KPI tiles) ── */}
         <div className="mb-10 flex gap-4">
@@ -382,9 +425,12 @@ export default function Home() {
           )}
         </section>
 
-        {/* ── Quiet Stakeholders ── */}
+        {/* ── Relationships waiting for reconnection ── */}
         <section className="mb-10">
-          <SectionHeader icon={Users} label="Quiet stakeholders" linkTo="/app/people" />
+          <SectionHeader icon={Heart} label="Relationships waiting for reconnection" linkTo="/app/people" />
+          <p className="text-xs text-[hsl(20_8%_48%)] italic -mt-2 mb-3">
+            A brief, warm check-in might deepen trust here.
+          </p>
           <div className="flex flex-col gap-2">
             {quiet_stakeholders.map((s) => (
               <QuietStakeholderRow key={s.id} stakeholder={s} />
@@ -395,6 +441,62 @@ export default function Home() {
               Everyone has been in touch recently.
             </p>
           )}
+        </section>
+
+        {/* ── Signs of Life (Consolation Signals) ── */}
+        <section className="mb-10">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <Sparkles className="h-4 w-4 text-[hsl(152_45%_28%)]" />
+              <span className="font-sans text-xs font-semibold uppercase tracking-widest text-[hsl(152_45%_28%)]">
+                Signs of Life
+              </span>
+            </div>
+          </div>
+          <div className="space-y-2">
+            {/* Commitments being honored */}
+            {commitments.filter(c => c.status === 'in_motion').slice(0, 2).map(c => (
+              <Link
+                key={c.id}
+                to="/app/commitments"
+                className="flex items-center gap-3 rounded-lg bg-white px-4 py-3 border border-[hsl(30_18%_82%)] hover:shadow-md transition-shadow"
+              >
+                <Handshake className="h-4 w-4 shrink-0 text-[hsl(152_45%_28%)]" />
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-medium text-[hsl(20_10%_20%)] truncate">{c.title}</p>
+                  <p className="text-xs text-[hsl(152_45%_28%)]">Being honored</p>
+                </div>
+              </Link>
+            ))}
+            {/* Deep or established trust stakeholders */}
+            {stakeholders.filter(s => s.trust_level === 'deep' || s.trust_level === 'established').slice(0, 2).map(s => (
+              <Link
+                key={s.id}
+                to="/app/people"
+                className="flex items-center gap-3 rounded-lg bg-white px-4 py-3 border border-[hsl(30_18%_82%)] hover:shadow-md transition-shadow"
+              >
+                <Users className="h-4 w-4 shrink-0 text-[hsl(152_45%_28%)]" />
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-medium text-[hsl(20_10%_20%)]">{s.name}</p>
+                  <p className="text-xs text-[hsl(152_45%_28%)]">Trust: {s.trust_level}</p>
+                </div>
+              </Link>
+            ))}
+            {/* Recent community stories */}
+            {communityStories.filter(cs => cs.consent_level === 'public').slice(0, 1).map(cs => (
+              <Link
+                key={cs.id}
+                to="/app/community-stories"
+                className="flex items-center gap-3 rounded-lg bg-white px-4 py-3 border border-[hsl(30_18%_82%)] hover:shadow-md transition-shadow"
+              >
+                <Heart className="h-4 w-4 shrink-0 text-[hsl(152_45%_28%)]" />
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-medium text-[hsl(20_10%_20%)]">{cs.person_name}</p>
+                  <p className="text-xs text-[hsl(152_45%_28%)]">Community story shared</p>
+                </div>
+              </Link>
+            ))}
+          </div>
         </section>
       </div>
     </div>
