@@ -23,3 +23,6 @@ export { fetchEarthImagery, getAvailableGIBSLayers } from './nasa';
 export { fetchElevation, searchProducts } from './usgs';
 export { searchGrants } from './grants';
 export { searchLOC, searchNARA, searchSmithsonian } from './archives';
+export { fetchCEJSTData } from './cejst';
+export { searchCommunityBenefitAgreements } from './wri';
+export { listNRDCDatasets, fetchNRDCPollutionData } from './nrdc';

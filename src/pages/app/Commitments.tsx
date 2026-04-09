@@ -7,24 +7,14 @@
 
 import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { Handshake, Filter, MapPin, CalendarClock, MessageSquareQuote } from 'lucide-react';
-import { MOCK_COMMITMENTS, MOCK_PLACES, MOCK_ORGS } from '@/lib/mockData';
+import { Handshake, Filter, MapPin, CalendarClock, MessageSquareQuote, Plus } from 'lucide-react';
 import { useTransitusData } from '@/contexts/TransitusDataContext';
+import { CreateCommitmentForm } from '@/components/forms/CreateCommitmentForm';
+import { EditCommitmentStatusForm } from '@/components/forms/EditCommitmentStatusForm';
 import { COMMITMENT_STATUS_LABELS } from '@/types/transitus';
 import type { Commitment, CommitmentStatus } from '@/types/transitus';
 
 // ── Helpers ──
-
-function placeNameById(id: string): string {
-  const place = MOCK_PLACES.find((p) => p.id === id);
-  return place ? place.name : id;
-}
-
-function orgNameById(orgId?: string): string | undefined {
-  if (!orgId) return undefined;
-  const org = MOCK_ORGS.find((o) => o.id === orgId);
-  return org?.name;
-}
 
 function formatDate(iso?: string): string {
   if (!iso) return 'N/A';
@@ -51,16 +41,6 @@ const STATUS_CLASSES: Record<CommitmentStatus, string> = {
   completed: 'bg-emerald-100 text-emerald-700',
 };
 
-function StatusBadge({ status }: { status: CommitmentStatus }) {
-  return (
-    <span
-      className={`inline-block rounded-full px-2.5 py-0.5 text-[11px] font-medium leading-tight ${STATUS_CLASSES[status]}`}
-    >
-      {COMMITMENT_STATUS_LABELS[status]}
-    </span>
-  );
-}
-
 function TypeBadge({ type }: { type: string }) {
   return (
     <span className="inline-block rounded-full bg-[hsl(30_18%_90%)] text-[hsl(30_18%_40%)] px-2 py-0.5 text-[11px] font-medium leading-tight">
@@ -71,7 +51,7 @@ function TypeBadge({ type }: { type: string }) {
 
 // ── Commitment Card ──
 
-function CommitmentCard({ commitment }: { commitment: Commitment }) {
+function CommitmentCard({ commitment, placeNameById, orgNameById }: { commitment: Commitment; placeNameById: (id: string) => string; orgNameById: (orgId?: string) => string | undefined }) {
   const madeByOrg = orgNameById(commitment.made_by_org_id);
 
   return (
@@ -81,7 +61,7 @@ function CommitmentCard({ commitment }: { commitment: Commitment }) {
         <h3 className="font-serif text-lg leading-snug tracking-tight text-[hsl(20_28%_15%)]">
           {commitment.title}
         </h3>
-        <StatusBadge status={commitment.status} />
+        <EditCommitmentStatusForm commitmentId={commitment.id} currentStatus={commitment.status} />
       </div>
 
       {/* Type badge + org */}
@@ -139,23 +119,45 @@ function CommitmentCard({ commitment }: { commitment: Commitment }) {
 const ALL_STATUSES = Object.keys(COMMITMENT_STATUS_LABELS) as CommitmentStatus[];
 
 export default function Commitments() {
+  const { commitments, places, organizations } = useTransitusData();
   const [activeStatus, setActiveStatus] = useState<CommitmentStatus | null>(null);
 
+  const placeNameById = (id: string): string => {
+    const place = places.find((p) => p.id === id);
+    return place ? place.name : id;
+  };
+
+  const orgNameById = (orgId?: string): string | undefined => {
+    if (!orgId) return undefined;
+    const org = organizations.find((o) => o.id === orgId);
+    return org?.name;
+  };
+
   const filteredCommitments = useMemo(() => {
-    if (!activeStatus) return MOCK_COMMITMENTS;
-    return MOCK_COMMITMENTS.filter((c) => c.status === activeStatus);
-  }, [activeStatus]);
+    if (!activeStatus) return commitments;
+    return commitments.filter((c) => c.status === activeStatus);
+  }, [activeStatus, commitments]);
 
   return (
     <div className="min-h-screen bg-[hsl(38_30%_95%)]">
       <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
         {/* Page header */}
         <div className="mb-8">
-          <div className="flex items-center gap-2 mb-1">
-            <Handshake className="h-4 w-4 text-[hsl(16_65%_48%)]" />
-            <span className="text-[11px] font-semibold uppercase tracking-[0.15em] text-[hsl(16_65%_48%)]">
-              Commitment Tracker
-            </span>
+          <div className="flex items-center justify-between mb-1">
+            <div className="flex items-center gap-2">
+              <Handshake className="h-4 w-4 text-[hsl(16_65%_48%)]" />
+              <span className="text-[11px] font-semibold uppercase tracking-[0.15em] text-[hsl(16_65%_48%)]">
+                Commitment Tracker
+              </span>
+            </div>
+            <CreateCommitmentForm
+              trigger={
+                <button className="hidden sm:inline-flex items-center gap-1.5 rounded-full bg-[hsl(16_65%_48%)] px-4 py-2 text-sm font-medium text-white hover:bg-[hsl(12_55%_35%)] transition-colors">
+                  <Plus className="h-4 w-4" />
+                  New Commitment
+                </button>
+              }
+            />
           </div>
           <h1 className="font-serif text-3xl tracking-tight text-[hsl(20_28%_15%)]">
             Commitments
@@ -184,10 +186,10 @@ export default function Commitments() {
                   : 'bg-[hsl(30_18%_90%)] text-[hsl(30_18%_40%)] hover:bg-[hsl(30_18%_85%)]'
               }`}
             >
-              All ({MOCK_COMMITMENTS.length})
+              All ({commitments.length})
             </button>
             {ALL_STATUSES.map((status) => {
-              const count = MOCK_COMMITMENTS.filter((c) => c.status === status).length;
+              const count = commitments.filter((c) => c.status === status).length;
               if (count === 0) return null;
               return (
                 <button
@@ -208,13 +210,13 @@ export default function Commitments() {
 
         {/* Results count */}
         <p className="mb-4 text-xs text-[hsl(30_10%_50%)]">
-          Showing {filteredCommitments.length} of {MOCK_COMMITMENTS.length} commitments
+          Showing {filteredCommitments.length} of {commitments.length} commitments
         </p>
 
         {/* Commitment cards grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {filteredCommitments.map((c) => (
-            <CommitmentCard key={c.id} commitment={c} />
+            <CommitmentCard key={c.id} commitment={c} placeNameById={placeNameById} orgNameById={orgNameById} />
           ))}
         </div>
 
@@ -226,6 +228,15 @@ export default function Commitments() {
           </div>
         )}
       </div>
+
+      {/* Mobile FAB */}
+      <CreateCommitmentForm
+        trigger={
+          <button className="sm:hidden fixed bottom-20 right-4 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-[hsl(16_65%_48%)] text-white shadow-lg hover:bg-[hsl(12_55%_35%)] transition-colors">
+            <Plus className="h-6 w-6" />
+          </button>
+        }
+      />
     </div>
   );
 }

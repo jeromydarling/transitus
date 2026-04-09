@@ -7,10 +7,10 @@
 
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { NotebookPen, MapPin, User, Shield } from 'lucide-react';
+import { NotebookPen, MapPin, User, Shield, Plus } from 'lucide-react';
 
-import { MOCK_FIELD_NOTES, MOCK_STAKEHOLDERS, MOCK_PLACES } from '@/lib/mockData';
 import { useTransitusData } from '@/contexts/TransitusDataContext';
+import { CreateFieldNoteForm } from '@/components/forms/CreateFieldNoteForm';
 import { FIELD_NOTE_TAG_LABELS } from '@/types/transitus';
 import type { FieldNote, FieldNoteTag, FieldNoteType } from '@/types/transitus';
 
@@ -43,16 +43,6 @@ const TAG_COLORS: Record<FieldNoteTag, string> = {
   displacement: 'bg-pink-100 text-pink-700',
   jobs: 'bg-teal-100 text-teal-700',
 };
-
-function authorName(authorId: string): string {
-  const s = MOCK_STAKEHOLDERS.find((st) => st.id === authorId);
-  return s ? s.name : authorId;
-}
-
-function placeName(placeId: string): string {
-  const p = MOCK_PLACES.find((pl) => pl.id === placeId);
-  return p ? p.name : placeId;
-}
 
 function formatDate(iso: string): string {
   const d = new Date(iso);
@@ -92,7 +82,7 @@ function TagPill({
   );
 }
 
-function FieldNoteCard({ note }: { note: FieldNote }) {
+function FieldNoteCard({ note, authorName, placeName }: { note: FieldNote; authorName: string; placeName: string }) {
   const excerpt = note.content.length > 200 ? note.content.slice(0, 200) + '...' : note.content;
 
   return (
@@ -130,14 +120,14 @@ function FieldNoteCard({ note }: { note: FieldNote }) {
         <div className="flex flex-wrap items-center gap-3 mb-3 text-xs text-[hsl(20_8%_42%)]">
           <span className="flex items-center gap-1">
             <User className="h-3 w-3" />
-            {authorName(note.author_id)}
+            {authorName}
           </span>
           <Link
             to={`/app/places/${note.place_id}`}
             className="flex items-center gap-1 hover:text-[hsl(16_65%_48%)] transition-colors"
           >
             <MapPin className="h-3 w-3" />
-            {placeName(note.place_id)}
+            {placeName}
           </Link>
         </div>
 
@@ -165,18 +155,29 @@ function FieldNoteCard({ note }: { note: FieldNote }) {
 // ── Main page ──
 
 export default function FieldNotes() {
+  const { fieldNotes, stakeholders, places } = useTransitusData();
   const [activeTag, setActiveTag] = useState<FieldNoteTag | null>(null);
   const [activePlaceId, setActivePlaceId] = useState<string | null>(null);
 
+  const getAuthorName = (authorId: string): string => {
+    const s = stakeholders.find((st) => st.id === authorId);
+    return s ? s.name : authorId;
+  };
+
+  const getPlaceName = (placeId: string): string => {
+    const p = places.find((pl) => pl.id === placeId);
+    return p ? p.name : placeId;
+  };
+
   const allTags = Array.from(
-    new Set(MOCK_FIELD_NOTES.flatMap((n) => n.tags)),
+    new Set(fieldNotes.flatMap((n) => n.tags)),
   ) as FieldNoteTag[];
 
   const usedPlaces = Array.from(
-    new Set(MOCK_FIELD_NOTES.map((n) => n.place_id)),
+    new Set(fieldNotes.map((n) => n.place_id)),
   );
 
-  const filtered = MOCK_FIELD_NOTES.filter((n) => {
+  const filtered = fieldNotes.filter((n) => {
     if (activeTag && !n.tags.includes(activeTag)) return false;
     if (activePlaceId && n.place_id !== activePlaceId) return false;
     return true;
@@ -188,11 +189,21 @@ export default function FieldNotes() {
     <div className="min-h-screen bg-[hsl(38_30%_95%)]">
       <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6 lg:px-8">
         {/* Section header */}
-        <div className="flex items-center gap-2 mb-1">
-          <NotebookPen className="h-4 w-4 text-[hsl(16_65%_48%)]" />
-          <span className="font-sans text-xs font-semibold uppercase tracking-widest text-[hsl(16_65%_48%)]">
-            Field Notes
-          </span>
+        <div className="flex items-center justify-between mb-1">
+          <div className="flex items-center gap-2">
+            <NotebookPen className="h-4 w-4 text-[hsl(16_65%_48%)]" />
+            <span className="font-sans text-xs font-semibold uppercase tracking-widest text-[hsl(16_65%_48%)]">
+              Field Notes
+            </span>
+          </div>
+          <CreateFieldNoteForm
+            trigger={
+              <button className="hidden sm:inline-flex items-center gap-1.5 rounded-full bg-[hsl(16_65%_48%)] px-4 py-2 text-sm font-medium text-white hover:bg-[hsl(12_55%_35%)] transition-colors">
+                <Plus className="h-4 w-4" />
+                New Field Note
+              </button>
+            }
+          />
         </div>
         <h1 className="font-serif text-3xl tracking-tight text-[hsl(20_28%_15%)] mb-2">
           Field Notes
@@ -230,7 +241,7 @@ export default function FieldNotes() {
                     : 'border-[hsl(30_18%_82%)] bg-white text-[hsl(20_10%_40%)] hover:border-[hsl(16_65%_48%)]'
                 }`}
               >
-                {placeName(pid)}
+                {getPlaceName(pid)}
               </button>
             ))}
           </div>
@@ -256,7 +267,7 @@ export default function FieldNotes() {
         {/* Feed */}
         <div>
           {filtered.map((note) => (
-            <FieldNoteCard key={note.id} note={note} />
+            <FieldNoteCard key={note.id} note={note} authorName={getAuthorName(note.author_id)} placeName={getPlaceName(note.place_id)} />
           ))}
           {filtered.length === 0 && (
             <p className="text-sm text-[hsl(20_8%_52%)] italic">
@@ -265,6 +276,15 @@ export default function FieldNotes() {
           )}
         </div>
       </div>
+
+      {/* Mobile FAB */}
+      <CreateFieldNoteForm
+        trigger={
+          <button className="sm:hidden fixed bottom-20 right-4 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-[hsl(16_65%_48%)] text-white shadow-lg hover:bg-[hsl(12_55%_35%)] transition-colors">
+            <Plus className="h-6 w-6" />
+          </button>
+        }
+      />
     </div>
   );
 }
