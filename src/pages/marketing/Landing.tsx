@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import type { ArchetypeKey } from '@/config/brand';
 import SeoHead from '@/components/seo/SeoHead';
+import { ScreenshotPlaceDetail, ScreenshotCompass, ScreenshotCommunityStories, ScreenshotNRI } from '@/components/marketing/AppScreenshot';
 
 const pillarIcons = [Heart, MapPin, BookOpen];
 const moduleIcons: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -54,9 +55,9 @@ export default function Landing() {
                 {hero.ctaPrimary} <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </Link>
-            <Link to="/features">
+            <Link to="/demo">
               <Button variant="outline" size="lg" className="rounded-full border-[hsl(var(--transitus-sand)/0.25)] text-[hsl(var(--transitus-sand))] hover:bg-[hsl(var(--transitus-sand)/0.08)] px-8 h-13 text-base bg-transparent">
-                <Compass className="mr-2 h-4 w-4" /> {hero.ctaSecondary}
+                <Compass className="mr-2 h-4 w-4" /> Try the demo
               </Button>
             </Link>
           </div>
@@ -129,6 +130,36 @@ export default function Landing() {
                 </Link>
               );
             })}
+          </div>
+        </div>
+      </section>
+
+      {/* APP SCREENSHOTS — live mini previews */}
+      <section className="bg-[hsl(var(--transitus-parchment))] relative overflow-hidden">
+        <div className="absolute inset-0 contour-pattern opacity-30" />
+        <div className="relative marketing-section">
+          <div className="max-w-3xl mx-auto text-center mb-12">
+            <div className="inline-flex items-center gap-2 mb-4">
+              <Eye className="h-5 w-5 text-[hsl(var(--transitus-terracotta))]" />
+              <span className="font-sans text-xs font-semibold uppercase tracking-widest text-[hsl(var(--transitus-terracotta))]">See It In Action</span>
+            </div>
+            <h2 className="marketing-heading text-[hsl(var(--marketing-earth))] mb-4">Built for the field, beautiful enough for the board</h2>
+            <p className="marketing-subheading text-[hsl(var(--marketing-earth)/0.6)]">
+              Every screen is designed to be printed, shared, and understood — by field companions, stewards, investors, and community members alike.
+            </p>
+          </div>
+          <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+            <ScreenshotPlaceDetail />
+            <ScreenshotCompass />
+            <ScreenshotCommunityStories />
+            <ScreenshotNRI />
+          </div>
+          <div className="text-center mt-10">
+            <Link to="/demo">
+              <Button size="lg" className="rounded-full bg-[hsl(var(--transitus-terracotta))] text-white hover:bg-[hsl(var(--transitus-terracotta)/0.85)] px-8 h-12 text-base font-medium shadow-lg shadow-[hsl(var(--transitus-terracotta)/0.2)]">
+                Try the live demo <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
           </div>
         </div>
       </section>

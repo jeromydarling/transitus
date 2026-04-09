@@ -60,6 +60,8 @@ const GardenerSystemHealth = lazy(() => import('@/pages/gardener/SystemHealth'))
 const GardenerSupportInbox = lazy(() => import('@/pages/gardener/SupportInbox'));
 const GardenerSettings = lazy(() => import('@/pages/gardener/GardenerSettings'));
 
+const DemoGate = lazy(() => import('@/pages/DemoGate'));
+
 function AppFallback() {
   return (
     <div className="p-6 space-y-4">
@@ -96,6 +98,9 @@ export function AppRouter() {
         <Route path="/cros" element={<Navigate to="/features" replace />} />
         <Route path="/nri" element={<Navigate to="/features" replace />} />
       </Route>
+
+      {/* Demo gate */}
+      <Route path="/demo" element={<Suspense fallback={<AppFallback />}><DemoGate /></Suspense>} />
 
       {/* Auth routes */}
       <Route path="/login" element={<Login />} />
