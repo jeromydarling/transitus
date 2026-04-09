@@ -144,7 +144,7 @@ function CommitmentCard({ commitment, placeNameById, orgNameById, places }: { co
 const ALL_STATUSES = Object.keys(COMMITMENT_STATUS_LABELS) as CommitmentStatus[];
 
 export default function Commitments() {
-  const { commitments, places, organizations } = useTransitusData();
+  const { commitments, canCreate, places, organizations } = useTransitusData();
   const [activeStatus, setActiveStatus] = useState<CommitmentStatus | null>(null);
 
   const placeNameById = (id: string): string => {

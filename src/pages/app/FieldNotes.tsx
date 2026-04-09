@@ -156,7 +156,7 @@ function FieldNoteCard({ note, authorName, placeName }: { note: FieldNote; autho
 // ── Main page ──
 
 export default function FieldNotes() {
-  const { fieldNotes, stakeholders, places } = useTransitusData();
+  const { fieldNotes, canCreate, stakeholders, places } = useTransitusData();
   const [activeTag, setActiveTag] = useState<FieldNoteTag | null>(null);
   const [activePlaceId, setActivePlaceId] = useState<string | null>(null);
 

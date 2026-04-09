@@ -108,7 +108,7 @@ function StakeholderCard({ stakeholder, orgName }: { stakeholder: Stakeholder; o
 const ALL_ROLES = Object.keys(ROLE_LABELS) as TransitusRole[];
 
 export default function People() {
-  const { stakeholders, organizations } = useTransitusData();
+  const { stakeholders, organizations, canCreate } = useTransitusData();
   const [searchQuery, setSearchQuery] = useState('');
   const [activeRole, setActiveRole] = useState<TransitusRole | null>(null);
 

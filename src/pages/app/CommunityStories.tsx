@@ -152,7 +152,7 @@ function StoryCard({
 // ── Main Page ──
 
 export default function CommunityStories() {
-  const { communityStories, stakeholders, places } = useTransitusData();
+  const { visibleStories, canCreate, stakeholders, places } = useTransitusData();
 
   const getCollectorName = (id: string): string => {
     const s = stakeholders.find((st) => st.id === id);
@@ -167,7 +167,7 @@ export default function CommunityStories() {
   // Group stories by place
   const groupedStories = useMemo(() => {
     const groups: Record<string, CommunityStory[]> = {};
-    communityStories.forEach((story) => {
+    visibleStories.forEach((story) => {
       if (!groups[story.place_id]) groups[story.place_id] = [];
       groups[story.place_id].push(story);
     });
@@ -176,7 +176,7 @@ export default function CommunityStories() {
       arr.sort((a, b) => new Date(b.collected_at).getTime() - new Date(a.collected_at).getTime())
     );
     return groups;
-  }, [communityStories]);
+  }, [visibleStories]);
 
   const placeIds = Object.keys(groupedStories);
 
@@ -250,7 +250,7 @@ export default function CommunityStories() {
           );
         })}
 
-        {communityStories.length === 0 && (
+        {visibleStories.length === 0 && (
           <div className="text-center py-16 space-y-4">
             <Quote className="h-12 w-12 text-[hsl(30_18%_82%)] mx-auto" />
             <p className="font-serif text-lg text-[hsl(20_10%_42%)]">

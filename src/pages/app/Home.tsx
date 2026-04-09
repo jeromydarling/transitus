@@ -19,7 +19,7 @@ import {
   Sparkles,
 } from 'lucide-react';
 
-import { MOCK_DASHBOARD, MOCK_COMMUNITY_STORIES } from '@/lib/mockData';
+import { MOCK_DASHBOARD } from '@/lib/mockData';
 import { useTransitusData } from '@/contexts/TransitusDataContext';
 import { getCurrentSeason, getDayMoment, getWeekRhythm, getNearbyMilestones } from '@/lib/transitionCalendar';
 
@@ -267,7 +267,7 @@ function QuietStakeholderRow({ stakeholder }: { stakeholder: Stakeholder }) {
 // ── Main page ──
 
 export default function Home() {
-  const { places, signals, commitments, fieldNotes, stakeholders, communityStories, isSignalRead } = useTransitusData();
+  const { places, signals, commitments, fieldNotes, stakeholders, visibleStories, isSignalRead } = useTransitusData();
   const { weekly_brief } = MOCK_DASHBOARD;
 
   const season = getCurrentSeason();
@@ -364,7 +364,7 @@ export default function Home() {
             <span className="font-sans text-xs font-semibold uppercase tracking-widest text-[hsl(16_65%_48%)]">Community Voices</span>
           </div>
           {/* Show 2 most recent stories with public consent */}
-          {MOCK_COMMUNITY_STORIES.filter(s => s.consent_level === 'public').slice(0, 2).map(story => (
+          {visibleStories.filter(s => s.consent_level === "public").slice(0, 2).map(story => (
             <div key={story.id} className="mb-4 rounded-lg bg-white border border-[hsl(30_18%_82%)] p-5">
               <blockquote className="font-serif-body text-base italic text-[hsl(20_25%_12%/0.8)] leading-relaxed border-l-[3px] border-[hsl(16_65%_48%/0.4)] pl-4 mb-3">
                 "{story.quote}"
@@ -483,7 +483,7 @@ export default function Home() {
               </Link>
             ))}
             {/* Recent community stories */}
-            {communityStories.filter(cs => cs.consent_level === 'public').slice(0, 1).map(cs => (
+            {visibleStories.filter(cs => cs.consent_level === 'public').slice(0, 1).map(cs => (
               <Link
                 key={cs.id}
                 to="/app/community-stories"
