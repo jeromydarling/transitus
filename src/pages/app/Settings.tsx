@@ -3,7 +3,10 @@
  */
 
 import { useState } from 'react';
-import { Settings, Mail, Globe, Bell, Shield, User, Palette, Brain, ChevronRight, Check, AlertCircle } from 'lucide-react';
+import { Settings, Mail, Globe, Bell, Shield, User, Palette, Brain, ChevronRight, Check, AlertCircle, Users } from 'lucide-react';
+import { useTransitusData } from '@/contexts/TransitusDataContext';
+import { USER_ROLE_CONFIG } from '@/types/transitus';
+import type { UserRole } from '@/types/transitus';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -37,6 +40,7 @@ function saveEmailConfig(config: EmailConfig) {
 }
 
 export default function AppSettings() {
+  const { userRole, setUserRole } = useTransitusData();
   const [emailConfig, setEmailConfig] = useState<EmailConfig>(loadEmailConfig);
   const [emailInput, setEmailInput] = useState('');
   const [notifySignals, setNotifySignals] = useState(true);
@@ -86,6 +90,42 @@ export default function AppSettings() {
         <h1 className="font-serif text-2xl sm:text-3xl text-[hsl(20_25%_12%)] mb-8">Preferences</h1>
 
         <div className="space-y-6">
+
+          {/* ── User Role ── */}
+          <section className="rounded-xl bg-white border border-[hsl(30_18%_82%)] overflow-hidden">
+            <div className="px-5 py-4 border-b border-[hsl(30_18%_82%/0.5)] flex items-center gap-3">
+              <Users className="h-5 w-5 text-[hsl(16_65%_48%)]" />
+              <div>
+                <h2 className="text-sm font-semibold text-[hsl(20_25%_12%)]">Your Role</h2>
+                <p className="text-xs text-[hsl(20_25%_12%/0.5)]">Controls what you can see and do in Transitus</p>
+              </div>
+            </div>
+            <div className="px-5 py-4 space-y-2">
+              {(Object.entries(USER_ROLE_CONFIG) as [UserRole, typeof USER_ROLE_CONFIG.steward][]).map(([key, config]) => (
+                <button
+                  key={key}
+                  onClick={() => setUserRole(key)}
+                  className={`w-full flex items-start gap-3 p-3 rounded-lg text-left transition-all ${
+                    userRole === key
+                      ? 'bg-[hsl(16_65%_48%/0.08)] ring-1 ring-[hsl(16_65%_48%/0.3)]'
+                      : 'hover:bg-[hsl(30_18%_82%/0.3)]'
+                  }`}
+                >
+                  <span className={`shrink-0 w-5 h-5 rounded-full border-2 flex items-center justify-center mt-0.5 ${
+                    userRole === key ? 'border-[hsl(16_65%_48%)] bg-[hsl(16_65%_48%)]' : 'border-[hsl(30_18%_82%)]'
+                  }`}>
+                    {userRole === key && <Check className="h-3 w-3 text-white" />}
+                  </span>
+                  <div>
+                    <p className={`text-sm font-medium ${userRole === key ? 'text-[hsl(16_65%_48%)]' : 'text-[hsl(20_25%_12%)]'}`}>
+                      {config.label}
+                    </p>
+                    <p className="text-xs text-[hsl(20_25%_12%/0.5)] mt-0.5">{config.description}</p>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </section>
 
           {/* ── Email Integration ── */}
           <section className="rounded-xl bg-white border border-[hsl(30_18%_82%)] overflow-hidden">

@@ -12,8 +12,9 @@
 import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from 'react';
 import type {
   Place, Stakeholder, Organization, Commitment, FieldNote,
-  Signal, Journey, LibraryItem, Report, CommunityStory,
+  Signal, Journey, LibraryItem, Report, CommunityStory, UserRole,
 } from '@/types/transitus';
+import { USER_ROLE_CONFIG } from '@/types/transitus';
 import type { NRIChatMessage } from '@/types/nri';
 import {
   MOCK_PLACES, MOCK_STAKEHOLDERS, MOCK_ORGS, MOCK_COMMITMENTS,
@@ -36,6 +37,7 @@ interface TransitusDataState {
   communityStories: CommunityStory[];
   nriMessages: NRIChatMessage[];
   readSignalIds: Set<string>;
+  userRole: UserRole;
 }
 
 interface TransitusDataActions {
@@ -84,6 +86,14 @@ interface TransitusDataActions {
 
   // Search
   searchAll: (query: string) => SearchResult[];
+
+  // User Role
+  setUserRole: (role: UserRole) => void;
+  canCreate: boolean;
+  canEditPlaces: boolean;
+  canChangeCommitmentStatus: boolean;
+  canManageTeam: boolean;
+  visibleStories: CommunityStory[];
 }
 
 export interface SearchResult {
@@ -158,10 +168,33 @@ export function TransitusDataProvider({ children }: { children: ReactNode }) {
     stored?.readSignalIds instanceof Set ? stored.readSignalIds : new Set()
   );
 
+  // User role — persisted separately
+  const [userRole, setUserRoleState] = useState<UserRole>(() => {
+    try { return (localStorage.getItem('transitus_user_role') as UserRole) || 'steward'; }
+    catch { return 'steward'; }
+  });
+
+  const setUserRole = useCallback((role: UserRole) => {
+    setUserRoleState(role);
+    localStorage.setItem('transitus_user_role', role);
+  }, []);
+
+  // Permission flags derived from role
+  const roleConfig = USER_ROLE_CONFIG[userRole];
+  const canCreate = roleConfig.canCreate;
+  const canEditPlaces = roleConfig.canEditPlaces;
+  const canChangeCommitmentStatus = roleConfig.canChangeCommitmentStatus;
+  const canManageTeam = roleConfig.canManageTeam;
+
+  // Consent-filtered community stories
+  const visibleStories = communityStories.filter(
+    s => roleConfig.maxConsentVisible.includes(s.consent_level)
+  );
+
   // Persist on every change
   useEffect(() => {
-    saveToStorage({ places, stakeholders, organizations, commitments, fieldNotes, signals, journeys, library, reports, communityStories, nriMessages, readSignalIds });
-  }, [places, stakeholders, organizations, commitments, fieldNotes, signals, journeys, library, reports, communityStories, nriMessages, readSignalIds]);
+    saveToStorage({ places, stakeholders, organizations, commitments, fieldNotes, signals, journeys, library, reports, communityStories, nriMessages, readSignalIds, userRole });
+  }, [places, stakeholders, organizations, commitments, fieldNotes, signals, journeys, library, reports, communityStories, nriMessages, readSignalIds, userRole]);
 
   // ── Field Notes CRUD ──
   const addFieldNote = useCallback((note: Omit<FieldNote, 'id' | 'created_at'>) => {
@@ -365,6 +398,7 @@ export function TransitusDataProvider({ children }: { children: ReactNode }) {
     addCommunityStory, updateCommunityStory, deleteCommunityStory,
     addNriMessage, clearNriMessages,
     searchAll,
+    userRole, setUserRole, canCreate, canEditPlaces, canChangeCommitmentStatus, canManageTeam, visibleStories,
   };
 
   return (

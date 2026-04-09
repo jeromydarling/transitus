@@ -5,7 +5,49 @@
  * Every type maps to a future database table or view.
  */
 
-// ── Roles ──
+// ── User Roles (app access level) ──
+
+export type UserRole = 'steward' | 'companion' | 'observer';
+
+export const USER_ROLE_CONFIG: Record<UserRole, {
+  label: string;
+  description: string;
+  canCreate: boolean;
+  canEditPlaces: boolean;
+  canChangeCommitmentStatus: boolean;
+  canManageTeam: boolean;
+  maxConsentVisible: ('local_only' | 'trusted_allies' | 'institutional' | 'public')[];
+}> = {
+  steward: {
+    label: 'Steward',
+    description: 'Full access. Edit places, change commitment status, manage team, see all consent levels.',
+    canCreate: true,
+    canEditPlaces: true,
+    canChangeCommitmentStatus: true,
+    canManageTeam: true,
+    maxConsentVisible: ['local_only', 'trusted_allies', 'institutional', 'public'],
+  },
+  companion: {
+    label: 'Companion',
+    description: 'Create field notes and stories. View most data. Cannot edit places or manage team.',
+    canCreate: true,
+    canEditPlaces: false,
+    canChangeCommitmentStatus: false,
+    canManageTeam: false,
+    maxConsentVisible: ['trusted_allies', 'institutional', 'public'],
+  },
+  observer: {
+    label: 'Observer',
+    description: 'Read-only access. For board members, funders, and institutional partners.',
+    canCreate: false,
+    canEditPlaces: false,
+    canChangeCommitmentStatus: false,
+    canManageTeam: false,
+    maxConsentVisible: ['institutional', 'public'],
+  },
+};
+
+// ── Stakeholder Roles (role in the movement, not app access) ──
 
 export type TransitusRole =
   | 'steward'
