@@ -198,7 +198,7 @@ export default function Compass() {
         {/* ── Compass Cross Layout with SVG Rose ── */}
         <div className="relative mb-8">
           {/* SVG Compass Rose — background */}
-          <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 600 600" preserveAspectRatio="xMidYMid meet" style={{ opacity: 0.12 }}>
+          <svg className="absolute inset-0 w-full h-full pointer-events-none overflow-visible" viewBox="-20 -20 640 640" preserveAspectRatio="xMidYMid meet" style={{ opacity: 0.14 }}>
             {/* Rings */}
             <circle cx="300" cy="300" r="270" fill="none" stroke="hsl(20 25% 30%)" strokeWidth="1.2" />
             <circle cx="300" cy="300" r="210" fill="none" stroke="hsl(20 25% 30%)" strokeWidth="0.6" strokeDasharray="4 4" />
@@ -218,24 +218,24 @@ export default function Compass() {
               const r1 = 264; const r2 = 276;
               return <line key={i} x1={300 + r1 * Math.sin(angle)} y1={300 - r1 * Math.cos(angle)} x2={300 + r2 * Math.sin(angle)} y2={300 - r2 * Math.cos(angle)} stroke="hsl(20 25% 30%)" strokeWidth={i % 9 === 0 ? "1.5" : "0.4"} />;
             })}
-            {/* Cardinal arrows — peeking out from edges */}
+            {/* Cardinal arrows — larger, more visible */}
             {/* North arrow */}
-            <polygon points="300,8 293,28 300,22 307,28" fill="hsl(198 55% 42%)" />
-            <line x1="300" y1="28" x2="300" y2="45" stroke="hsl(198 55% 42%)" strokeWidth="1.5" />
+            <polygon points="300,-8 288,22 300,14 312,22" fill="hsl(198 55% 42%)" opacity="0.9" />
+            <line x1="300" y1="22" x2="300" y2="50" stroke="hsl(198 55% 42%)" strokeWidth="2" opacity="0.7" />
             {/* East arrow */}
-            <polygon points="592,300 572,293 578,300 572,307" fill="hsl(16 65% 48%)" />
-            <line x1="572" y1="300" x2="555" y2="300" stroke="hsl(16 65% 48%)" strokeWidth="1.5" />
+            <polygon points="608,300 578,288 586,300 578,312" fill="hsl(16 65% 48%)" opacity="0.9" />
+            <line x1="578" y1="300" x2="550" y2="300" stroke="hsl(16 65% 48%)" strokeWidth="2" opacity="0.7" />
             {/* South arrow */}
-            <polygon points="300,592 293,572 300,578 307,572" fill="hsl(152 40% 28%)" />
-            <line x1="300" y1="572" x2="300" y2="555" stroke="hsl(152 40% 28%)" strokeWidth="1.5" />
+            <polygon points="300,608 288,578 300,586 312,578" fill="hsl(152 40% 28%)" opacity="0.9" />
+            <line x1="300" y1="578" x2="300" y2="550" stroke="hsl(152 40% 28%)" strokeWidth="2" opacity="0.7" />
             {/* West arrow */}
-            <polygon points="8,300 28,293 22,300 28,307" fill="hsl(38 80% 55%)" />
-            <line x1="28" y1="300" x2="45" y2="300" stroke="hsl(38 80% 55%)" strokeWidth="1.5" />
-            {/* N E S W labels */}
-            <text x="300" y="65" textAnchor="middle" fontSize="11" fontWeight="700" fill="hsl(198 55% 42%)" fontFamily="Inter" letterSpacing="0.1em">N</text>
-            <text x="545" y="304" textAnchor="middle" fontSize="11" fontWeight="700" fill="hsl(16 65% 48%)" fontFamily="Inter" letterSpacing="0.1em">E</text>
-            <text x="300" y="548" textAnchor="middle" fontSize="11" fontWeight="700" fill="hsl(152 40% 28%)" fontFamily="Inter" letterSpacing="0.1em">S</text>
-            <text x="55" y="304" textAnchor="middle" fontSize="11" fontWeight="700" fill="hsl(38 80% 55%)" fontFamily="Inter" letterSpacing="0.1em">W</text>
+            <polygon points="-8,300 22,288 14,300 22,312" fill="hsl(38 80% 55%)" opacity="0.9" />
+            <line x1="22" y1="300" x2="50" y2="300" stroke="hsl(38 80% 55%)" strokeWidth="2" opacity="0.7" />
+            {/* N E S W labels — larger */}
+            <text x="300" y="70" textAnchor="middle" fontSize="16" fontWeight="800" fill="hsl(198 55% 42%)" fontFamily="Inter" letterSpacing="0.15em">N</text>
+            <text x="535" y="306" textAnchor="middle" fontSize="16" fontWeight="800" fill="hsl(16 65% 48%)" fontFamily="Inter" letterSpacing="0.15em">E</text>
+            <text x="300" y="545" textAnchor="middle" fontSize="16" fontWeight="800" fill="hsl(152 40% 28%)" fontFamily="Inter" letterSpacing="0.15em">S</text>
+            <text x="65" y="306" textAnchor="middle" fontSize="16" fontWeight="800" fill="hsl(38 80% 55%)" fontFamily="Inter" letterSpacing="0.15em">W</text>
             {/* Center dot */}
             <circle cx="300" cy="300" r="4" fill="hsl(16 65% 48%)" opacity="0.5" />
             <circle cx="300" cy="300" r="1.5" fill="hsl(20 25% 30%)" />

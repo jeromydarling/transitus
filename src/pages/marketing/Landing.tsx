@@ -249,14 +249,32 @@ export default function Landing() {
           </div>
           <div className="grid md:grid-cols-3 gap-5 max-w-4xl mx-auto">
             {pricingTiers.map((tier) => (
-              <div key={tier.key} className={`editorial-card text-center ${tier.highlighted ? 'ring-2 ring-[hsl(var(--transitus-terracotta))] border-[hsl(var(--transitus-terracotta)/0.3)]' : ''}`}>
-                {tier.highlighted && <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-[hsl(var(--transitus-terracotta))] text-white text-xs font-medium">Most popular</div>}
-                <h3 className="font-sans text-sm font-semibold text-[hsl(var(--marketing-earth))] mb-1">{tier.name}</h3>
-                <p className="text-xs text-[hsl(var(--marketing-earth)/0.45)] mb-4">{tier.tagline}</p>
-                <div className="mb-5">
+              <div key={tier.key} className={`editorial-card text-center pt-8 ${tier.highlighted ? 'ring-2 ring-[hsl(var(--transitus-terracotta))] border-[hsl(var(--transitus-terracotta)/0.3)]' : ''}`}>
+                {tier.highlighted && (
+                  <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 px-4 py-1 rounded-full bg-[hsl(var(--transitus-terracotta))] text-white text-xs font-semibold whitespace-nowrap shadow-sm">
+                    Most popular
+                  </div>
+                )}
+                <h3 className="font-sans text-base font-semibold text-[hsl(var(--marketing-earth))] mb-1">{tier.name}</h3>
+                <p className="text-xs text-[hsl(var(--marketing-earth)/0.45)] mb-3">{tier.tagline}</p>
+                <div className="mb-4">
                   <span className="font-serif text-3xl text-[hsl(var(--marketing-earth))]">{tier.price}</span>
                   <span className="text-sm text-[hsl(var(--marketing-earth)/0.45)]">{tier.priceSuffix}</span>
                 </div>
+                {/* Top 4 features */}
+                <ul className="text-left mb-5 space-y-1.5 px-2">
+                  {tier.includes.slice(0, 4).map((feat, i) => (
+                    <li key={i} className="flex items-start gap-2 text-xs text-[hsl(var(--marketing-earth)/0.6)]">
+                      <Check className="h-3.5 w-3.5 text-[hsl(var(--transitus-forest))] shrink-0 mt-0.5" />
+                      {feat}
+                    </li>
+                  ))}
+                  {tier.includes.length > 4 && (
+                    <li className="text-[10px] text-[hsl(var(--marketing-earth)/0.4)] pl-5">
+                      +{tier.includes.length - 4} more features
+                    </li>
+                  )}
+                </ul>
                 <Link to="/pricing">
                   <Button variant={tier.highlighted ? 'default' : 'outline'} className={`rounded-full w-full text-sm ${tier.highlighted ? 'bg-[hsl(var(--transitus-forest))] text-white hover:bg-[hsl(var(--transitus-green))]' : 'border-[hsl(var(--marketing-earth)/0.2)] text-[hsl(var(--marketing-earth))]'}`}>{tier.cta}</Button>
                 </Link>
