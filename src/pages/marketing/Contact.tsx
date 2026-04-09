@@ -1,148 +1,95 @@
-import { useState, useRef } from 'react';
-import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { ArrowRight, CheckCircle2, Loader2 } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
-import { archetypes, type ArchetypeKey } from '@/config/brand';
+import { Mail, MapPin } from 'lucide-react';
+import SeoHead from '@/components/seo/SeoHead';
 
 export default function Contact() {
-  const { t } = useTranslation('marketing');
-  const [submitted, setSubmitted] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState('');
-  const lastSubmitRef = useRef(0);
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setError('');
-
-    // Client-side rate limit (1 per 10s)
-    const now = Date.now();
-    if (now - lastSubmitRef.current < 10_000) {
-      setError(t('contactPage.rateLimitError'));
-      return;
-    }
-
-    const form = new FormData(e.currentTarget);
-    const honeypot = form.get('website') as string;
-    if (honeypot) return; // bot detected
-
-    const name = (form.get('name') as string || '').trim();
-    const email = (form.get('email') as string || '').trim();
-    const organization = (form.get('organization') as string || '').trim();
-    const archetype = form.get('archetype') as string || '';
-    const message = (form.get('message') as string || '').trim();
-
-    if (!name || !email) {
-      setError(t('contactPage.nameEmailRequired'));
-      return;
-    }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      setError(t('contactPage.invalidEmail'));
-      return;
-    }
-
-    setSubmitting(true);
-    lastSubmitRef.current = now;
-
-    const { error: dbError } = await supabase.from('inbound_leads').insert({
-      name,
-      email,
-      organization: organization || null,
-      archetype: archetype || null,
-      message: message || null,
-      honeypot: null,
-    } as any);
-
-    setSubmitting(false);
-
-    if (dbError) {
-      setError(t('contactPage.serverError'));
-      return;
-    }
-
-    setSubmitted(true);
-  };
-
-  if (submitted) {
-    return (
-      <div className="bg-white">
-        <div className="max-w-lg mx-auto px-4 sm:px-6 py-24 sm:py-32 text-center">
-          <CheckCircle2 className="h-12 w-12 text-[hsl(var(--marketing-blue))] mx-auto mb-6" />
-          <h1 className="text-2xl font-bold text-[hsl(var(--marketing-navy))] mb-3">{t('contactPage.successHeading')}</h1>
-          <p className="text-[hsl(var(--marketing-navy)/0.55)]">
-            {t('contactPage.successBody')}
-          </p>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="bg-white">
-      <div className="max-w-lg mx-auto px-4 sm:px-6 py-16 sm:py-24">
-        <h1 className="text-3xl font-bold text-[hsl(var(--marketing-navy))] mb-3">{t('contactPage.heading')}</h1>
-        <p className="text-[hsl(var(--marketing-navy)/0.55)] mb-10">
-          {t('contactPage.subheading')}
-        </p>
+      <SeoHead
+        title="Contact \u2014 Transitus"
+        description="Get in touch about Transitus. Whether you're exploring a pilot, applying for charter pricing, or have questions about how Transitus fits your work."
+        canonical="/contact"
+      />
 
-        <form onSubmit={handleSubmit} className="space-y-5">
-          {/* Honeypot — hidden from humans */}
-          <div className="absolute opacity-0 pointer-events-none" aria-hidden="true">
-            <input type="text" name="website" tabIndex={-1} autoComplete="off" />
-          </div>
+      {/* Hero */}
+      <section className="relative overflow-hidden">
+        <div className="absolute inset-0 contour-pattern" />
+        <div className="relative marketing-section text-center">
+          <h1 className="marketing-heading mb-4">Let's talk about your places</h1>
+          <p className="marketing-subheading max-w-xl mx-auto">
+            Whether you're exploring a pilot, applying for charter pricing, or wondering how Transitus fits
+            your coalition's work {'\u2014'} we'd love to hear from you.
+          </p>
+        </div>
+      </section>
 
-          <div className="space-y-1.5">
-            <Label htmlFor="name" className="text-sm text-[hsl(var(--marketing-navy)/0.7)]">{t('contactPage.nameLabel')}</Label>
-            <Input id="name" name="name" required maxLength={100} className="rounded-xl border-[hsl(var(--marketing-border))]" />
-          </div>
+      <div className="h-px bg-[hsl(var(--marketing-border))]" />
 
-          <div className="space-y-1.5">
-            <Label htmlFor="email" className="text-sm text-[hsl(var(--marketing-navy)/0.7)]">{t('contactPage.emailLabel')}</Label>
-            <Input id="email" name="email" type="email" required maxLength={255} className="rounded-xl border-[hsl(var(--marketing-border))]" />
-          </div>
-
-          <div className="space-y-1.5">
-            <Label htmlFor="organization" className="text-sm text-[hsl(var(--marketing-navy)/0.7)]">{t('contactPage.organizationLabel')}</Label>
-            <Input id="organization" name="organization" maxLength={150} className="rounded-xl border-[hsl(var(--marketing-border))]" />
-          </div>
-
-          <div className="space-y-1.5">
-            <Label className="text-sm text-[hsl(var(--marketing-navy)/0.7)]">{t('contactPage.archetypeLabel')}</Label>
-            <Select name="archetype">
-              <SelectTrigger className="rounded-xl border-[hsl(var(--marketing-border))]">
-                <SelectValue placeholder={t('contactPage.archetypePlaceholder')} />
-              </SelectTrigger>
-              <SelectContent>
-                {(Object.keys(archetypes) as ArchetypeKey[]).map((key) => (
-                  <SelectItem key={key} value={key}>{archetypes[key].name}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="space-y-1.5">
-            <Label htmlFor="message" className="text-sm text-[hsl(var(--marketing-navy)/0.7)]">{t('contactPage.messageLabel')}</Label>
-            <Textarea id="message" name="message" rows={4} maxLength={1000} className="rounded-xl border-[hsl(var(--marketing-border))] resize-none" />
-          </div>
-
-          {error && <p className="text-sm text-destructive">{error}</p>}
-
-          <Button
-            type="submit"
-            disabled={submitting}
-            className="w-full rounded-full bg-[hsl(var(--marketing-navy))] text-white hover:bg-[hsl(var(--marketing-navy)/0.9)] h-11"
+      <section className="marketing-section">
+        <div className="max-w-xl mx-auto">
+          <form
+            className="space-y-6"
+            onSubmit={(e) => {
+              e.preventDefault();
+            }}
           >
-            {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : (
-              <>{t('contactPage.sendButton')} <ArrowRight className="ml-2 h-4 w-4" /></>
-            )}
-          </Button>
-        </form>
-      </div>
+            <div className="grid sm:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="name" className="text-sm text-[hsl(var(--marketing-navy))]">Name</Label>
+                <Input id="name" placeholder="Your name" className="rounded-lg" />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="org" className="text-sm text-[hsl(var(--marketing-navy))]">Organization</Label>
+                <Input id="org" placeholder="Your organization" className="rounded-lg" />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="email" className="text-sm text-[hsl(var(--marketing-navy))]">Email</Label>
+              <Input id="email" type="email" placeholder="you@example.org" className="rounded-lg" />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="message" className="text-sm text-[hsl(var(--marketing-navy))]">Message</Label>
+              <Textarea
+                id="message"
+                placeholder="Tell us about the places you're working in, the coalitions you're part of, or what you're hoping to build..."
+                rows={5}
+                className="rounded-lg resize-none"
+              />
+            </div>
+
+            <Button
+              type="submit"
+              className="rounded-full bg-[hsl(var(--marketing-navy))] text-white hover:bg-[hsl(var(--marketing-navy)/0.9)] px-8 h-11"
+            >
+              Send message
+            </Button>
+          </form>
+
+          <div className="mt-12 pt-8 border-t border-[hsl(var(--marketing-border))]">
+            <div className="flex flex-col sm:flex-row gap-6">
+              <div className="flex items-start gap-3">
+                <Mail className="h-4 w-4 text-[hsl(var(--marketing-green))] mt-1" />
+                <div>
+                  <p className="text-sm font-medium text-[hsl(var(--marketing-navy))]">Email us</p>
+                  <p className="text-sm text-[hsl(var(--marketing-navy)/0.6)]">hello@transitus.app</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <MapPin className="h-4 w-4 text-[hsl(var(--marketing-green))] mt-1" />
+                <div>
+                  <p className="text-sm font-medium text-[hsl(var(--marketing-navy))]">Based in</p>
+                  <p className="text-sm text-[hsl(var(--marketing-navy)/0.6)]">The places that need us</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

@@ -15,7 +15,7 @@ export default {
     extend: {
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
-        serif: ['Playfair Display', 'Georgia', 'serif'],
+        serif: ['Instrument Serif', 'Georgia', 'serif'],
         'serif-body': ['Source Serif 4', 'Georgia', 'serif'],
       },
       colors: {
@@ -81,18 +81,19 @@ export default {
           "4": "hsl(var(--chart-4))",
           "5": "hsl(var(--chart-5))",
         },
-        ignatian: {
-          deep: "hsl(var(--ignatian-deep))",
-          brown: "hsl(var(--ignatian-brown))",
-          gold: "hsl(var(--ignatian-gold))",
-          "gold-light": "hsl(var(--ignatian-gold-light))",
-          muted: "hsl(var(--ignatian-muted))",
-          tan: "hsl(var(--ignatian-tan))",
-          border: "hsl(var(--ignatian-border))",
-          cream: "hsl(var(--ignatian-cream))",
-          "cream-dark": "hsl(var(--ignatian-cream-dark))",
-          bg: "hsl(var(--ignatian-bg))",
-          "bg-end": "hsl(var(--ignatian-bg-end))",
+        transitus: {
+          forest: "hsl(var(--transitus-forest))",
+          green: "hsl(var(--transitus-green))",
+          "green-light": "hsl(var(--transitus-green-light))",
+          slate: "hsl(var(--transitus-slate))",
+          "slate-light": "hsl(var(--transitus-slate-light))",
+          umber: "hsl(var(--transitus-umber))",
+          "umber-light": "hsl(var(--transitus-umber-light))",
+          atlas: "hsl(var(--transitus-atlas))",
+          "atlas-light": "hsl(var(--transitus-atlas-light))",
+          parchment: "hsl(var(--transitus-parchment))",
+          cream: "hsl(var(--transitus-cream))",
+          "cream-dark": "hsl(var(--transitus-cream-dark))",
         },
       },
       borderRadius: {

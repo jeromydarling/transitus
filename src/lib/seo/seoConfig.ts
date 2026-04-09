@@ -1,5 +1,5 @@
 /**
- * SEO Configuration Engine for CROS™ Marketing Site
+ * SEO Configuration Engine for Transitus Marketing Site
  *
  * WHAT: Centralised meta-tag builder + JSON-LD schema generators.
  * WHERE: Imported by every marketing page via <SeoHead />.
@@ -23,9 +23,9 @@ export interface SeoMeta {
 
 /** Build a full set of document-head values from a compact input. */
 export function buildMeta(input: SeoMeta) {
-  const fullTitle = input.title.includes('CROS')
+  const fullTitle = input.title.includes('Transitus')
     ? input.title
-    : `${input.title} — CROS™`;
+    : `${input.title} — Transitus`;
   const canonical = input.canonical
     ? `${SITE_URL}${input.canonical}`
     : undefined;

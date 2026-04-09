@@ -1,324 +1,178 @@
-import { useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useDiscernmentSignal } from '@/hooks/useDiscernmentSignal';
+import { Link } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import { ArrowRight } from 'lucide-react';
 import SeoHead from '@/components/seo/SeoHead';
-import SeoBreadcrumb from '@/components/seo/SeoBreadcrumb';
-import SeoInternalLinks from '@/components/seo/SeoInternalLinks';
-import RoleIdentityBlock from '@/components/seo/RoleIdentityBlock';
-import ConceptLinks from '@/components/seo/ConceptLinks';
 
-import NarrativeCTA from '@/components/marketing/NarrativeCTA';
-import CivicSignalBlock from '@/components/marketing/CivicSignalBlock';
-
-export default function Manifesto() {
-  const { t } = useTranslation('marketing');
-  const emit = useDiscernmentSignal('manifesto');
-  useEffect(() => { emit('page_view'); }, [emit]);
-
+export default function Philosophy() {
   return (
-    <div className="bg-background">
+    <div className="bg-white">
       <SeoHead
-        title="Manifesto"
-        description="CROS™ is not another CRM. It is a living relationship system that remembers people, notices community shifts, and builds lasting stories of impact."
-        keywords={['relationship OS', 'community CRM alternative', 'narrative intelligence', 'nonprofit technology']}
-        canonical="/manifesto"
+        title="Philosophy \u2014 Transitus"
+        description="Why places need memory. The design philosophy behind Transitus: relationship memory, place intelligence, and narrative continuity for just transition work."
+        canonical="/philosophy"
       />
 
-      <article className="max-w-2xl mx-auto px-4 sm:px-6 py-16 sm:py-24 space-y-6 text-lg leading-relaxed text-muted-foreground font-serif">
-        <SeoBreadcrumb items={[{ label: 'Home', to: '/' }, { label: 'Manifesto' }]} />
-
-        <p className="text-sm font-sans font-medium text-primary uppercase tracking-wider">Manifesto</p>
-
-        <p className="text-2xl sm:text-3xl text-foreground font-semibold leading-snug">
-          For decades, software taught organizations to think in records and pipelines.
-        </p>
-
-        <p>CROS™ teaches us to think in relationships and communities.</p>
-
-        <p>
-          It holds memory gently — reflections, touchpoints, moments — so we don't forget
-          the people we meant to care for.
-        </p>
-
-        <hr className="border-border my-12" />
-
-        <p>
-          For the last 40 years, technology has been driven by Operating Systems and Artificial Intelligence.
-        </p>
-
-        <p>Both were invented by humans, but both have largely remained cold, data-driven, and impersonal.</p>
-
-        <p>
-          CROS™ replaces the OS with a human touch. It is the bridge between an organization
-          and the community it serves.
-        </p>
-
-        <hr className="border-border my-12" />
-
-        <p>
-          NRI™ · Narrative Relational Intelligence · is not artificial. It is human-first intelligence:
-          reflections, events attended, conversations, community signals, shared experiences.
-        </p>
-
-        <p>AI assists the system, but the intelligence belongs to the human relationships.</p>
-
-        <hr className="border-border my-12" />
-
-        {/* A Different Kind of Stewardship */}
-        <p className="text-sm font-sans font-medium text-primary uppercase tracking-wider">
-          A Different Kind of Stewardship
-        </p>
-
-        <p>
-          Many organizations serving their communities were never meant to become software administrators.
-        </p>
-
-        <p>
-          And yet, over time, technology has quietly shifted from a companion to a burden —
-          shaping workflows, budgets, and even language.
-        </p>
-
-        <p>
-          Grants meant for people are often redirected toward tools that were never designed
-          with those people in mind.
-          Not because leaders made the wrong choice — but because for a long time,
-          those were the only tools available.
-        </p>
-
-        <p>
-          We don't say this with criticism.
-          Only with recognition.
-        </p>
-
-        <p>
-          Most platforms emerged from enterprise sales models and later adapted themselves
-          to nonprofit work. CROS™ began in the opposite direction — from lived community
-          experience outward into technology.
-        </p>
-
-        <p>
-          At its heart, this is an ontological shift.
-          Instead of treating relationships as data points, CROS™ treats story as the
-          organizing structure through which data finds meaning.
-        </p>
-
-        <p>
-          We are not simply building new features.
-          We are gently redefining the category itself — moving from systems that manage
-          people toward a Relationship Operating System that helps people see one another
-          more clearly.
-        </p>
-
-        <p className="italic text-muted-foreground/60">
-          What if software didn't sit above the mission, but walked alongside it?
-        </p>
-
-        <p className="italic text-muted-foreground/60">
-          What if technology carried the logistics quietly, while people carried the meaning?
-        </p>
-
-        <p>
-          CROS™ exists because stewardship includes the tools we choose —
-          and the spirit those tools embody.
-        </p>
-
-        <p className="italic text-muted-foreground/60">
-          We do not operate communities.
-          We cultivate them.
-        </p>
-
-        <hr className="border-border my-12" />
-
-        {/* The First Garden */}
-        <p className="text-sm font-sans font-medium text-primary uppercase tracking-wider">
-          The First Garden
-        </p>
-
-        <p>
-          CROS™ did not begin as a startup idea.
-          It grew from decades of lived community work —
-          ministry, recovery spaces, nonprofit outreach, education,
-          creative work, and relational service.
-        </p>
-
-        <p>
-          The platform was shaped slowly through real encounters,
-          not product strategy sessions.
-        </p>
-
-        <p>
-          Most software asks organizations to reshape their mission
-          around systems.
-          CROS™ exists to hold relationships more faithfully —
-          to let systems bend toward the dignity of people.
-        </p>
-
-        <p>
-          This is more than a feature set — it is a shift in ontology.
-          Rather than reducing people to records, CROS™ makes relational intelligence
-          the foundation: the quiet awareness that grows when stewardship
-          replaces administration.
-        </p>
-
-        <p>
-          Over time, the garden became larger than one person.
-          New gardeners now shape it through their own communities —
-          each one helping to redefine what technology in service of mission can look like.
-        </p>
-
-        <p className="italic text-muted-foreground/60">
-          Technology built from presence, not disruption.
-        </p>
-
-        <hr className="border-border my-12" />
-
-        {/* The Human Nervous System */}
-        <p className="text-sm font-sans font-medium text-primary uppercase tracking-wider text-center">
-          The Human Nervous System
-        </p>
-
-        <h2 className="text-2xl sm:text-3xl font-semibold text-foreground leading-snug text-center">
-          The System Only Lives When You Do
-        </h2>
-
-        <p>CROS™ was never built to replace people.</p>
-
-        <p>
-          Most software tries to automate relationships away.
-          We built something different — a system that becomes more aware the more present you are.
-        </p>
-
-        <p>
-          NRI™ may be the head.
-          CROS™ may be the heart.
-          Profunda™ may be the body.
-        </p>
-
-        <p className="text-foreground font-medium">
-          But you are the nervous system.
-        </p>
-
-        <p>
-          Every reflection you write,
-          every conversation you hold,
-          every moment you choose to follow up —
-          those are the signals that give the platform life.
-        </p>
-
-        <p>
-          CROS™ doesn't generate meaning on its own.
-          It listens to the work already happening
-          and helps you see the story that's forming around it.
-        </p>
-
-        <p className="text-sm text-muted-foreground/50 text-center italic">
-          Your presence drives the intelligence.
-        </p>
-
-        <hr className="border-border my-12" />
-
-        {/* From Numbers to Meaning */}
-        <p className="text-sm font-sans font-medium text-primary uppercase tracking-wider text-center">
-          From Numbers to Meaning
-        </p>
-
-        <p>For decades, computers have helped us do what once felt impossible.</p>
-
-        <p>
-          A calculator could solve equations in seconds.
-          Spreadsheets could organize thousands of numbers at once.
-          Software helped us manage schedules, calendars, and endless lists.
-        </p>
-
-        <p>In many ways, AI is simply the next step in that same story.</p>
-
-        <p>
-          Computers once understood numbers better than we ever could.
-          Now they are beginning to understand letters — the language we actually live in.
-        </p>
-
-        <p>
-          Because humans don't experience life as data points.
-          We experience it through conversations,
-          through stories,
-          through the rhythm of seasons, calendars, and relationships.
-        </p>
-
-        <p>
-          The goal of CROS™ is not to turn people into code.
-          It is to let AI carry the weight of organization
-          so that humans can return to the work that only humans can do.
-        </p>
-
-        <p>
-          Not data entry.
-          Not endless spreadsheets.
-        </p>
-
-        <p className="text-foreground font-medium">
-          But presence.
-          Care.
-          And the work of love that technology was always meant to support.
-        </p>
-
-        <hr className="border-border my-12" />
-
-        {/* Why This Exists */}
-        <p className="text-sm font-sans font-medium text-primary uppercase tracking-wider">
-          Why This Exists
-        </p>
-
-        <p>
-          This platform didn't begin as a product idea.
-          It began as years of walking alongside communities —
-          delivering devices, building curricula, listening to stories,
-          and noticing how many tools asked people to become data managers instead of neighbors.
-        </p>
-
-        <p>
-          CROS™ is simply the digital expression of that lived work —
-          an attempt to build technology that reflects the dignity already present in community life.
-        </p>
-
-        <p className="italic text-muted-foreground/60">
-          It is cultivated by gardeners —
-          people who believe technology should grow alongside mission,
-          never above it.
-        </p>
-
-        <hr className="border-border my-12" />
-
-        <p className="text-foreground font-medium">
-          CROS™ is not another system asking you to change your mission.
-        </p>
-
-        <p>
-          It is a space where your mission can breathe again —
-          where story becomes structure,
-          and relationships become the operating system.
-        </p>
-
-        {/* Role identity block */}
-        <RoleIdentityBlock />
-      </article>
-
-      {/* Civic Signals */}
-      <CivicSignalBlock />
-
-      {/* Quiet CTA */}
-      <NarrativeCTA variant="walk_first_week" />
-
-      {/* Concept graph cross-links */}
-      <ConceptLinks conceptSlug="cros" heading={t('roleDeepPage.relatedConceptsHeading')} />
-
-      <SeoInternalLinks
-        heading={t('manifestoPage.seoLinksHeading')}
-        links={[
-          { label: 'NRI™ — Narrative Relational Intelligence', to: '/nri', description: 'The intelligence that begins with people.' },
-          { label: 'Roles — Shepherd, Companion, Visitor', to: '/roles', description: 'Find where you fit in the system.' },
-          { label: 'Archetypes', to: '/archetypes', description: 'See how CROS adapts to your mission type.' },
-        ]}
-      />
+      {/* Hero */}
+      <section className="relative overflow-hidden">
+        <div className="absolute inset-0 gradient-terrain opacity-[0.05]" />
+        <div className="absolute inset-0 contour-pattern" />
+        <div className="relative marketing-section text-center">
+          <h1 className="marketing-heading mb-6">Why places need memory</h1>
+          <p className="marketing-subheading max-w-2xl mx-auto">
+            A design philosophy rooted in dignity, place, and the belief that transition work
+            deserves better tools than spreadsheets and scattered notes.
+          </p>
+        </div>
+      </section>
+
+      <div className="h-px bg-[hsl(var(--marketing-border))]" />
+
+      {/* Main Content */}
+      <section className="marketing-section">
+        <article className="max-w-2xl mx-auto space-y-12">
+
+          {/* Section 1 */}
+          <div>
+            <h2 className="font-serif text-2xl text-[hsl(var(--marketing-navy))] mb-4">
+              Software flattens what matters most
+            </h2>
+            <div className="space-y-4 font-serif-body text-base text-[hsl(var(--marketing-navy)/0.75)] leading-relaxed">
+              <p>
+                Environmental justice work is full of living relationships that ordinary software flattens:
+                communities to land, organizers to investors, workers to transition plans, faith to action,
+                and seasonal decisions to local conditions.
+              </p>
+              <p>
+                Most tools treat these as records in a database. A contact with a tag. A task with a due date.
+                A permit number. A meeting logged. But the relationships that carry transition work forward
+                are richer than any record can hold.
+              </p>
+              <p>
+                Transitus was built around a different idea: that software should help teams remember people,
+                honor places, and preserve the story of change {'\u2014'} instead of forcing everything into
+                pipelines and transactions.
+              </p>
+            </div>
+          </div>
+
+          {/* Divider */}
+          <div className="h-px bg-[hsl(var(--marketing-border))]" />
+
+          {/* Section 2 */}
+          <div>
+            <h2 className="font-serif text-2xl text-[hsl(var(--marketing-navy))] mb-4">
+              Three things most tools keep separate
+            </h2>
+            <div className="space-y-6">
+              <div className="pl-5 border-l-2 border-[hsl(var(--marketing-green)/0.3)]">
+                <h3 className="font-sans text-sm font-semibold text-[hsl(var(--marketing-green))] uppercase tracking-wider mb-2">
+                  Relationship Memory
+                </h3>
+                <p className="font-serif-body text-base text-[hsl(var(--marketing-navy)/0.75)] leading-relaxed">
+                  Every stakeholder engagement, site visit, and community meeting becomes part of a living record.
+                  No promise is forgotten. No voice is lost. No relationship falls through the cracks when a staff
+                  member moves on.
+                </p>
+              </div>
+              <div className="pl-5 border-l-2 border-[hsl(var(--transitus-atlas)/0.3)]">
+                <h3 className="font-sans text-sm font-semibold text-[hsl(var(--transitus-atlas))] uppercase tracking-wider mb-2">
+                  Place Intelligence
+                </h3>
+                <p className="font-serif-body text-base text-[hsl(var(--marketing-navy)/0.75)] leading-relaxed">
+                  Environmental burdens, demographic context, climate risks, and community assets {'\u2014'}
+                  layered into a civic atlas that makes complexity legible. Not just data, but data anchored to
+                  land and people, presented with the dignity both deserve.
+                </p>
+              </div>
+              <div className="pl-5 border-l-2 border-[hsl(var(--transitus-umber)/0.3)]">
+                <h3 className="font-sans text-sm font-semibold text-[hsl(var(--transitus-umber))] uppercase tracking-wider mb-2">
+                  Narrative Continuity
+                </h3>
+                <p className="font-serif-body text-base text-[hsl(var(--marketing-navy)/0.75)] leading-relaxed">
+                  Scattered notes, meetings, and field observations become a coherent story of transition.
+                  Communities and institutions stop losing the thread. Leadership turns over; the memory stays.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="h-px bg-[hsl(var(--marketing-border))]" />
+
+          {/* Section 3 */}
+          <div>
+            <h2 className="font-serif text-2xl text-[hsl(var(--marketing-navy))] mb-4">
+              Design principles
+            </h2>
+            <div className="space-y-4 font-serif-body text-base text-[hsl(var(--marketing-navy)/0.75)] leading-relaxed">
+              <p>
+                <strong className="text-[hsl(var(--marketing-navy))]">Every screen should be printable.</strong>{' '}
+                If a Place page, a Journey chapter, or a commitment report can become a PDF someone would willingly
+                read, the design is working. If it looks like enterprise software, it isn't.
+              </p>
+              <p>
+                <strong className="text-[hsl(var(--marketing-navy))]">Typography carries authority.</strong>{' '}
+                Data becomes legible through composition, not decoration. Large editorial serif for moments of
+                significance. Clear, warm sans-serif for navigation and action. Body text that invites reading,
+                not scanning.
+              </p>
+              <p>
+                <strong className="text-[hsl(var(--marketing-navy))]">Maps are first-class citizens.</strong>{' '}
+                Not widgets in a corner. A Place page should feel like an atlas spread: terrain, burdens, history,
+                voices, and commitments composed into something beautiful enough to frame.
+              </p>
+              <p>
+                <strong className="text-[hsl(var(--marketing-navy))]">Awareness over alerts.</strong>{' '}
+                Transitus does not bark. It does not create urgency where there is none. It gently surfaces what is
+                shifting, who has gone quiet, and what remains unfinished {'\u2014'} and trusts users to respond with
+                discernment rather than panic.
+              </p>
+            </div>
+          </div>
+
+          <div className="h-px bg-[hsl(var(--marketing-border))]" />
+
+          {/* Section 4 */}
+          <div>
+            <h2 className="font-serif text-2xl text-[hsl(var(--marketing-navy))] mb-4">
+              The philosophical roots
+            </h2>
+            <div className="space-y-4 font-serif-body text-base text-[hsl(var(--marketing-navy)/0.75)] leading-relaxed">
+              <p>
+                Transitus is philosophically rooted in principles that many traditions share but few software
+                products embody: the dignity of every person, the common good, subsidiarity (decisions closest to
+                the people affected), solidarity across difference, and care for creation as a moral imperative.
+              </p>
+              <p>
+                You don't need to name these principles to feel them. When a tool asks "who was in the room {'\u2014'}
+                and who was left out?" instead of "how many contacts were logged," the grammar itself carries the
+                philosophy. When a commitment tracker asks "what do affected communities think this promise means?"
+                alongside "what was formally agreed," the system quietly encodes justice.
+              </p>
+              <p>
+                That is the Transitus difference: not features alone, but a grammar of civic care embedded in
+                every screen, every question, every default.
+              </p>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      {/* CTA */}
+      <section className="bg-[hsl(var(--marketing-surface))]">
+        <div className="marketing-section text-center">
+          <h2 className="font-serif text-2xl sm:text-3xl text-[hsl(var(--marketing-navy))] mb-4">
+            Built for the work that matters most
+          </h2>
+          <p className="font-serif-body text-base text-[hsl(var(--marketing-navy)/0.7)] mb-8 max-w-lg mx-auto leading-relaxed">
+            Start with one place. Let the memory build. See what becomes possible.
+          </p>
+          <Link to="/pricing">
+            <Button size="lg" className="rounded-full bg-[hsl(var(--marketing-navy))] text-white hover:bg-[hsl(var(--marketing-navy)/0.9)] px-8 h-12 text-base font-medium">
+              See pricing <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          </Link>
+        </div>
+      </section>
     </div>
   );
 }

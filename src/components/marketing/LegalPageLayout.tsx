@@ -17,7 +17,7 @@ export default function LegalPageLayout({ page }: { page: LegalPageContent }) {
   return (
     <article>
       <SeoHead
-        title={`${page.title} — CROS\u2122`}
+        title={`${page.title} — Transitus`}
         description={page.intro}
         canonical={page.route}
         jsonLd={{

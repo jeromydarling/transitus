@@ -1,113 +1,113 @@
-// CROS Brand Constants
-// UI rebrand layer — database tables retain original Profunda names
+// Transitus Brand Constants
+// The Operating System for Places Under Change
 
 export const brand = {
-  appName: 'CROS',
-  fullName: 'Communal Relationship Operating System',
-  assistantName: 'Neary',
+  appName: 'Transitus',
+  fullName: 'The Operating System for Places Under Change',
+  assistantName: 'NRI',
   assistantFullName: 'NRI — Narrative Relational Intelligence',
-  tagline: 'The Community Relationship OS',
-  positioning: 'CROS is the Community Relationship OS — a human system for remembering, noticing, and serving people well.',
-  domain: 'thecros.app',
+  tagline: 'Relationship memory for environmental and civic transition work.',
+  positioning: 'Transitus is a stewardship platform for communities, coalitions, and the places they hold in trust.',
+  domain: 'transitus.app',
 } as const;
 
 export const modules = {
-  civitas: { label: 'Civitas', description: 'Community layer — metros, pulse, narrative' },
-  signum: { label: 'Signum', description: 'Signals & discovery intelligence' },
-  testimonium: { label: 'Testimonium', description: 'Narrative storytelling & insight layer' },
-  impulsus: { label: 'Impulsus', description: 'Private impact scrapbook journal' },
-  relatio: { label: 'Relatio', description: 'Integrations & migration bridges' },
-  voluntarium: { label: 'Voluntārium', description: 'Volunteer management & hours tracking' },
-  provisio: { label: 'Prōvīsiō', description: 'Technology provisions & orders' },
+  places: { label: 'Places', description: 'Living civic-land profiles for neighborhoods, corridors, watersheds, and communities under change.' },
+  stakeholders: { label: 'People & Organizations', description: 'Relational graph of the people and institutions shaping a place.' },
+  commitments: { label: 'Commitments', description: 'Living promises, community benefit agreements, pledges, and transition plans.' },
+  fieldNotes: { label: 'Field Notes', description: 'Voice notes, field logs, photos, and community testimony with consent controls.' },
+  signals: { label: 'Signals', description: 'News, permits, EPA actions, hearing notices, climate alerts, and funding opportunities.' },
+  journeys: { label: 'Journeys', description: 'Narrative chapters of a place, campaign, or coalition over time.' },
+  library: { label: 'Library', description: 'Frameworks, templates, case studies, glossary, and formation tracks.' },
+  reports: { label: 'Reports', description: 'Place briefs, engagement logs, commitment status, board memos, and investor packets.' },
 } as const;
 
 export const tiers = {
-  core: {
-    name: 'CROS Core',
-    tagline: 'The foundation for relationship-centered community work.',
+  local: {
+    name: 'Transitus Local',
+    tagline: '1 place, 1 table.',
+    price: '$150/mo',
     includes: [
-      'Profunda (Relationship OS)',
-      'Civitas (Community Awareness)',
-      'Relationships & People',
-      'Journey Chapters',
-      'Reflections',
-      'Volunteers (Voluntārium)',
-      'Events & Calendar',
-      'Signum (Local Pulse baseline)',
-      'Basic Narrative',
-      'Communio (opt-in shared network)',
+      '1 place profile',
+      'Up to 5 organizations',
+      'Role-based access',
+      'Field notes & voice capture',
+      'Commitment tracker',
+      'Signal monitoring',
+      'Journey chapters',
+      'Basic reports',
     ],
   },
-  insight: {
-    name: 'CROS Insight',
-    tagline: 'Understand how your city is changing.',
+  region: {
+    name: 'Transitus Region',
+    tagline: 'Several places, multi-stakeholder program.',
+    price: '$500\u20131,000/mo',
     includes: [
-      'Everything in Core',
-      'Testimonium storytelling',
-      'Drift Detection',
-      'Heat Map Narrative Overlays',
-      'Story Signals (Signum Intelligence)',
+      '3\u201310 place profiles',
+      'Unlimited community participants',
+      'Advanced narrative tools',
+      'Portfolio-by-place view',
+      'Commitment tracking across places',
+      'Stronger reporting & exports',
+      'Program-level analytics',
+      'Priority support',
     ],
   },
-  story: {
-    name: 'CROS Story',
-    tagline: 'Turn daily work into lasting impact narratives.',
+  network: {
+    name: 'Transitus Network',
+    tagline: 'Cross-region, multi-partner coalitions.',
+    price: 'Custom',
     includes: [
-      'Everything in Insight',
-      'Impulsus impact journal',
-      'Executive storytelling exports',
-      'Narrative reporting',
+      '10+ place profiles',
+      'Network-wide pattern analytics',
+      'Cross-coalition views',
+      'White-label options',
+      'API integrations',
+      'Dedicated onboarding',
+      'Data export & compliance tools',
+      'Custom support agreement',
     ],
   },
 } as const;
 
 export const archetypes = {
-  church: {
-    name: 'Church / Faith Community',
-    tagline: 'Often led by Shepherds, sustained by Companions, and lived out through Visitors.',
+  ej_coalition: {
+    name: 'EJ Coalition',
+    tagline: 'Coordinate frontline environmental justice campaigns across communities.',
   },
-  digital_inclusion: {
-    name: 'Digital Inclusion Nonprofit',
-    tagline: 'Companions and Visitors carry most of the daily relationship work — Shepherds guide the strategy.',
+  faith_investor: {
+    name: 'Faith-Based Investor',
+    tagline: 'Connect portfolios to real places, people, and just-transition commitments.',
   },
-  social_enterprise: {
-    name: 'Social Enterprise',
-    tagline: 'Shepherds guide growth while Companions maintain community trust.',
+  community_land_trust: {
+    name: 'Community Land Trust',
+    tagline: 'Steward land, people, and shared memory across seasons of change.',
   },
-  workforce: {
-    name: 'Workforce Development',
-    tagline: 'Stay close to employers, learners, and local shifts that change demand.',
+  urban_farm_network: {
+    name: 'Urban Farm Network',
+    tagline: 'Grow food, resilience, and relationship memory together.',
   },
-  refugee_support: {
-    name: 'Refugee Support Organization',
-    tagline: 'Welcome and integrate refugee communities with gentle continuity.',
+  diocesan_program: {
+    name: 'Diocesan Program',
+    tagline: 'Align land, investment, and parish presence with care for creation.',
   },
-  education_access: {
-    name: 'Education Access Program',
-    tagline: 'Expand equitable access to learning across your region.',
+  municipal_resilience: {
+    name: 'Municipal Resilience Office',
+    tagline: 'Hold the civic memory of neighborhoods under transition.',
   },
-  library_system: {
-    name: 'Library System',
-    tagline: 'Companions and Visitors carry most of the daily relationship work.',
-  },
-  caregiver_solo: {
-    name: 'Caregiver (Solo)',
-    tagline: 'A private space for independent caregivers to remember, reflect, and stay present.',
-  },
-  caregiver_agency: {
-    name: 'Caregiver Agency',
-    tagline: 'Dignified visibility into care patterns — without surveillance.',
-  },
-  missionary_org: {
-    name: 'Missionary Organization',
-    tagline: 'Serve cross-cultural fields with country-level awareness and relationship memory.',
-  },
-  retreat_center: {
-    name: 'Retreat Center',
-    tagline: 'Hold the thread of every retreat journey — remember the people who return.',
-  },
+} as const;
+
+export const roles = {
+  steward: { name: 'Steward', description: 'Oversees place and program strategy' },
+  fieldCompanion: { name: 'Field Companion', description: 'Conducts site visits, captures field notes' },
+  listener: { name: 'Listener', description: 'Attends hearings, meetings, community sessions' },
+  convener: { name: 'Convener', description: 'Brings stakeholders to the table' },
+  analyst: { name: 'Analyst', description: 'Interprets signals, data, and patterns' },
+  sponsor: { name: 'Sponsor', description: 'Investor, funder, or institutional backer' },
+  residentWitness: { name: 'Resident Witness', description: 'Community member with lived experience' },
 } as const;
 
 export type ArchetypeKey = keyof typeof archetypes;
 export type TierKey = keyof typeof tiers;
 export type ModuleKey = keyof typeof modules;
+export type RoleKey = keyof typeof roles;
