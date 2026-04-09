@@ -1,18 +1,23 @@
 /**
  * PlaceMap — Data-driven atlas-style map visualization for a Place.
  *
+ * Uses real Mapbox GL JS when VITE_MAPBOX_TOKEN is set.
+ * Falls back to the CSS atlas placeholder with data-driven SVG elements.
+ *
  * Every visual element represents real data:
- *  - Burden Rings: EnvironmentalBurden severity, colored and sized by severity
- *  - Facility Markers: EPA ECHO facilities, positioned by distance, colored by compliance
+ *  - Burden Rings: EnvironmentalBurden severity, colored and sized
+ *  - Facility Markers: EPA ECHO facilities, colored by compliance
  *  - Stakeholder Pins: Connected people, positioned around the edge
  *  - Active Work Markers: Diamonds showing work items by status
- *  - Grid Lines: 1-mile scale reference grid
  */
 
-import { useState, useMemo, useCallback } from 'react';
+import { lazy, Suspense, useState, useMemo, useCallback } from 'react';
 import { MapPin, Mountain } from 'lucide-react';
 import type { EnvironmentalBurden, ActiveWork } from '@/types/transitus';
 import type { ECHOFacility } from '@/lib/api/echo';
+import { hasMapboxToken } from './MapboxPlaceMap';
+
+const MapboxPlaceMap = lazy(() => import('./MapboxPlaceMap'));
 
 // ── Design tokens ──
 
@@ -132,6 +137,22 @@ export default function PlaceMap({
   population,
   className = '',
 }: PlaceMapProps) {
+  // Use real Mapbox when token is available
+  if (hasMapboxToken()) {
+    return (
+      <Suspense fallback={<div className={`rounded-lg bg-[hsl(30_18%_82%/0.3)] animate-pulse ${className}`} style={{ minHeight: '300px' }} />}>
+        <MapboxPlaceMap
+          lat={lat} lng={lng} name={name}
+          environmental_burdens={environmental_burdens}
+          facilities={facilities}
+          population={population}
+          className={className}
+        />
+      </Suspense>
+    );
+  }
+
+  // CSS atlas fallback
   const [show3D, setShow3D] = useState(false);
   const [activeLayers, setActiveLayers] = useState<Set<LayerName>>(
     new Set(['Burdens', 'Facilities', 'People', 'Active Work']),
