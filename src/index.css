@@ -131,6 +131,15 @@
   body {
     @apply bg-background text-foreground font-sans antialiased;
     font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overscroll-behavior-y: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Safe area padding for notch/home indicator */
+  html {
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) 0 env(safe-area-inset-left);
   }
   h1, h2, h3 { @apply font-serif font-normal tracking-tight; }
   h4, h5, h6 { @apply font-sans font-medium tracking-tight; }
@@ -244,6 +253,42 @@
 
   .score-bar { @apply h-2 rounded-full bg-muted overflow-hidden; }
   .score-fill { @apply h-full rounded-full transition-all duration-500; }
+
+  /* ── Mobile-native touch targets ── */
+  .touch-target {
+    @apply min-h-[44px] min-w-[44px];
+  }
+
+  .touch-card {
+    @apply rounded-xl bg-white border border-[hsl(30_18%_82%)] transition-all duration-150;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .touch-card:active {
+    @apply scale-[0.98] bg-[hsl(38_30%_95%)];
+  }
+
+  /* ── App page container — edge-to-edge on mobile ── */
+  .app-page {
+    @apply min-h-screen bg-[hsl(38_30%_95%)] px-4 py-5 sm:px-6 sm:py-6;
+  }
+
+  .app-page-header {
+    @apply mb-6;
+  }
+
+  /* ── Section label pattern ── */
+  .section-label {
+    @apply flex items-center gap-2 mb-4;
+  }
+
+  .section-label-text {
+    @apply font-sans text-xs font-semibold uppercase tracking-widest text-[hsl(16_65%_48%)];
+  }
+
+  .section-label-icon {
+    @apply h-4 w-4 text-[hsl(16_65%_48%)];
+  }
 
   /* Marketing */
   .marketing-section { @apply max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-24; }
