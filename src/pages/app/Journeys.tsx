@@ -9,7 +9,6 @@
 import { Link } from 'react-router-dom';
 import { BookOpen, MapPin } from 'lucide-react';
 
-import { MOCK_JOURNEYS, MOCK_PLACES } from '@/lib/mockData';
 import { useTransitusData } from '@/contexts/TransitusDataContext';
 import { CHAPTER_TYPE_LABELS } from '@/types/transitus';
 import type { Journey, JourneyType, ChapterType } from '@/types/transitus';
@@ -49,10 +48,7 @@ const CHAPTER_DOT_RING: Record<ChapterType, string> = {
   stewardship: 'ring-emerald-200',
 };
 
-function placeName(placeId: string): string {
-  const p = MOCK_PLACES.find((pl) => pl.id === placeId);
-  return p ? p.name : placeId;
-}
+// placeName is now passed as a prop from the main component
 
 // ── Components ──
 
@@ -81,7 +77,7 @@ function ChapterTimeline({ journey }: { journey: Journey }) {
   );
 }
 
-function JourneyCard({ journey }: { journey: Journey }) {
+function JourneyCard({ journey, getPlaceName }: { journey: Journey; getPlaceName: (id: string) => string }) {
   return (
     <Link
       to={`/app/journeys/${journey.id}`}
@@ -94,7 +90,7 @@ function JourneyCard({ journey }: { journey: Journey }) {
         </span>
         <span className="flex items-center gap-1 text-[10px] text-[hsl(20_8%_52%)]">
           <MapPin className="h-2.5 w-2.5" />
-          {placeName(journey.place_id)}
+          {getPlaceName(journey.place_id)}
         </span>
       </div>
 
@@ -122,7 +118,14 @@ function JourneyCard({ journey }: { journey: Journey }) {
 // ── Main page ──
 
 export default function Journeys() {
-  const sorted = [...MOCK_JOURNEYS].sort(
+  const { journeys, places } = useTransitusData();
+
+  const getPlaceName = (placeId: string): string => {
+    const p = places.find((pl) => pl.id === placeId);
+    return p ? p.name : placeId;
+  };
+
+  const sorted = [...journeys].sort(
     (a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime(),
   );
 
@@ -148,7 +151,7 @@ export default function Journeys() {
         {/* Journey cards */}
         <div className="flex flex-col gap-4">
           {sorted.map((journey) => (
-            <JourneyCard key={journey.id} journey={journey} />
+            <JourneyCard key={journey.id} journey={journey} getPlaceName={getPlaceName} />
           ))}
           {sorted.length === 0 && (
             <p className="text-sm text-[hsl(20_8%_52%)] italic">

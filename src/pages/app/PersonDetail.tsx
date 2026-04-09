@@ -6,24 +6,12 @@
  */
 
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, MapPin, NotebookPen, Handshake, Tag } from 'lucide-react';
-import { MOCK_STAKEHOLDERS, MOCK_ORGS, MOCK_PLACES, MOCK_COMMITMENTS, MOCK_FIELD_NOTES } from '@/lib/mockData';
+import { ArrowLeft, MapPin, NotebookPen, Handshake, Tag, Pencil } from 'lucide-react';
 import { useTransitusData } from '@/contexts/TransitusDataContext';
 import { ROLE_LABELS, COMMITMENT_STATUS_LABELS } from '@/types/transitus';
 import type { TransitusRole, CommitmentStatus, FieldNoteType } from '@/types/transitus';
 
 // ── Helpers ──
-
-function orgNameById(orgId?: string): string | undefined {
-  if (!orgId) return undefined;
-  const org = MOCK_ORGS.find((o) => o.id === orgId);
-  return org?.name;
-}
-
-function placeNameById(id: string): string {
-  const place = MOCK_PLACES.find((p) => p.id === id);
-  return place ? place.name : id;
-}
 
 function formatDate(iso: string): string {
   const d = new Date(iso);
@@ -107,7 +95,20 @@ const FIELD_NOTE_TYPE_LABELS: Record<FieldNoteType, string> = {
 
 export default function PersonDetail() {
   const { id } = useParams<{ id: string }>();
-  const stakeholder = MOCK_STAKEHOLDERS.find((s) => s.id === id);
+  const { stakeholders, organizations, places, commitments, fieldNotes } = useTransitusData();
+
+  const stakeholder = stakeholders.find((s) => s.id === id);
+
+  const orgNameById = (orgId?: string): string | undefined => {
+    if (!orgId) return undefined;
+    const org = organizations.find((o) => o.id === orgId);
+    return org?.name;
+  };
+
+  const placeNameById = (placeId: string): string => {
+    const place = places.find((p) => p.id === placeId);
+    return place ? place.name : placeId;
+  };
 
   if (!stakeholder) {
     return (
@@ -129,12 +130,12 @@ export default function PersonDetail() {
   const orgName = orgNameById(stakeholder.organization_id);
 
   // Related commitments: commitments whose place_ids overlap with stakeholder's place_ids
-  const relatedCommitments = MOCK_COMMITMENTS.filter((c) =>
+  const relatedCommitments = commitments.filter((c) =>
     c.place_ids.some((pid) => stakeholder.place_ids.includes(pid)),
   );
 
   // Related field notes: notes where author_id matches
-  const relatedFieldNotes = MOCK_FIELD_NOTES.filter(
+  const relatedFieldNotes = fieldNotes.filter(
     (fn) => fn.author_id === stakeholder.id,
   );
 
@@ -167,6 +168,15 @@ export default function PersonDetail() {
                 <p className="mt-1 text-sm text-[hsl(30_10%_40%)]">{stakeholder.title}</p>
               )}
             </div>
+            {/* Edit placeholder button */}
+            <button
+              type="button"
+              className="inline-flex items-center gap-1.5 rounded-full border border-[hsl(16_65%_48%)] px-4 py-2 text-sm font-medium text-[hsl(16_65%_48%)] hover:bg-[hsl(16_65%_48%)] hover:text-white transition-colors self-start"
+              onClick={() => { /* placeholder for edit form */ }}
+            >
+              <Pencil className="h-4 w-4" />
+              Edit
+            </button>
           </div>
 
           {stakeholder.bio && (

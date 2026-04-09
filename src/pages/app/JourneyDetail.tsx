@@ -8,7 +8,6 @@
 import { useParams, Link } from 'react-router-dom';
 import { BookOpen, MapPin, AlertTriangle, HelpCircle } from 'lucide-react';
 
-import { MOCK_JOURNEYS, MOCK_PLACES } from '@/lib/mockData';
 import { useTransitusData } from '@/contexts/TransitusDataContext';
 import { CHAPTER_TYPE_LABELS } from '@/types/transitus';
 import type { JourneyType, ChapterType, JourneyChapter } from '@/types/transitus';
@@ -48,10 +47,7 @@ const CHAPTER_TIMELINE_DOT: Record<ChapterType, string> = {
   stewardship: 'bg-emerald-500 ring-emerald-200',
 };
 
-function placeName(placeId: string): string {
-  const p = MOCK_PLACES.find((pl) => pl.id === placeId);
-  return p ? p.name : placeId;
-}
+// placeName is resolved from context in the main component
 
 // ── Components ──
 
@@ -119,7 +115,14 @@ function ChapterCard({ chapter }: { chapter: JourneyChapter }) {
 
 export default function JourneyDetail() {
   const { id } = useParams<{ id: string }>();
-  const journey = MOCK_JOURNEYS.find((j) => j.id === id);
+  const { journeys, places } = useTransitusData();
+
+  const placeName = (placeId: string): string => {
+    const p = places.find((pl) => pl.id === placeId);
+    return p ? p.name : placeId;
+  };
+
+  const journey = journeys.find((j) => j.id === id);
 
   if (!journey) {
     return (

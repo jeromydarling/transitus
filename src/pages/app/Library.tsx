@@ -8,7 +8,6 @@
 import { useState } from 'react';
 import { Library as LibraryIcon } from 'lucide-react';
 
-import { MOCK_LIBRARY } from '@/lib/mockData';
 import { useTransitusData } from '@/contexts/TransitusDataContext';
 import type { LibraryItem, LibraryCategory, FormationTrack } from '@/types/transitus';
 
@@ -98,18 +97,19 @@ function LibraryItemCard({ item }: { item: LibraryItem }) {
 // ── Main page ──
 
 export default function AppLibrary() {
+  const { library } = useTransitusData();
   const [categoryFilter, setCategoryFilter] = useState<LibraryCategory | null>(null);
   const [trackFilter, setTrackFilter] = useState<FormationTrack | null>(null);
 
   const allCategories = Array.from(
-    new Set(MOCK_LIBRARY.map((item) => item.category)),
+    new Set(library.map((item) => item.category)),
   ) as LibraryCategory[];
 
   const allTracks = Array.from(
-    new Set(MOCK_LIBRARY.map((item) => item.formation_track).filter(Boolean)),
+    new Set(library.map((item) => item.formation_track).filter(Boolean)),
   ) as FormationTrack[];
 
-  const filtered = MOCK_LIBRARY.filter((item) => {
+  const filtered = library.filter((item) => {
     if (categoryFilter && item.category !== categoryFilter) return false;
     if (trackFilter && item.formation_track !== trackFilter) return false;
     return true;

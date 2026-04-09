@@ -27,15 +27,7 @@ import {
   Shield,
 } from 'lucide-react';
 
-import {
-  MOCK_PLACES,
-  MOCK_STAKEHOLDERS,
-  MOCK_COMMITMENTS,
-  MOCK_FIELD_NOTES,
-  MOCK_SIGNALS,
-  MOCK_JOURNEYS,
-  MOCK_ORGS,
-} from '@/lib/mockData';
+import { useTransitusData } from '@/contexts/TransitusDataContext';
 
 import PlaceMap from '@/components/map/PlaceMap';
 
@@ -187,10 +179,7 @@ function placeTypeBadgeLabel(type: Place['place_type']): string {
     .replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
-function stakeholderNameById(id: string): string {
-  const s = MOCK_STAKEHOLDERS.find((st) => st.id === id);
-  return s?.name ?? id;
-}
+// stakeholderNameById is now passed as a closure from the component
 
 // ── Shared section header ──
 
@@ -323,7 +312,7 @@ function SidebarCommitments({
   );
 }
 
-function SidebarFieldNotes({ notes }: { notes: FieldNote[] }) {
+function SidebarFieldNotes({ notes, stakeholderNameById }: { notes: FieldNote[]; stakeholderNameById: (id: string) => string }) {
   if (notes.length === 0) return null;
   return (
     <div>
@@ -441,7 +430,8 @@ function EJScreenIndicatorRow({
 
 export default function PlaceDetail() {
   const { id } = useParams<{ id: string }>();
-  const place = MOCK_PLACES.find((p) => p.id === id);
+  const { places, stakeholders, organizations, commitments, fieldNotes, signals, journeys } = useTransitusData();
+  const place = places.find((p) => p.id === id);
 
   // API state
   const [ejData, setEjData] = React.useState<EJScreenResult | null>(null);
@@ -485,23 +475,28 @@ export default function PlaceDetail() {
     );
   }
 
+  const stakeholderNameById = (sid: string): string => {
+    const s = stakeholders.find((st) => st.id === sid);
+    return s?.name ?? sid;
+  };
+
   // Derived data for sidebar
-  const linkedStakeholders = MOCK_STAKEHOLDERS.filter((s) =>
+  const linkedStakeholders = stakeholders.filter((s) =>
     s.place_ids.includes(place.id),
   );
-  const linkedOrgs = MOCK_ORGS.filter((o) =>
+  const linkedOrgs = organizations.filter((o) =>
     o.place_ids.includes(place.id),
   );
-  const linkedCommitments = MOCK_COMMITMENTS.filter((c) =>
+  const linkedCommitments = commitments.filter((c) =>
     c.place_ids.includes(place.id),
   );
-  const linkedNotes = MOCK_FIELD_NOTES.filter(
+  const linkedNotes = fieldNotes.filter(
     (n) => n.place_id === place.id,
   );
-  const linkedSignals = MOCK_SIGNALS.filter((s) =>
+  const linkedSignals = signals.filter((s) =>
     s.place_ids.includes(place.id),
   );
-  const linkedJourney = MOCK_JOURNEYS.find(
+  const linkedJourney = journeys.find(
     (j) => j.place_id === place.id,
   );
 
@@ -986,7 +981,7 @@ export default function PlaceDetail() {
             <SidebarStakeholders stakeholders={linkedStakeholders} />
             <SidebarOrganizations orgs={linkedOrgs} />
             <SidebarCommitments commitments={linkedCommitments} />
-            <SidebarFieldNotes notes={linkedNotes} />
+            <SidebarFieldNotes notes={linkedNotes} stakeholderNameById={stakeholderNameById} />
             <SidebarSignals signals={linkedSignals} />
             {linkedJourney && (
               <SidebarJourney journey={linkedJourney} />

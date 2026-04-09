@@ -8,7 +8,6 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FileText, MapPin, ChevronDown, ChevronRight } from 'lucide-react';
 
-import { MOCK_REPORTS, MOCK_PLACES } from '@/lib/mockData';
 import { useTransitusData } from '@/contexts/TransitusDataContext';
 import type { Report, ReportType, ReportSection } from '@/types/transitus';
 
@@ -36,10 +35,7 @@ const SECTION_TYPE_COLORS: Record<ReportSection['type'], string> = {
   commitments: 'bg-orange-100 text-orange-700',
 };
 
-function placeName(placeId: string): string {
-  const p = MOCK_PLACES.find((pl) => pl.id === placeId);
-  return p ? p.name : placeId;
-}
+// placeName is resolved from context in the main component
 
 function formatDate(iso: string): string {
   const d = new Date(iso);
@@ -48,7 +44,7 @@ function formatDate(iso: string): string {
 
 // ── Components ──
 
-function ReportCard({ report }: { report: Report }) {
+function ReportCard({ report, placeName }: { report: Report; placeName: (id: string) => string }) {
   const [expanded, setExpanded] = useState(false);
 
   return (
@@ -130,7 +126,14 @@ function ReportCard({ report }: { report: Report }) {
 // ── Main page ──
 
 export default function Reports() {
-  const sorted = [...MOCK_REPORTS].sort(
+  const { reports, places } = useTransitusData();
+
+  const placeName = (placeId: string): string => {
+    const p = places.find((pl) => pl.id === placeId);
+    return p ? p.name : placeId;
+  };
+
+  const sorted = [...reports].sort(
     (a, b) => new Date(b.generated_at).getTime() - new Date(a.generated_at).getTime(),
   );
 
@@ -155,7 +158,7 @@ export default function Reports() {
         {/* Report cards */}
         <div className="flex flex-col gap-4">
           {sorted.map((report) => (
-            <ReportCard key={report.id} report={report} />
+            <ReportCard key={report.id} report={report} placeName={placeName} />
           ))}
           {sorted.length === 0 && (
             <p className="text-sm text-[hsl(20_8%_52%)] italic">
