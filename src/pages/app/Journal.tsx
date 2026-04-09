@@ -133,6 +133,17 @@ export default function Journal() {
           </p>
         </header>
 
+        {/* ── Reflection prompts ── */}
+        <div className="mb-6 rounded-xl bg-[hsl(198_55%_42%/0.06)] border border-[hsl(198_55%_42%/0.15)] p-4">
+          <p className="text-xs font-semibold text-[hsl(198_55%_42%)] uppercase tracking-widest mb-2">Before you write, reflect:</p>
+          <ul className="text-xs text-[hsl(20_25%_12%/0.6)] space-y-1.5">
+            <li>• Who did you meet today? What's their story?</li>
+            <li>• What burden did you witness someone carrying?</li>
+            <li>• What hope or resistance did you see?</li>
+            <li>• Whose name should you remember?</li>
+          </ul>
+        </div>
+
         {/* ── New entry form ── */}
         <form
           onSubmit={handleSubmit}

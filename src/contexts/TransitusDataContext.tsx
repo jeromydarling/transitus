@@ -12,13 +12,13 @@
 import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from 'react';
 import type {
   Place, Stakeholder, Organization, Commitment, FieldNote,
-  Signal, Journey, LibraryItem, Report,
+  Signal, Journey, LibraryItem, Report, CommunityStory,
 } from '@/types/transitus';
 import type { NRIChatMessage } from '@/types/nri';
 import {
   MOCK_PLACES, MOCK_STAKEHOLDERS, MOCK_ORGS, MOCK_COMMITMENTS,
   MOCK_FIELD_NOTES, MOCK_SIGNALS, MOCK_JOURNEYS, MOCK_LIBRARY,
-  MOCK_REPORTS,
+  MOCK_REPORTS, MOCK_COMMUNITY_STORIES,
 } from '@/lib/mockData';
 
 // ── Types ──
@@ -33,6 +33,7 @@ interface TransitusDataState {
   journeys: Journey[];
   library: LibraryItem[];
   reports: Report[];
+  communityStories: CommunityStory[];
   nriMessages: NRIChatMessage[];
   readSignalIds: Set<string>;
 }
@@ -68,6 +69,11 @@ interface TransitusDataActions {
   addPlace: (place: Omit<Place, 'id' | 'created_at' | 'updated_at'>) => Place;
   updatePlace: (id: string, updates: Partial<Place>) => void;
 
+  // Community Stories
+  addCommunityStory: (story: Omit<CommunityStory, 'id' | 'collected_at'>) => CommunityStory;
+  updateCommunityStory: (id: string, updates: Partial<CommunityStory>) => void;
+  deleteCommunityStory: (id: string) => void;
+
   // NRI Chat
   addNriMessage: (msg: NRIChatMessage) => void;
   clearNriMessages: () => void;
@@ -77,7 +83,7 @@ interface TransitusDataActions {
 }
 
 export interface SearchResult {
-  type: 'place' | 'stakeholder' | 'organization' | 'commitment' | 'field_note' | 'signal' | 'journey' | 'library';
+  type: 'place' | 'stakeholder' | 'organization' | 'commitment' | 'field_note' | 'signal' | 'journey' | 'library' | 'community_story';
   id: string;
   title: string;
   subtitle: string;
@@ -135,6 +141,7 @@ export function TransitusDataProvider({ children }: { children: ReactNode }) {
   const [journeys, setJourneys] = useState<Journey[]>(stored?.journeys || MOCK_JOURNEYS);
   const [library] = useState<LibraryItem[]>(stored?.library || MOCK_LIBRARY);
   const [reports] = useState<Report[]>(stored?.reports || MOCK_REPORTS);
+  const [communityStories, setCommunityStories] = useState<CommunityStory[]>(stored?.communityStories || MOCK_COMMUNITY_STORIES);
   const [nriMessages, setNriMessages] = useState<NRIChatMessage[]>(stored?.nriMessages || []);
   const [readSignalIds, setReadSignalIds] = useState<Set<string>>(
     stored?.readSignalIds instanceof Set ? stored.readSignalIds : new Set()
@@ -142,8 +149,8 @@ export function TransitusDataProvider({ children }: { children: ReactNode }) {
 
   // Persist on every change
   useEffect(() => {
-    saveToStorage({ places, stakeholders, organizations, commitments, fieldNotes, signals, journeys, library, reports, nriMessages, readSignalIds });
-  }, [places, stakeholders, organizations, commitments, fieldNotes, signals, journeys, library, reports, nriMessages, readSignalIds]);
+    saveToStorage({ places, stakeholders, organizations, commitments, fieldNotes, signals, journeys, library, reports, communityStories, nriMessages, readSignalIds });
+  }, [places, stakeholders, organizations, commitments, fieldNotes, signals, journeys, library, reports, communityStories, nriMessages, readSignalIds]);
 
   // ── Field Notes CRUD ──
   const addFieldNote = useCallback((note: Omit<FieldNote, 'id' | 'created_at'>) => {
@@ -233,6 +240,21 @@ export function TransitusDataProvider({ children }: { children: ReactNode }) {
     setPlaces(prev => prev.map(p => p.id === id ? { ...p, ...updates, updated_at: new Date().toISOString() } : p));
   }, []);
 
+  // ── Community Stories CRUD ──
+  const addCommunityStory = useCallback((s: Omit<CommunityStory, 'id' | 'collected_at'>) => {
+    const newS: CommunityStory = { ...s, id: genId('cs'), collected_at: new Date().toISOString() };
+    setCommunityStories(prev => [newS, ...prev]);
+    return newS;
+  }, []);
+
+  const updateCommunityStory = useCallback((id: string, updates: Partial<CommunityStory>) => {
+    setCommunityStories(prev => prev.map(s => s.id === id ? { ...s, ...updates } : s));
+  }, []);
+
+  const deleteCommunityStory = useCallback((id: string) => {
+    setCommunityStories(prev => prev.filter(s => s.id !== id));
+  }, []);
+
   // ── NRI Chat ──
   const addNriMessage = useCallback((msg: NRIChatMessage) => {
     setNriMessages(prev => [...prev, msg]);
@@ -296,18 +318,25 @@ export function TransitusDataProvider({ children }: { children: ReactNode }) {
       }
     });
 
+    communityStories.forEach(cs => {
+      if (cs.person_name.toLowerCase().includes(q) || cs.story.toLowerCase().includes(q) || (cs.quote?.toLowerCase().includes(q)) || (cs.location_detail?.toLowerCase().includes(q))) {
+        results.push({ type: 'community_story', id: cs.id, title: cs.person_name, subtitle: cs.location_detail || 'Community Story', route: `/app/community-stories` });
+      }
+    });
+
     return results.slice(0, 20);
-  }, [places, stakeholders, organizations, commitments, fieldNotes, signals, journeys, library]);
+  }, [places, stakeholders, organizations, commitments, fieldNotes, signals, journeys, library, communityStories]);
 
   const value: TransitusDataContextType = {
     places, stakeholders, organizations, commitments, fieldNotes, signals,
-    journeys, library, reports, nriMessages, readSignalIds,
+    journeys, library, reports, communityStories, nriMessages, readSignalIds,
     addFieldNote, updateFieldNote, deleteFieldNote,
     addCommitment, updateCommitment, deleteCommitment,
     addStakeholder, updateStakeholder, deleteStakeholder,
     addOrganization, updateOrganization, deleteOrganization,
     markSignalRead, markSignalUnread, markAllSignalsRead, isSignalRead,
     addPlace, updatePlace,
+    addCommunityStory, updateCommunityStory, deleteCommunityStory,
     addNriMessage, clearNriMessages,
     searchAll,
   };

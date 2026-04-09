@@ -25,9 +25,11 @@ import {
   Thermometer,
   BarChart3,
   Shield,
+  Heart,
 } from 'lucide-react';
 
 import { useTransitusData } from '@/contexts/TransitusDataContext';
+import { MOCK_COMMUNITY_STORIES } from '@/lib/mockData';
 
 import PlaceMap from '@/components/map/PlaceMap';
 
@@ -564,6 +566,28 @@ export default function PlaceDetail() {
               </p>
             </header>
 
+            {/* ── Human Impact ── */}
+            {place.human_impact_summary && (
+              <section className="mb-8">
+                <div className="flex items-center gap-2 mb-3">
+                  <Heart className="h-4 w-4 text-[hsl(16_65%_48%)]" />
+                  <span className="font-sans text-xs font-semibold uppercase tracking-widest text-[hsl(16_65%_48%)]">Who Lives Here</span>
+                </div>
+                <div className="rounded-xl bg-white border-l-4 border-[hsl(16_65%_48%)] border-r border-t border-b border-r-[hsl(30_18%_82%)] border-t-[hsl(30_18%_82%)] border-b-[hsl(30_18%_82%)] p-5">
+                  {place.population_estimate && (
+                    <p className="font-serif text-2xl text-[hsl(20_25%_12%)] mb-2">{place.population_estimate.toLocaleString()} people live here.</p>
+                  )}
+                  <p className="font-serif-body text-sm text-[hsl(20_25%_12%/0.75)] leading-relaxed mb-3">{place.human_impact_summary}</p>
+                  {place.health_snapshot && (
+                    <div className="rounded-lg bg-[hsl(0_50%_97%)] border border-[hsl(0_40%_90%)] p-3 mt-3">
+                      <p className="text-xs font-semibold text-[hsl(0_50%_40%)] mb-1">Health Impact</p>
+                      <p className="text-xs text-[hsl(0_40%_30%)]">{place.health_snapshot}</p>
+                    </div>
+                  )}
+                </div>
+              </section>
+            )}
+
             {/* Place Map */}
             <PlaceMap
               lat={place.lat}
@@ -986,6 +1010,35 @@ export default function PlaceDetail() {
             {linkedJourney && (
               <SidebarJourney journey={linkedJourney} />
             )}
+
+            {/* Community Voices */}
+            {(() => {
+              const placeStories = MOCK_COMMUNITY_STORIES.filter(
+                (s) => s.place_id === place.id && s.consent_level === 'public'
+              );
+              if (placeStories.length === 0) return null;
+              return (
+                <div>
+                  <SectionHeader icon={Heart} label="Community Voices" />
+                  <div className="flex flex-col gap-3">
+                    {placeStories.slice(0, 3).map((story) => (
+                      <div
+                        key={story.id}
+                        className="rounded-lg bg-white p-4 border border-[hsl(30_18%_82%)]"
+                      >
+                        <blockquote className="font-serif-body text-sm italic text-[hsl(20_25%_12%/0.8)] leading-relaxed border-l-[3px] border-[hsl(16_65%_48%/0.4)] pl-3 mb-2">
+                          "{story.quote}"
+                        </blockquote>
+                        <p className="text-[11px] text-[hsl(20_25%_12%/0.55)]">
+                          <span className="font-medium text-[hsl(20_25%_12%)]">{story.person_name}</span>
+                          {story.location_detail && ` — ${story.location_detail}`}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            })()}
           </aside>
         </div>
       </div>

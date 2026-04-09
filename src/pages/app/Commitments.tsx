@@ -12,7 +12,7 @@ import { useTransitusData } from '@/contexts/TransitusDataContext';
 import { CreateCommitmentForm } from '@/components/forms/CreateCommitmentForm';
 import { EditCommitmentStatusForm } from '@/components/forms/EditCommitmentStatusForm';
 import { COMMITMENT_STATUS_LABELS } from '@/types/transitus';
-import type { Commitment, CommitmentStatus } from '@/types/transitus';
+import type { Commitment, CommitmentStatus, Place } from '@/types/transitus';
 
 // ── Helpers ──
 
@@ -51,7 +51,7 @@ function TypeBadge({ type }: { type: string }) {
 
 // ── Commitment Card ──
 
-function CommitmentCard({ commitment, placeNameById, orgNameById }: { commitment: Commitment; placeNameById: (id: string) => string; orgNameById: (orgId?: string) => string | undefined }) {
+function CommitmentCard({ commitment, placeNameById, orgNameById, places }: { commitment: Commitment; placeNameById: (id: string) => string; orgNameById: (orgId?: string) => string | undefined; places: Place[] }) {
   const madeByOrg = orgNameById(commitment.made_by_org_id);
 
   return (
@@ -64,6 +64,17 @@ function CommitmentCard({ commitment, placeNameById, orgNameById }: { commitment
         <EditCommitmentStatusForm commitmentId={commitment.id} currentStatus={commitment.status} />
       </div>
 
+      {/* Who this commitment affects */}
+      {(() => {
+        const affectedPlaces = commitment.place_ids.map(pid => places.find(p => p.id === pid)).filter(Boolean);
+        const totalPop = affectedPlaces.reduce((sum, p) => sum + (p?.population_estimate || 0), 0);
+        return totalPop > 0 ? (
+          <p className="text-xs text-[hsl(16_65%_48%/0.8)] mt-1 mb-2">
+            Affects {totalPop.toLocaleString()} residents
+          </p>
+        ) : null;
+      })()}
+
       {/* Type badge + org */}
       <div className="flex flex-wrap items-center gap-2 mb-3">
         <TypeBadge type={commitment.commitment_type} />
@@ -72,12 +83,7 @@ function CommitmentCard({ commitment, placeNameById, orgNameById }: { commitment
         )}
       </div>
 
-      {/* Context excerpt */}
-      <p className="text-sm leading-relaxed text-[hsl(30_10%_35%)] line-clamp-2 mb-3">
-        {commitment.context}
-      </p>
-
-      {/* Community interpretation */}
+      {/* Community interpretation (elevated above context) */}
       {commitment.community_interpretation && (
         <div className="mb-3 rounded-md bg-[hsl(38_30%_95%)] border border-[hsl(30_18%_88%)] px-3 py-2">
           <div className="flex items-start gap-2">
@@ -88,6 +94,11 @@ function CommitmentCard({ commitment, placeNameById, orgNameById }: { commitment
           </div>
         </div>
       )}
+
+      {/* Context excerpt */}
+      <p className="text-sm leading-relaxed text-[hsl(30_10%_35%)] line-clamp-2 mb-3">
+        {commitment.context}
+      </p>
 
       {/* Linked places */}
       <div className="flex flex-wrap items-center gap-2 mb-3">
@@ -216,7 +227,7 @@ export default function Commitments() {
         {/* Commitment cards grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {filteredCommitments.map((c) => (
-            <CommitmentCard key={c.id} commitment={c} placeNameById={placeNameById} orgNameById={orgNameById} />
+            <CommitmentCard key={c.id} commitment={c} placeNameById={placeNameById} orgNameById={orgNameById} places={places} />
           ))}
         </div>
 

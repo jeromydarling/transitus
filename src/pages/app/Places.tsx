@@ -76,6 +76,18 @@ function PlaceCard({ place }: { place: Place }) {
         {place.description}
       </p>
 
+      {/* Who lives here */}
+      {place.human_impact_summary && (
+        <p className="text-xs text-[hsl(20_25%_12%/0.55)] italic mt-2 line-clamp-2 border-l-2 border-[hsl(16_65%_48%/0.3)] pl-2">
+          {place.human_impact_summary.split('.')[0]}.
+        </p>
+      )}
+      {place.population_estimate && (
+        <p className="text-xs font-medium text-[hsl(20_25%_12%/0.6)] mt-1">
+          {place.population_estimate.toLocaleString()} residents
+        </p>
+      )}
+
       {/* Environmental burdens */}
       {topBurdens.length > 0 && (
         <div className="mb-3">

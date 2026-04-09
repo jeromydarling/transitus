@@ -15,9 +15,10 @@ import {
   ChevronRight,
   AlertTriangle,
   Clock,
+  Heart,
 } from 'lucide-react';
 
-import { MOCK_DASHBOARD } from '@/lib/mockData';
+import { MOCK_DASHBOARD, MOCK_COMMUNITY_STORIES } from '@/lib/mockData';
 import { useTransitusData } from '@/contexts/TransitusDataContext';
 
 import {
@@ -312,6 +313,29 @@ export default function Home() {
             </span>
           </div>
         </div>
+
+        {/* ── Community Voices ── */}
+        <section className="mb-10">
+          <div className="flex items-center gap-2 mb-4">
+            <Heart className="h-4 w-4 text-[hsl(16_65%_48%)]" />
+            <span className="font-sans text-xs font-semibold uppercase tracking-widest text-[hsl(16_65%_48%)]">Community Voices</span>
+          </div>
+          {/* Show 2 most recent stories with public consent */}
+          {MOCK_COMMUNITY_STORIES.filter(s => s.consent_level === 'public').slice(0, 2).map(story => (
+            <div key={story.id} className="mb-4 rounded-lg bg-white border border-[hsl(30_18%_82%)] p-5">
+              <blockquote className="font-serif-body text-base italic text-[hsl(20_25%_12%/0.8)] leading-relaxed border-l-[3px] border-[hsl(16_65%_48%/0.4)] pl-4 mb-3">
+                "{story.quote}"
+              </blockquote>
+              <p className="text-xs text-[hsl(20_25%_12%/0.55)]">
+                <span className="font-medium text-[hsl(20_25%_12%)]">{story.person_name}</span> — {story.location_detail}
+                {story.years_in_community && ` · ${story.years_in_community} years in community`}
+              </p>
+            </div>
+          ))}
+          <Link to="/app/community-stories" className="text-xs text-[hsl(16_65%_48%)] hover:underline flex items-center gap-1">
+            All community stories <ChevronRight className="h-3 w-3" />
+          </Link>
+        </section>
 
         {/* ── New Signals ── */}
         <section className="mb-10">

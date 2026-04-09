@@ -45,6 +45,9 @@ export default function Landing() {
           </div>
           <h1 className="font-serif text-4xl sm:text-5xl md:text-[3.75rem] leading-[1.06] tracking-tight mb-6 text-white">{hero.title}</h1>
           <p className="font-serif-body text-lg sm:text-xl text-[hsl(var(--transitus-sand)/0.8)] max-w-2xl mx-auto leading-relaxed mb-10">{hero.subtitle}</p>
+          <blockquote className="mt-8 max-w-xl mx-auto font-serif-body text-base italic text-[hsl(var(--transitus-sand)/0.7)] border-l-2 border-[hsl(var(--transitus-terracotta)/0.4)] pl-4">
+            "The people breathing the worst air are the ones with the least political power and the fewest resources to move."
+          </blockquote>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
             <Link to="/pricing">
               <Button size="lg" className="rounded-full bg-[hsl(var(--transitus-terracotta))] text-white hover:bg-[hsl(var(--transitus-terracotta)/0.85)] px-8 h-13 text-base font-medium shadow-lg shadow-[hsl(var(--transitus-terracotta)/0.3)]">

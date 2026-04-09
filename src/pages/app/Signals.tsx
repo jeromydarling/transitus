@@ -68,7 +68,7 @@ function severityLabel(severity?: Signal['severity']): string {
 
 // ── Components ──
 
-function SignalCard({ signal, isRead, placeName, onToggleRead }: { signal: Signal; isRead: boolean; placeName: (id: string) => string; onToggleRead: () => void }) {
+function SignalCard({ signal, isRead, placeName, onToggleRead, places }: { signal: Signal; isRead: boolean; placeName: (id: string) => string; onToggleRead: () => void; places: { id: string; population_estimate?: number }[] }) {
   return (
     <div
       className={`rounded-lg bg-white p-4 border border-[hsl(30_18%_82%)] transition-shadow hover:shadow-md ${
@@ -92,6 +92,17 @@ function SignalCard({ signal, isRead, placeName, onToggleRead }: { signal: Signa
           <p className="mt-1 text-xs text-[hsl(20_8%_42%)] leading-relaxed">
             {signal.summary}
           </p>
+
+          {/* Who's affected */}
+          {(() => {
+            const affectedPlaces = signal.place_ids.map(pid => places.find(p => p.id === pid)).filter(Boolean);
+            const totalPop = affectedPlaces.reduce((sum, p) => sum + (p?.population_estimate || 0), 0);
+            return totalPop > 0 ? (
+              <p className="text-[10px] text-[hsl(16_65%_48%/0.7)] mt-1.5">
+                Affects communities of {totalPop.toLocaleString()} residents
+              </p>
+            ) : null;
+          })()}
 
           {/* Badges row */}
           <div className="mt-3 flex flex-wrap items-center gap-2">
@@ -327,6 +338,7 @@ export default function Signals() {
               signal={signal}
               isRead={isSignalRead(signal.id)}
               placeName={getPlaceName}
+              places={places}
               onToggleRead={() => {
                 if (isSignalRead(signal.id)) {
                   markSignalUnread(signal.id);
