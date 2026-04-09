@@ -23,6 +23,16 @@
   </head>
 
   <body>
+    <script>
+      // GitHub Pages SPA redirect handler — picks up path from 404.html redirect
+      (function(){
+        var q = window.location.search;
+        var p = new URLSearchParams(q).get('p');
+        if (p) {
+          window.history.replaceState(null, '', p + window.location.hash);
+        }
+      })();
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
