@@ -36,9 +36,10 @@ const ORG_TYPE_OPTIONS: { value: OrgType; label: string }[] = [
 
 interface CreateOrganizationFormProps {
   trigger?: React.ReactNode;
+  defaultPlaceId?: string;
 }
 
-export function CreateOrganizationForm({ trigger }: CreateOrganizationFormProps) {
+export function CreateOrganizationForm({ trigger, defaultPlaceId }: CreateOrganizationFormProps) {
   const { places, addOrganization } = useTransitusData();
   const [open, setOpen] = useState(false);
 
@@ -46,7 +47,7 @@ export function CreateOrganizationForm({ trigger }: CreateOrganizationFormProps)
   const [orgType, setOrgType] = useState<OrgType>('ngo');
   const [description, setDescription] = useState('');
   const [website, setWebsite] = useState('');
-  const [placeIds, setPlaceIds] = useState<string[]>([]);
+  const [placeIds, setPlaceIds] = useState<string[]>(defaultPlaceId ? [defaultPlaceId] : []);
   const [tagsInput, setTagsInput] = useState('');
 
   const resetForm = () => {
@@ -54,7 +55,7 @@ export function CreateOrganizationForm({ trigger }: CreateOrganizationFormProps)
     setOrgType('ngo');
     setDescription('');
     setWebsite('');
-    setPlaceIds([]);
+    setPlaceIds(defaultPlaceId ? [defaultPlaceId] : []);
     setTagsInput('');
   };
 

@@ -30,9 +30,10 @@ const TRUST_LEVELS = [
 
 interface CreateStakeholderFormProps {
   trigger?: React.ReactNode;
+  defaultPlaceId?: string;
 }
 
-export function CreateStakeholderForm({ trigger }: CreateStakeholderFormProps) {
+export function CreateStakeholderForm({ trigger, defaultPlaceId }: CreateStakeholderFormProps) {
   const { places, organizations, addStakeholder } = useTransitusData();
   const [open, setOpen] = useState(false);
 
@@ -43,7 +44,7 @@ export function CreateStakeholderForm({ trigger }: CreateStakeholderFormProps) {
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [bio, setBio] = useState('');
-  const [placeIds, setPlaceIds] = useState<string[]>([]);
+  const [placeIds, setPlaceIds] = useState<string[]>(defaultPlaceId ? [defaultPlaceId] : []);
   const [tagsInput, setTagsInput] = useState('');
   const [trustLevel, setTrustLevel] = useState<'new' | 'building' | 'established' | 'deep'>('new');
 
@@ -55,7 +56,7 @@ export function CreateStakeholderForm({ trigger }: CreateStakeholderFormProps) {
     setEmail('');
     setPhone('');
     setBio('');
-    setPlaceIds([]);
+    setPlaceIds(defaultPlaceId ? [defaultPlaceId] : []);
     setTagsInput('');
     setTrustLevel('new');
   };

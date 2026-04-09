@@ -38,9 +38,10 @@ const STATUS_OPTIONS: { value: CommitmentStatus; label: string }[] = (
 
 interface CreateCommitmentFormProps {
   trigger?: React.ReactNode;
+  defaultPlaceId?: string;
 }
 
-export function CreateCommitmentForm({ trigger }: CreateCommitmentFormProps) {
+export function CreateCommitmentForm({ trigger, defaultPlaceId }: CreateCommitmentFormProps) {
   const { places, addCommitment } = useTransitusData();
   const [open, setOpen] = useState(false);
 
@@ -48,7 +49,7 @@ export function CreateCommitmentForm({ trigger }: CreateCommitmentFormProps) {
   const [description, setDescription] = useState('');
   const [commitmentType, setCommitmentType] = useState<CommitmentType>('public_pledge');
   const [status, setStatus] = useState<CommitmentStatus>('proposed');
-  const [placeIds, setPlaceIds] = useState<string[]>([]);
+  const [placeIds, setPlaceIds] = useState<string[]>(defaultPlaceId ? [defaultPlaceId] : []);
   const [context, setContext] = useState('');
   const [communityInterpretation, setCommunityInterpretation] = useState('');
   const [renewalDate, setRenewalDate] = useState<Date | undefined>(undefined);
@@ -58,7 +59,7 @@ export function CreateCommitmentForm({ trigger }: CreateCommitmentFormProps) {
     setDescription('');
     setCommitmentType('public_pledge');
     setStatus('proposed');
-    setPlaceIds([]);
+    setPlaceIds(defaultPlaceId ? [defaultPlaceId] : []);
     setContext('');
     setCommunityInterpretation('');
     setRenewalDate(undefined);

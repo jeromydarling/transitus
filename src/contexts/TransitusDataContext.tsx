@@ -60,10 +60,14 @@ interface TransitusDataActions {
   deleteOrganization: (id: string) => void;
 
   // Signals
+  addSignal: (signal: Omit<Signal, 'id' | 'created_at'>) => Signal;
   markSignalRead: (id: string) => void;
   markSignalUnread: (id: string) => void;
   markAllSignalsRead: () => void;
   isSignalRead: (id: string) => boolean;
+
+  // Journeys
+  addJourney: (journey: Omit<Journey, 'id' | 'started_at' | 'updated_at'>) => Journey;
 
   // Places
   addPlace: (place: Omit<Place, 'id' | 'created_at' | 'updated_at'>) => Place;
@@ -220,7 +224,13 @@ export function TransitusDataProvider({ children }: { children: ReactNode }) {
     setOrganizations(prev => prev.filter(o => o.id !== id));
   }, []);
 
-  // ── Signals ──
+  // ── Signals CRUD ──
+  const addSignal = useCallback((s: Omit<Signal, 'id' | 'created_at'>) => {
+    const newS: Signal = { ...s, id: genId('sig'), created_at: new Date().toISOString() };
+    setSignals(prev => [newS, ...prev]);
+    return newS;
+  }, []);
+
   const markSignalRead = useCallback((id: string) => {
     setReadSignalIds(prev => new Set([...prev, id]));
   }, []);
@@ -245,6 +255,14 @@ export function TransitusDataProvider({ children }: { children: ReactNode }) {
 
   const updatePlace = useCallback((id: string, updates: Partial<Place>) => {
     setPlaces(prev => prev.map(p => p.id === id ? { ...p, ...updates, updated_at: new Date().toISOString() } : p));
+  }, []);
+
+  // ── Journeys CRUD ──
+  const addJourney = useCallback((j: Omit<Journey, 'id' | 'started_at' | 'updated_at'>) => {
+    const now = new Date().toISOString();
+    const newJ: Journey = { ...j, id: genId('journey'), started_at: now, updated_at: now };
+    setJourneys(prev => [newJ, ...prev]);
+    return newJ;
   }, []);
 
   // ── Community Stories CRUD ──
@@ -341,8 +359,9 @@ export function TransitusDataProvider({ children }: { children: ReactNode }) {
     addCommitment, updateCommitment, deleteCommitment,
     addStakeholder, updateStakeholder, deleteStakeholder,
     addOrganization, updateOrganization, deleteOrganization,
-    markSignalRead, markSignalUnread, markAllSignalsRead, isSignalRead,
+    addSignal, markSignalRead, markSignalUnread, markAllSignalsRead, isSignalRead,
     addPlace, updatePlace,
+    addJourney,
     addCommunityStory, updateCommunityStory, deleteCommunityStory,
     addNriMessage, clearNriMessages,
     searchAll,

@@ -664,7 +664,15 @@ export default function PlaceDetail() {
               lng={place.lng}
               name={place.name}
               environmental_burdens={place.environmental_burdens}
-              facilityCount={facilities.length}
+              facilities={facilities}
+              stakeholderLocations={linkedStakeholders.map((s) => ({
+                id: s.id,
+                name: s.name,
+                role: s.role,
+                initials: s.name.split(' ').map((n) => n[0]).join('').slice(0, 2),
+              }))}
+              activeWork={place.active_work}
+              population={place.population_estimate}
               className="h-64 sm:h-72"
             />
 

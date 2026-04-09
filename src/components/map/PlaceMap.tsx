@@ -1,31 +1,18 @@
 /**
- * PlaceMap — Atlas-style map visualization for a Place.
+ * PlaceMap — Data-driven atlas-style map visualization for a Place.
  *
- * Currently renders a beautiful CSS atlas placeholder with terrain gradients,
- * contour lines, coordinate display, and interactive layer toggles.
- *
- * TODO: Install mapbox-gl and react-map-gl, then uncomment:
- * import Map, { Marker, NavigationControl } from 'react-map-gl';
- * import 'mapbox-gl/dist/mapbox-gl.css';
- *
- * Then replace the placeholder div with:
- *   <Map
- *     initialViewState={{ longitude: lng, latitude: lat, zoom: 13 }}
- *     style={{ width: '100%', height: '100%' }}
- *     mapStyle={show3D ? 'mapbox://styles/mapbox/satellite-streets-v12' : 'mapbox://styles/mapbox/light-v11'}
- *     mapboxAccessToken={import.meta.env.VITE_MAPBOX_TOKEN}
- *     terrain={show3D ? { source: 'mapbox-dem', exaggeration: 1.5 } : undefined}
- *   >
- *     <NavigationControl position="top-right" />
- *     <Marker longitude={lng} latitude={lat}>
- *       <MapPin className="h-8 w-8 text-[hsl(16_65%_48%)]" />
- *     </Marker>
- *   </Map>
+ * Every visual element represents real data:
+ *  - Burden Rings: EnvironmentalBurden severity, colored and sized by severity
+ *  - Facility Markers: EPA ECHO facilities, positioned by distance, colored by compliance
+ *  - Stakeholder Pins: Connected people, positioned around the edge
+ *  - Active Work Markers: Diamonds showing work items by status
+ *  - Grid Lines: 1-mile scale reference grid
  */
 
-import { useState, useMemo } from 'react';
-import { MapPin, Layers, Mountain, Building2, Users, AlertTriangle } from 'lucide-react';
-import type { EnvironmentalBurden } from '@/types/transitus';
+import { useState, useMemo, useCallback } from 'react';
+import { MapPin, Mountain } from 'lucide-react';
+import type { EnvironmentalBurden, ActiveWork } from '@/types/transitus';
+import type { ECHOFacility } from '@/lib/api/echo';
 
 // ── Design tokens ──
 
@@ -36,20 +23,48 @@ const SEVERITY_COLORS: Record<EnvironmentalBurden['severity'], string> = {
   low: '#16a34a',
 };
 
-const SEVERITY_BG: Record<EnvironmentalBurden['severity'], string> = {
-  critical: 'bg-red-100 text-red-800',
-  high: 'bg-orange-100 text-orange-800',
-  moderate: 'bg-amber-100 text-amber-800',
-  low: 'bg-green-100 text-green-800',
+const SEVERITY_RADII: Record<EnvironmentalBurden['severity'], number> = {
+  critical: 38,
+  high: 30,
+  moderate: 22,
+  low: 15,
 };
 
-type LayerName = 'Burdens' | 'Facilities' | 'Demographics';
-
-const LAYER_ICONS: Record<LayerName, React.ComponentType<{ className?: string }>> = {
-  Burdens: AlertTriangle,
-  Facilities: Building2,
-  Demographics: Users,
+const COMPLIANCE_COLORS: Record<ECHOFacility['compliance_status'], string> = {
+  significant_violation: '#dc2626',
+  violation: '#ea580c',
+  in_compliance: '#16a34a',
 };
+
+const COMPLIANCE_LABELS: Record<ECHOFacility['compliance_status'], string> = {
+  significant_violation: 'Significant Violation',
+  violation: 'Violation',
+  in_compliance: 'In Compliance',
+};
+
+const WORK_STATUS_COLORS: Record<ActiveWork['status'], string> = {
+  upcoming: '#d97706',
+  in_progress: '#c2714f',
+  completed: '#2d6a4f',
+};
+
+const WORK_STATUS_LABELS: Record<ActiveWork['status'], string> = {
+  upcoming: 'Upcoming',
+  in_progress: 'In Progress',
+  completed: 'Completed',
+};
+
+const ROLE_COLORS: Record<string, string> = {
+  steward: 'hsl(152 40% 28%)',
+  field_companion: 'hsl(16 65% 48%)',
+  listener: 'hsl(198 55% 42%)',
+  convener: 'hsl(38 80% 55%)',
+  analyst: 'hsl(270 40% 50%)',
+  sponsor: 'hsl(20 30% 40%)',
+  resident_witness: 'hsl(340 45% 50%)',
+};
+
+type LayerName = 'Burdens' | 'Facilities' | 'People' | 'Active Work';
 
 // ── Props ──
 
@@ -58,8 +73,50 @@ interface PlaceMapProps {
   lng: number;
   name: string;
   environmental_burdens: EnvironmentalBurden[];
-  facilityCount?: number;
+  facilities?: ECHOFacility[];
+  stakeholderLocations?: { id: string; name: string; role: string; initials: string }[];
+  activeWork?: ActiveWork[];
+  population?: number;
   className?: string;
+}
+
+// ── Helpers ──
+
+/** Derive a deterministic angle from a string (e.g. registry_id). */
+function hashToAngle(str: string): number {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = ((hash << 5) - hash + str.charCodeAt(i)) | 0;
+  }
+  return ((hash % 360) + 360) % 360;
+}
+
+/** Map facility distance to SVG distance from center. Max display radius ~40 SVG units. */
+function distanceToRadius(miles: number, maxMiles: number): number {
+  const clamped = Math.min(miles, maxMiles);
+  // Scale 0..maxMiles to 8..40 SVG units
+  return 8 + (clamped / maxMiles) * 32;
+}
+
+/** Map total_releases_lbs to dot size. */
+function releasesToSize(lbs: number | undefined): number {
+  if (!lbs || lbs <= 0) return 0.8;
+  if (lbs < 1000) return 0.8;
+  if (lbs < 10000) return 1.1;
+  if (lbs < 50000) return 1.5;
+  if (lbs < 100000) return 2.0;
+  return 2.5;
+}
+
+function formatLbs(lbs: number | undefined): string {
+  if (!lbs) return 'N/A';
+  if (lbs >= 1_000_000) return `${(lbs / 1_000_000).toFixed(1)}M lbs`;
+  if (lbs >= 1_000) return `${(lbs / 1_000).toFixed(1)}K lbs`;
+  return `${lbs} lbs`;
+}
+
+function formatWorkType(type: ActiveWork['type']): string {
+  return type.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
 // ── Component ──
@@ -69,136 +126,310 @@ export default function PlaceMap({
   lng,
   name,
   environmental_burdens,
-  facilityCount,
+  facilities = [],
+  stakeholderLocations = [],
+  activeWork = [],
+  population,
   className = '',
 }: PlaceMapProps) {
   const [show3D, setShow3D] = useState(false);
-  const [activeLayers, setActiveLayers] = useState<Set<LayerName>>(new Set(['Burdens']));
+  const [activeLayers, setActiveLayers] = useState<Set<LayerName>>(
+    new Set(['Burdens', 'Facilities', 'People', 'Active Work']),
+  );
+  const [tooltip, setTooltip] = useState<{ text: string; x: number; y: number } | null>(null);
 
-  const topBurden = useMemo(() => {
-    const severity = ['critical', 'high', 'moderate', 'low'] as const;
-    for (const level of severity) {
-      const found = environmental_burdens.find((b) => b.severity === level);
-      if (found) return found;
-    }
-    return environmental_burdens[0] ?? null;
-  }, [environmental_burdens]);
-
-  const toggleLayer = (layer: LayerName) => {
+  const toggleLayer = useCallback((layer: LayerName) => {
     setActiveLayers((prev) => {
       const next = new Set(prev);
       if (next.has(layer)) next.delete(layer);
       else next.add(layer);
       return next;
     });
-  };
-
-  // Generate deterministic contour rings based on coordinates
-  const contourRings = useMemo(() => {
-    const seed = Math.abs(lat * 1000 + lng * 100);
-    return Array.from({ length: 6 }, (_, i) => ({
-      cx: 40 + ((seed * (i + 1) * 7) % 30),
-      cy: 30 + ((seed * (i + 2) * 11) % 40),
-      rx: 15 + ((seed * (i + 3) * 3) % 25),
-      ry: 10 + ((seed * (i + 1) * 5) % 20),
-      rotation: (seed * (i + 4) * 13) % 360,
-    }));
-  }, [lat, lng]);
-
-  // Generate grid dots for the topographic effect
-  const gridDots = useMemo(() => {
-    const dots: { x: number; y: number; opacity: number }[] = [];
-    for (let gx = 0; gx < 20; gx++) {
-      for (let gy = 0; gy < 12; gy++) {
-        dots.push({
-          x: gx * 5 + 2.5,
-          y: gy * 8.5 + 4,
-          opacity: 0.08 + Math.sin(gx * 0.7 + gy * 0.5) * 0.06,
-        });
-      }
-    }
-    return dots;
   }, []);
 
+  const showTooltip = useCallback((e: React.MouseEvent<SVGElement>, text: string) => {
+    const svg = (e.currentTarget as SVGElement).closest('svg');
+    if (!svg) return;
+    const rect = svg.getBoundingClientRect();
+    setTooltip({
+      text,
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top - 10,
+    });
+  }, []);
+
+  const hideTooltip = useCallback(() => setTooltip(null), []);
+
+  // Center of the SVG viewBox
+  const CX = 50;
+  const CY = 50;
+
+  // Compute max facility distance for scaling
+  const maxFacilityDist = useMemo(() => {
+    if (facilities.length === 0) return 3;
+    return Math.max(...facilities.map((f) => f.distance_miles), 1);
+  }, [facilities]);
+
+  // Burden rings: sorted by severity so largest (critical) renders first (behind)
+  const sortedBurdens = useMemo(() => {
+    const order: EnvironmentalBurden['severity'][] = ['critical', 'high', 'moderate', 'low'];
+    return [...environmental_burdens].sort(
+      (a, b) => order.indexOf(a.severity) - order.indexOf(b.severity),
+    );
+  }, [environmental_burdens]);
+
+  // Facility positions
+  const facilityPositions = useMemo(() => {
+    return facilities.map((f) => {
+      const angle = (hashToAngle(f.registry_id) * Math.PI) / 180;
+      const r = distanceToRadius(f.distance_miles, maxFacilityDist);
+      return {
+        facility: f,
+        x: CX + r * Math.cos(angle),
+        y: CY + r * Math.sin(angle),
+        size: releasesToSize(f.total_releases_lbs),
+      };
+    });
+  }, [facilities, maxFacilityDist]);
+
+  // Stakeholder positions: evenly around the outer edge
+  const stakeholderPositions = useMemo(() => {
+    const edgeR = 44;
+    return stakeholderLocations.map((s, i) => {
+      const angle = (2 * Math.PI * i) / Math.max(stakeholderLocations.length, 1) - Math.PI / 2;
+      return {
+        ...s,
+        x: CX + edgeR * Math.cos(angle),
+        y: CY + edgeR * Math.sin(angle),
+      };
+    });
+  }, [stakeholderLocations]);
+
+  // Active work positions: clustered in a ring just outside burden rings
+  const workPositions = useMemo(() => {
+    const workR = 35;
+    return activeWork.map((w, i) => {
+      const angle = (2 * Math.PI * i) / Math.max(activeWork.length, 1) + Math.PI / 4;
+      return {
+        ...w,
+        x: CX + workR * Math.cos(angle),
+        y: CY + workR * Math.sin(angle),
+      };
+    });
+  }, [activeWork]);
+
   return (
-    <div className={`relative rounded-lg overflow-hidden border border-[hsl(30_18%_82%)] ${className}`}
-         style={{ minHeight: '18rem' }}>
+    <div
+      className={`relative rounded-lg overflow-hidden border border-[hsl(30_18%_82%)] ${className}`}
+      style={{ minHeight: '18rem' }}
+    >
       {/* Terrain gradient background */}
-      <div className="absolute inset-0"
-           style={{
-             background: show3D
-               ? 'linear-gradient(135deg, hsl(152 30% 25%) 0%, hsl(30 25% 35%) 35%, hsl(16 45% 40%) 65%, hsl(20 20% 30%) 100%)'
-               : 'linear-gradient(160deg, hsl(152 35% 32%) 0%, hsl(152 20% 42%) 20%, hsl(40 30% 50%) 45%, hsl(30 25% 58%) 65%, hsl(16 40% 45%) 85%, hsl(20 20% 35%) 100%)',
-             transition: 'background 0.6s ease',
-           }}
+      <div
+        className="absolute inset-0"
+        style={{
+          background: show3D
+            ? 'linear-gradient(135deg, hsl(152 30% 25%) 0%, hsl(30 25% 35%) 35%, hsl(16 45% 40%) 65%, hsl(20 20% 30%) 100%)'
+            : 'linear-gradient(160deg, hsl(152 35% 32%) 0%, hsl(152 20% 42%) 20%, hsl(40 30% 50%) 45%, hsl(30 25% 58%) 65%, hsl(16 40% 45%) 85%, hsl(20 20% 35%) 100%)',
+          transition: 'background 0.6s ease',
+        }}
       />
 
-      {/* SVG contour lines overlay */}
-      <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="none" viewBox="0 0 100 100">
-        {/* Grid dots */}
-        {gridDots.map((dot, i) => (
-          <circle key={`dot-${i}`} cx={dot.x} cy={dot.y} r="0.3" fill="white" opacity={dot.opacity} />
-        ))}
+      {/* SVG data layer */}
+      <svg
+        className="absolute inset-0 w-full h-full"
+        viewBox="0 0 100 100"
+        preserveAspectRatio="xMidYMid meet"
+      >
+        {/* Grid lines — 1-mile scale reference */}
+        {(() => {
+          // Grid spacing = SVG units per mile based on facility scale
+          const spacing = maxFacilityDist > 0 ? 32 / maxFacilityDist : 16;
+          const lines: React.ReactNode[] = [];
+          // Vertical lines
+          for (let i = -4; i <= 4; i++) {
+            const x = CX + i * spacing;
+            if (x < 0 || x > 100) continue;
+            lines.push(
+              <line
+                key={`gv-${i}`}
+                x1={x}
+                y1={0}
+                x2={x}
+                y2={100}
+                stroke="white"
+                strokeWidth="0.15"
+                opacity="0.12"
+              />,
+            );
+          }
+          // Horizontal lines
+          for (let i = -4; i <= 4; i++) {
+            const y = CY + i * spacing;
+            if (y < 0 || y > 100) continue;
+            lines.push(
+              <line
+                key={`gh-${i}`}
+                x1={0}
+                y1={y}
+                x2={100}
+                y2={y}
+                stroke="white"
+                strokeWidth="0.15"
+                opacity="0.12"
+              />,
+            );
+          }
+          // Scale label on the first grid line right of center
+          if (spacing > 4) {
+            lines.push(
+              <text
+                key="scale-label"
+                x={CX + spacing + 0.5}
+                y={CY - 0.5}
+                fontSize="2.2"
+                fill="white"
+                opacity="0.4"
+                fontFamily="sans-serif"
+              >
+                ~1 mi
+              </text>,
+            );
+          }
+          return lines;
+        })()}
 
-        {/* Contour ellipses */}
-        {contourRings.map((ring, i) => (
-          <ellipse
-            key={`contour-${i}`}
-            cx={ring.cx}
-            cy={ring.cy}
-            rx={ring.rx}
-            ry={ring.ry}
-            transform={`rotate(${ring.rotation} ${ring.cx} ${ring.cy})`}
-            fill="none"
-            stroke="white"
-            strokeWidth="0.3"
-            opacity={0.15 + i * 0.03}
-            strokeDasharray={i % 2 === 0 ? '2 1.5' : 'none'}
-          />
-        ))}
+        {/* Burden Rings */}
+        {activeLayers.has('Burdens') &&
+          sortedBurdens.map((burden, i) => {
+            const r = SEVERITY_RADII[burden.severity];
+            const color = SEVERITY_COLORS[burden.severity];
+            // Slight offset per-ring so overlapping rings are distinguishable
+            const offset = i * 0.4;
+            return (
+              <ellipse
+                key={`burden-${i}`}
+                cx={CX + offset}
+                cy={CY + offset * 0.5}
+                rx={r}
+                ry={r * 0.7}
+                fill="none"
+                stroke={color}
+                strokeWidth="0.6"
+                opacity={0.55}
+                strokeDasharray={burden.severity === 'critical' ? 'none' : '2 1'}
+                style={{ cursor: 'pointer' }}
+                onMouseMove={(e) =>
+                  showTooltip(
+                    e,
+                    `${burden.name} (${burden.severity}): ${burden.description}`,
+                  )
+                }
+                onMouseLeave={hideTooltip}
+              />
+            );
+          })}
 
-        {/* Meridian lines */}
-        {Array.from({ length: 5 }, (_, i) => (
-          <line
-            key={`meridian-${i}`}
-            x1={20 + i * 15}
-            y1="0"
-            x2={20 + i * 15}
-            y2="100"
-            stroke="white"
-            strokeWidth="0.15"
-            opacity="0.1"
-          />
-        ))}
-        {Array.from({ length: 4 }, (_, i) => (
-          <line
-            key={`parallel-${i}`}
-            x1="0"
-            y1={20 + i * 20}
-            x2="100"
-            y2={20 + i * 20}
-            stroke="white"
-            strokeWidth="0.15"
-            opacity="0.1"
-          />
-        ))}
+        {/* Facility Markers */}
+        {activeLayers.has('Facilities') &&
+          facilityPositions.map((fp, i) => {
+            const f = fp.facility;
+            const color = COMPLIANCE_COLORS[f.compliance_status];
+            const chemicals = f.top_chemicals?.slice(0, 3).join(', ') || 'None listed';
+            const ttText = `${f.facility_name}\n${COMPLIANCE_LABELS[f.compliance_status]} | ${formatLbs(f.total_releases_lbs)}\nTop chemicals: ${chemicals}\nDistance: ${f.distance_miles.toFixed(1)} mi`;
+            return (
+              <circle
+                key={`fac-${i}`}
+                cx={fp.x}
+                cy={fp.y}
+                r={fp.size}
+                fill={color}
+                stroke="white"
+                strokeWidth="0.25"
+                opacity={0.85}
+                style={{ cursor: 'pointer' }}
+                onMouseMove={(e) => showTooltip(e, ttText)}
+                onMouseLeave={hideTooltip}
+              />
+            );
+          })}
+
+        {/* Active Work Markers (diamonds) */}
+        {activeLayers.has('Active Work') &&
+          workPositions.map((wp, i) => {
+            const color = WORK_STATUS_COLORS[wp.status];
+            const d = 1.8; // half-size of diamond
+            const points = `${wp.x},${wp.y - d} ${wp.x + d},${wp.y} ${wp.x},${wp.y + d} ${wp.x - d},${wp.y}`;
+            const ttText = `${wp.title}\n${formatWorkType(wp.type)} - ${WORK_STATUS_LABELS[wp.status]}`;
+            return (
+              <polygon
+                key={`work-${i}`}
+                points={points}
+                fill={color}
+                stroke="white"
+                strokeWidth="0.25"
+                opacity={0.9}
+                style={{ cursor: 'pointer' }}
+                onMouseMove={(e) => showTooltip(e, ttText)}
+                onMouseLeave={hideTooltip}
+              />
+            );
+          })}
+
+        {/* Stakeholder Pins */}
+        {activeLayers.has('People') &&
+          stakeholderPositions.map((sp, i) => {
+            const color = ROLE_COLORS[sp.role] || 'hsl(20 12% 46%)';
+            const ttText = `${sp.name}\nRole: ${sp.role.replace(/_/g, ' ')}`;
+            return (
+              <g key={`stake-${i}`}>
+                <circle
+                  cx={sp.x}
+                  cy={sp.y}
+                  r={2.2}
+                  fill={color}
+                  stroke="white"
+                  strokeWidth="0.3"
+                  opacity={0.9}
+                  style={{ cursor: 'pointer' }}
+                  onMouseMove={(e) => showTooltip(e, ttText)}
+                  onMouseLeave={hideTooltip}
+                />
+                <text
+                  x={sp.x}
+                  y={sp.y + 0.6}
+                  textAnchor="middle"
+                  dominantBaseline="middle"
+                  fontSize="1.8"
+                  fontWeight="600"
+                  fill="white"
+                  style={{ pointerEvents: 'none' }}
+                >
+                  {sp.initials}
+                </text>
+              </g>
+            );
+          })}
       </svg>
 
       {/* Shadow gradient for depth */}
       {show3D && (
-        <div className="absolute inset-0 pointer-events-none"
-             style={{
-               background: 'linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.15) 60%, rgba(0,0,0,0.35) 100%)',
-             }}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background:
+              'linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.15) 60%, rgba(0,0,0,0.35) 100%)',
+          }}
         />
       )}
 
       {/* Central pin marker */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
         <div className="flex flex-col items-center">
-          {/* Pulse ring */}
           <div className="relative">
-            <div className="absolute inset-0 -m-3 rounded-full border-2 border-white/20 animate-ping" style={{ animationDuration: '3s' }} />
+            <div
+              className="absolute inset-0 -m-3 rounded-full border-2 border-white/20 animate-ping"
+              style={{ animationDuration: '3s' }}
+            />
             <div className="relative bg-white/15 backdrop-blur-sm rounded-full p-3 border border-white/25 shadow-lg">
               <MapPin className="h-8 w-8 text-white drop-shadow-md" />
             </div>
@@ -206,51 +437,35 @@ export default function PlaceMap({
           <span className="mt-2 text-sm font-serif font-medium text-white/90 drop-shadow-md tracking-wide">
             {name}
           </span>
+          {population != null && population > 0 && (
+            <span className="text-[10px] text-white/60 drop-shadow-sm">
+              Pop. ~{population.toLocaleString()}
+            </span>
+          )}
         </div>
       </div>
+
+      {/* Tooltip */}
+      {tooltip && (
+        <div
+          className="absolute z-50 pointer-events-none bg-black/80 backdrop-blur-sm text-white text-[10px] leading-snug rounded-md px-2.5 py-1.5 border border-white/10 max-w-[220px] whitespace-pre-line"
+          style={{
+            left: tooltip.x,
+            top: tooltip.y,
+            transform: 'translate(-50%, -100%)',
+          }}
+        >
+          {tooltip.text}
+        </div>
+      )}
 
       {/* Coordinate badge — bottom-left */}
       <div className="absolute bottom-3 left-3 flex items-center gap-1.5 bg-black/30 backdrop-blur-sm rounded-md px-2.5 py-1.5 border border-white/10">
         <MapPin className="h-3 w-3 text-white/60" />
         <span className="text-[11px] font-mono text-white/80 tracking-wide">
-          {lat.toFixed(4)}&#176;N, {Math.abs(lng).toFixed(4)}&#176;{lng >= 0 ? 'E' : 'W'}
+          {lat.toFixed(4)}&#176;N, {Math.abs(lng).toFixed(4)}&#176;
+          {lng >= 0 ? 'E' : 'W'}
         </span>
-      </div>
-
-      {/* Overlay info — top-left */}
-      <div className="absolute top-3 left-3 flex flex-col gap-1.5">
-        {/* Facility count */}
-        {typeof facilityCount === 'number' && activeLayers.has('Facilities') && (
-          <div className="flex items-center gap-1.5 bg-black/30 backdrop-blur-sm rounded-md px-2.5 py-1.5 border border-white/10">
-            <Building2 className="h-3 w-3 text-amber-300/80" />
-            <span className="text-[11px] font-medium text-white/85">
-              {facilityCount} nearby {facilityCount === 1 ? 'facility' : 'facilities'}
-            </span>
-          </div>
-        )}
-
-        {/* Top burden */}
-        {topBurden && activeLayers.has('Burdens') && (
-          <div className="flex items-center gap-1.5 bg-black/30 backdrop-blur-sm rounded-md px-2.5 py-1.5 border border-white/10">
-            <AlertTriangle className="h-3 w-3" style={{ color: SEVERITY_COLORS[topBurden.severity] }} />
-            <span className="text-[11px] font-medium text-white/85">
-              {topBurden.name}
-            </span>
-            <span className={`ml-1 inline-flex items-center rounded-full px-1.5 py-0 text-[9px] font-semibold uppercase tracking-wider ${SEVERITY_BG[topBurden.severity]}`}>
-              {topBurden.severity}
-            </span>
-          </div>
-        )}
-
-        {/* Burden count */}
-        {environmental_burdens.length > 1 && activeLayers.has('Burdens') && (
-          <div className="flex items-center gap-1.5 bg-black/30 backdrop-blur-sm rounded-md px-2.5 py-1.5 border border-white/10">
-            <Layers className="h-3 w-3 text-white/60" />
-            <span className="text-[11px] text-white/70">
-              {environmental_burdens.length} environmental burdens tracked
-            </span>
-          </div>
-        )}
       </div>
 
       {/* Controls — top-right */}
@@ -269,8 +484,7 @@ export default function PlaceMap({
         </button>
 
         {/* Layer toggles */}
-        {(['Burdens', 'Facilities', 'Demographics'] as LayerName[]).map((layer) => {
-          const Icon = LAYER_ICONS[layer];
+        {(['Burdens', 'Facilities', 'People', 'Active Work'] as LayerName[]).map((layer) => {
           const isActive = activeLayers.has(layer);
           return (
             <button
@@ -282,35 +496,100 @@ export default function PlaceMap({
                   : 'bg-black/20 text-white/50 border-white/5 hover:bg-black/30 hover:text-white/70'
               } backdrop-blur-sm`}
             >
-              <Icon className="h-3 w-3" />
               {layer}
             </button>
           );
         })}
       </div>
 
-      {/* Bottom-right: burden severity legend (shown when Burdens layer is active) */}
-      {activeLayers.has('Burdens') && environmental_burdens.length > 0 && (
-        <div className="absolute bottom-3 right-3 bg-black/30 backdrop-blur-sm rounded-md px-3 py-2 border border-white/10">
-          <p className="text-[9px] uppercase tracking-widest text-white/50 mb-1.5 font-semibold">Burden Severity</p>
-          <div className="flex items-center gap-2">
-            {(['low', 'moderate', 'high', 'critical'] as const).map((level) => {
-              const count = environmental_burdens.filter((b) => b.severity === level).length;
-              if (count === 0) return null;
-              return (
-                <div key={level} className="flex items-center gap-1">
-                  <span
-                    className="inline-block w-2 h-2 rounded-full"
-                    style={{ backgroundColor: SEVERITY_COLORS[level] }}
-                  />
-                  <span className="text-[10px] text-white/70 capitalize">{level}</span>
-                  <span className="text-[10px] text-white/40">({count})</span>
-                </div>
-              );
-            })}
-          </div>
+      {/* Bottom-right: Data legend */}
+      <div className="absolute bottom-3 right-3 bg-black/30 backdrop-blur-sm rounded-md px-3 py-2 border border-white/10 max-w-[340px]">
+        <p className="text-[9px] uppercase tracking-widest text-white/50 mb-1.5 font-semibold">
+          Legend
+        </p>
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+          {/* Burden severity */}
+          {activeLayers.has('Burdens') && environmental_burdens.length > 0 && (
+            <>
+              {(['critical', 'high', 'moderate', 'low'] as const).map((level) => {
+                const count = environmental_burdens.filter((b) => b.severity === level).length;
+                if (count === 0) return null;
+                return (
+                  <div key={`leg-b-${level}`} className="flex items-center gap-1">
+                    <span
+                      className="inline-block w-2 h-2 rounded-full border border-white/30"
+                      style={{ backgroundColor: SEVERITY_COLORS[level] }}
+                    />
+                    <span className="text-[9px] text-white/70 capitalize">
+                      {level} ({count})
+                    </span>
+                  </div>
+                );
+              })}
+            </>
+          )}
+
+          {/* Facility compliance */}
+          {activeLayers.has('Facilities') && facilities.length > 0 && (
+            <>
+              {(
+                ['significant_violation', 'violation', 'in_compliance'] as ECHOFacility['compliance_status'][]
+              ).map((status) => {
+                const count = facilities.filter((f) => f.compliance_status === status).length;
+                if (count === 0) return null;
+                return (
+                  <div key={`leg-f-${status}`} className="flex items-center gap-1">
+                    <span
+                      className="inline-block w-1.5 h-1.5 rounded-full"
+                      style={{ backgroundColor: COMPLIANCE_COLORS[status] }}
+                    />
+                    <span className="text-[9px] text-white/70">
+                      {COMPLIANCE_LABELS[status]} ({count})
+                    </span>
+                  </div>
+                );
+              })}
+            </>
+          )}
+
+          {/* Active work status */}
+          {activeLayers.has('Active Work') && activeWork.length > 0 && (
+            <>
+              {(['upcoming', 'in_progress', 'completed'] as ActiveWork['status'][]).map(
+                (status) => {
+                  const count = activeWork.filter((w) => w.status === status).length;
+                  if (count === 0) return null;
+                  return (
+                    <div key={`leg-w-${status}`} className="flex items-center gap-1">
+                      <span
+                        className="inline-block w-2 h-2 rotate-45"
+                        style={{ backgroundColor: WORK_STATUS_COLORS[status] }}
+                      />
+                      <span className="text-[9px] text-white/70">
+                        {WORK_STATUS_LABELS[status]} ({count})
+                      </span>
+                    </div>
+                  );
+                },
+              )}
+            </>
+          )}
+
+          {/* Stakeholder count */}
+          {activeLayers.has('People') && stakeholderLocations.length > 0 && (
+            <div className="flex items-center gap-1">
+              <span
+                className="inline-block w-2 h-2 rounded-full"
+                style={{ backgroundColor: 'hsl(198 55% 42%)' }}
+              />
+              <span className="text-[9px] text-white/70">
+                {stakeholderLocations.length} stakeholder
+                {stakeholderLocations.length !== 1 ? 's' : ''}
+              </span>
+            </div>
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 }

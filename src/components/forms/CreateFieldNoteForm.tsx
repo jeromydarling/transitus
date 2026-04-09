@@ -43,13 +43,14 @@ const CONSENT_LEVELS = [
 
 interface CreateFieldNoteFormProps {
   trigger?: React.ReactNode;
+  defaultPlaceId?: string;
 }
 
-export function CreateFieldNoteForm({ trigger }: CreateFieldNoteFormProps) {
+export function CreateFieldNoteForm({ trigger, defaultPlaceId }: CreateFieldNoteFormProps) {
   const { places, addFieldNote } = useTransitusData();
   const [open, setOpen] = useState(false);
 
-  const [placeId, setPlaceId] = useState('');
+  const [placeId, setPlaceId] = useState(defaultPlaceId || '');
   const [noteType, setNoteType] = useState<FieldNoteType>('quick_note');
   const [content, setContent] = useState('');
   const [whatISaw, setWhatISaw] = useState('');
@@ -61,7 +62,7 @@ export function CreateFieldNoteForm({ trigger }: CreateFieldNoteFormProps) {
   const [consentLevel, setConsentLevel] = useState<'local_only' | 'trusted_allies' | 'institutional' | 'public'>('local_only');
 
   const resetForm = () => {
-    setPlaceId('');
+    setPlaceId(defaultPlaceId || '');
     setNoteType('quick_note');
     setContent('');
     setWhatISaw('');
