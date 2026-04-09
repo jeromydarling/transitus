@@ -12,7 +12,7 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from '@/components/ui/select';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Pencil } from 'lucide-react';
+import { Pencil, Check } from 'lucide-react';
 import type { Place } from '@/types/transitus';
 
 const DISPLACEMENT_OPTIONS: { value: NonNullable<Place['displacement_pressure']>; label: string }[] = [
@@ -20,6 +20,28 @@ const DISPLACEMENT_OPTIONS: { value: NonNullable<Place['displacement_pressure']>
   { value: 'moderate', label: 'Moderate' },
   { value: 'high', label: 'High' },
   { value: 'critical', label: 'Critical' },
+];
+
+const POPULATION_OPTIONS = [
+  { value: 'children_under_5', label: 'Children under 5' },
+  { value: 'children_under_12', label: 'Children under 12' },
+  { value: 'elderly_over_65', label: 'Elderly (65+)' },
+  { value: 'pregnant_women', label: 'Pregnant women' },
+  { value: 'renters', label: 'Renters' },
+  { value: 'uninsured', label: 'Uninsured residents' },
+  { value: 'limited_english_speakers', label: 'Limited English speakers' },
+  { value: 'immigrant_families', label: 'Immigrant families' },
+  { value: 'undocumented_families', label: 'Undocumented families' },
+  { value: 'low_income_households', label: 'Low-income households' },
+  { value: 'people_with_disabilities', label: 'People with disabilities' },
+  { value: 'outdoor_workers', label: 'Outdoor workers' },
+  { value: 'workers_in_informal_economy', label: 'Workers in informal economy' },
+  { value: 'people_without_vehicles', label: 'People without vehicles' },
+  { value: 'residents_in_pre1960_housing', label: 'Residents in pre-1960 housing' },
+  { value: 'children_with_respiratory_illness', label: 'Children with respiratory illness' },
+  { value: 'elderly_long_term_residents', label: 'Long-term elderly residents' },
+  { value: 'coastal_zone_residents', label: 'Coastal zone residents' },
+  { value: 'communities_of_color', label: 'Communities of color' },
 ];
 
 interface EditHumanImpactFormProps {
@@ -33,8 +55,8 @@ export function EditHumanImpactForm({ place, trigger }: EditHumanImpactFormProps
 
   const [humanImpactSummary, setHumanImpactSummary] = useState(place.human_impact_summary || '');
   const [healthSnapshot, setHealthSnapshot] = useState(place.health_snapshot || '');
-  const [mostAffectedPopulations, setMostAffectedPopulations] = useState(
-    (place.most_affected_populations || []).join(', ')
+  const [selectedPopulations, setSelectedPopulations] = useState<Set<string>>(
+    new Set(place.most_affected_populations || [])
   );
   const [displacementPressure, setDisplacementPressure] = useState<Place['displacement_pressure']>(
     place.displacement_pressure || 'low'
@@ -44,7 +66,7 @@ export function EditHumanImpactForm({ place, trigger }: EditHumanImpactFormProps
     if (isOpen) {
       setHumanImpactSummary(place.human_impact_summary || '');
       setHealthSnapshot(place.health_snapshot || '');
-      setMostAffectedPopulations((place.most_affected_populations || []).join(', '));
+      setSelectedPopulations(new Set(place.most_affected_populations || []));
       setDisplacementPressure(place.displacement_pressure || 'low');
     }
     setOpen(isOpen);
@@ -53,10 +75,7 @@ export function EditHumanImpactForm({ place, trigger }: EditHumanImpactFormProps
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    const populations = mostAffectedPopulations
-      .split(',')
-      .map(s => s.trim())
-      .filter(Boolean);
+    const populations = Array.from(selectedPopulations);
 
     updatePlace(place.id, {
       human_impact_summary: humanImpactSummary.trim() || undefined,
@@ -119,17 +138,48 @@ export function EditHumanImpactForm({ place, trigger }: EditHumanImpactFormProps
               />
             </div>
 
-            {/* Most Affected Populations */}
+            {/* Most Affected Populations — multi-select */}
             <div className="space-y-1.5">
               <Label className="text-xs font-semibold uppercase tracking-widest text-[hsl(16_65%_48%)]">
                 Most Affected Populations
               </Label>
-              <Input
-                value={mostAffectedPopulations}
-                onChange={e => setMostAffectedPopulations(e.target.value)}
-                placeholder="e.g. Children under 5, Elderly, Low-income families"
-              />
-              <p className="text-xs text-muted-foreground">Separate with commas</p>
+              <p className="text-xs text-muted-foreground mb-2">Select all that apply</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 max-h-[220px] overflow-y-auto rounded-lg border border-[hsl(30_18%_82%)] bg-white p-2">
+                {POPULATION_OPTIONS.map(opt => {
+                  const isSelected = selectedPopulations.has(opt.value);
+                  return (
+                    <button
+                      key={opt.value}
+                      type="button"
+                      onClick={() => {
+                        setSelectedPopulations(prev => {
+                          const next = new Set(prev);
+                          if (next.has(opt.value)) next.delete(opt.value);
+                          else next.add(opt.value);
+                          return next;
+                        });
+                      }}
+                      className={`flex items-center gap-2 px-2.5 py-1.5 rounded-md text-xs text-left transition-colors ${
+                        isSelected
+                          ? 'bg-[hsl(16_65%_48%/0.1)] text-[hsl(16_65%_48%)] font-medium'
+                          : 'text-[hsl(20_25%_12%/0.6)] hover:bg-[hsl(30_18%_82%/0.3)]'
+                      }`}
+                    >
+                      <span className={`shrink-0 w-4 h-4 rounded border flex items-center justify-center ${
+                        isSelected ? 'bg-[hsl(16_65%_48%)] border-[hsl(16_65%_48%)]' : 'border-[hsl(30_18%_82%)]'
+                      }`}>
+                        {isSelected && <Check className="h-3 w-3 text-white" />}
+                      </span>
+                      {opt.label}
+                    </button>
+                  );
+                })}
+              </div>
+              {selectedPopulations.size > 0 && (
+                <p className="text-[10px] text-[hsl(20_25%_12%/0.4)] mt-1">
+                  {selectedPopulations.size} selected
+                </p>
+              )}
             </div>
 
             {/* Displacement Pressure */}
