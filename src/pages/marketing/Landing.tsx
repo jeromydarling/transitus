@@ -236,6 +236,82 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* THE REAL COST — comparison section */}
+      <section className="bg-[hsl(var(--transitus-parchment))] relative overflow-hidden">
+        <div className="absolute inset-0 contour-pattern opacity-40" />
+        <div className="relative marketing-section">
+          <div className="max-w-4xl mx-auto">
+            <div className="text-center mb-12">
+              <Eye className="h-8 w-8 text-[hsl(var(--transitus-terracotta))] mx-auto mb-5" />
+              <h2 className="marketing-heading text-[hsl(var(--marketing-earth))] mb-4">What your team is doing now costs more than you think</h2>
+              <p className="marketing-subheading text-[hsl(var(--marketing-earth)/0.6)] max-w-2xl mx-auto">
+                Most environmental justice organizations piece together 5–8 tools to do what Transitus does in one place. Here's what that actually costs in time, money, and lost institutional memory.
+              </p>
+            </div>
+
+            {/* Comparison Table */}
+            <div className="rounded-xl border border-[hsl(30_18%_82%)] overflow-hidden mb-10">
+              {/* Header */}
+              <div className="grid grid-cols-3 bg-[hsl(var(--transitus-earth))] text-[hsl(var(--transitus-sand))]">
+                <div className="p-4 text-xs font-semibold uppercase tracking-widest">What you need</div>
+                <div className="p-4 text-xs font-semibold uppercase tracking-widest text-center border-l border-[hsl(38_35%_90%/0.1)]">Current patchwork</div>
+                <div className="p-4 text-xs font-semibold uppercase tracking-widest text-center border-l border-[hsl(38_35%_90%/0.1)]" style={{ color: 'hsl(38 80% 55%)' }}>Transitus</div>
+              </div>
+              {/* Rows */}
+              {[
+                ['Stakeholder tracking', 'Spreadsheets + email threads', 'Built in'],
+                ['Environmental data', 'EJScreen + manual research', 'Auto-layered on every place'],
+                ['Commitment tracking', 'Shared docs + meeting notes', 'Living status with community voice'],
+                ['Field documentation', 'Text messages + notebooks', 'Geotagged notes with consent'],
+                ['Signal monitoring', 'Google Alerts + RSS + manual', 'EPA, NOAA, permits in one feed'],
+                ['Narrative reports', 'Hours of manual writing', 'Generated from your field data'],
+                ['Community stories', 'Scattered across drives', 'Consent-managed, place-linked'],
+                ['Institutional memory', 'Lost when people leave', 'Preserved across leadership changes'],
+              ].map(([need, current, transitus], i) => (
+                <div key={i} className={`grid grid-cols-3 ${i % 2 === 0 ? 'bg-white' : 'bg-[hsl(38_30%_97%)]'}`}>
+                  <div className="p-3.5 text-sm font-medium text-[hsl(var(--marketing-earth))]">{need}</div>
+                  <div className="p-3.5 text-sm text-[hsl(var(--marketing-earth)/0.5)] text-center border-l border-[hsl(30_18%_82%/0.5)]">{current}</div>
+                  <div className="p-3.5 text-sm font-medium text-[hsl(var(--transitus-forest))] text-center border-l border-[hsl(30_18%_82%/0.5)]">{transitus}</div>
+                </div>
+              ))}
+            </div>
+
+            {/* Time/money comparison */}
+            <div className="grid sm:grid-cols-3 gap-5 mb-10">
+              <div className="rounded-xl bg-white border border-[hsl(30_18%_82%)] p-5 text-center">
+                <p className="font-serif text-3xl text-[hsl(0_50%_45%)] mb-1">15–20 hrs</p>
+                <p className="text-xs text-[hsl(var(--marketing-earth)/0.5)]">per week managing scattered tools</p>
+                <div className="mt-3 h-px bg-[hsl(30_18%_82%)]" />
+                <p className="mt-3 font-serif text-3xl text-[hsl(var(--transitus-forest))]">3–5 hrs</p>
+                <p className="text-xs text-[hsl(var(--marketing-earth)/0.5)]">with Transitus</p>
+              </div>
+              <div className="rounded-xl bg-white border border-[hsl(30_18%_82%)] p-5 text-center">
+                <p className="font-serif text-3xl text-[hsl(0_50%_45%)] mb-1">$800+</p>
+                <p className="text-xs text-[hsl(var(--marketing-earth)/0.5)]">per month in tool subscriptions</p>
+                <div className="mt-3 h-px bg-[hsl(30_18%_82%)]" />
+                <p className="mt-3 font-serif text-3xl text-[hsl(var(--transitus-forest))]">$150</p>
+                <p className="text-xs text-[hsl(var(--marketing-earth)/0.5)]">per month, everything included</p>
+              </div>
+              <div className="rounded-xl bg-white border border-[hsl(30_18%_82%)] p-5 text-center">
+                <p className="font-serif text-3xl text-[hsl(0_50%_45%)] mb-1">100%</p>
+                <p className="text-xs text-[hsl(var(--marketing-earth)/0.5)]">of memory lost when staff turns over</p>
+                <div className="mt-3 h-px bg-[hsl(30_18%_82%)]" />
+                <p className="mt-3 font-serif text-3xl text-[hsl(var(--transitus-forest))]">0%</p>
+                <p className="text-xs text-[hsl(var(--marketing-earth)/0.5)]">Transitus remembers everything</p>
+              </div>
+            </div>
+
+            {/* The real cost callout */}
+            <div className="rounded-xl bg-[hsl(var(--transitus-earth))] text-[hsl(var(--transitus-sand))] p-6 sm:p-8 text-center">
+              <p className="font-serif-body text-base sm:text-lg leading-relaxed text-[hsl(var(--transitus-sand)/0.8)] max-w-2xl mx-auto">
+                The most expensive tool is the one that <span className="text-[hsl(var(--transitus-amber))] font-medium">loses your community's story</span> when a staff member moves on.
+                The second most expensive is the one that <span className="text-[hsl(var(--transitus-amber))] font-medium">makes your team spend more time managing software than accompanying people</span>.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* PRICING PREVIEW */}
       <section className="bg-[hsl(var(--transitus-sand))]">
         <div className="marketing-section">
