@@ -7,6 +7,7 @@
 
 import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
+import { slugify } from '@/lib/slugify';
 import { Users, Search, Filter, MapPin, Plus } from 'lucide-react';
 import { useTransitusData } from '@/contexts/TransitusDataContext';
 import { CreateStakeholderForm } from '@/components/forms/CreateStakeholderForm';
@@ -67,7 +68,7 @@ function RoleBadge({ role }: { role: TransitusRole }) {
 function StakeholderCard({ stakeholder, orgName }: { stakeholder: Stakeholder; orgName?: string }) {
   return (
     <Link
-      to={`/app/people/${stakeholder.id}`}
+      to={`/app/people/${slugify(stakeholder.name)}`}
       className="block rounded-lg bg-white p-4 border border-[hsl(30_18%_82%)] hover:border-[hsl(30_18%_70%)] hover:shadow-md transition-all group"
     >
       <div className="flex items-start justify-between gap-3 mb-2">

@@ -7,6 +7,7 @@
 
 import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
+import { slugify, placeSlug } from '@/lib/slugify';
 import { Handshake, Filter, MapPin, CalendarClock, MessageSquareQuote, Plus } from 'lucide-react';
 import { useTransitusData } from '@/contexts/TransitusDataContext';
 import { CreateCommitmentForm } from '@/components/forms/CreateCommitmentForm';
@@ -118,7 +119,7 @@ function CommitmentCard({ commitment, placeNameById, orgNameById, places }: { co
         {commitment.place_ids.map((pid) => (
           <Link
             key={pid}
-            to={`/app/places/${pid}`}
+            to={`/app/places/${placeSlug(places, pid)}`}
             className="inline-flex items-center gap-1 rounded-full bg-[hsl(152_30%_92%)] px-2.5 py-0.5 text-[11px] font-medium text-[hsl(152_45%_30%)] hover:bg-[hsl(152_30%_86%)] transition-colors"
           >
             <MapPin className="h-3 w-3" />

@@ -6,6 +6,7 @@
  */
 
 import { useParams, Link } from 'react-router-dom';
+import { slugify, placeSlug } from '@/lib/slugify';
 import { BookOpen, MapPin, AlertTriangle, HelpCircle } from 'lucide-react';
 
 import { useTransitusData } from '@/contexts/TransitusDataContext';
@@ -167,7 +168,7 @@ export default function JourneyDetail() {
               {JOURNEY_TYPE_LABELS[journey.journey_type]}
             </span>
             <Link
-              to={`/app/places/${journey.place_id}`}
+              to={`/app/places/${placeSlug(places, journey.place_id)}`}
               className="flex items-center gap-1 text-xs text-[hsl(20_8%_42%)] hover:text-[hsl(16_65%_48%)] transition-colors"
             >
               <MapPin className="h-3 w-3" />

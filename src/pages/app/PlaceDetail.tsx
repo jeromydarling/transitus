@@ -29,6 +29,7 @@ import {
 } from 'lucide-react';
 
 import { useTransitusData } from '@/contexts/TransitusDataContext';
+import { findByIdOrSlug } from '@/lib/slugify';
 import { MOCK_COMMUNITY_STORIES } from '@/lib/mockData';
 
 import PlaceMap from '@/components/map/PlaceMap';
@@ -521,7 +522,7 @@ function EJScreenIndicatorRow({
 export default function PlaceDetail() {
   const { id } = useParams<{ id: string }>();
   const { places, stakeholders, organizations, commitments, fieldNotes, signals, journeys } = useTransitusData();
-  const place = places.find((p) => p.id === id);
+  const place = findByIdOrSlug(places, id || "");
 
   // EJScreen layman mode toggle
   const [laymanMode, setLaymanMode] = React.useState(true);

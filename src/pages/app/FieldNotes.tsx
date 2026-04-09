@@ -7,6 +7,7 @@
 
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { slugify, placeSlug } from '@/lib/slugify';
 import { NotebookPen, MapPin, User, Shield, Plus } from 'lucide-react';
 
 import { useTransitusData } from '@/contexts/TransitusDataContext';
@@ -123,7 +124,7 @@ function FieldNoteCard({ note, authorName, placeName }: { note: FieldNote; autho
             {authorName}
           </span>
           <Link
-            to={`/app/places/${note.place_id}`}
+            to={`/app/places/${placeSlug(places, note.place_id)}`}
             className="flex items-center gap-1 hover:text-[hsl(16_65%_48%)] transition-colors"
           >
             <MapPin className="h-3 w-3" />

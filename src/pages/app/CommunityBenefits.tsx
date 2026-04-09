@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { slugify, placeSlug } from '@/lib/slugify';
 import { Target, MapPin, AlertTriangle, CheckCircle2, Clock } from 'lucide-react';
 import { useTransitusData } from '@/contexts/TransitusDataContext';
 import { COMMITMENT_STATUS_LABELS } from '@/types/transitus';
@@ -65,7 +66,7 @@ export default function CommunityBenefits() {
                         {COMMITMENT_STATUS_LABELS[c.status]}
                       </span>
                       {c.place_ids.map(pid => (
-                        <Link key={pid} to={`/app/places/${pid}`} className="flex items-center gap-1 text-[10px] text-[hsl(20_25%_12%/0.5)] hover:text-[hsl(16_65%_48%)]">
+                        <Link key={pid} to={`/app/places/${placeSlug(places, pid)}`} className="flex items-center gap-1 text-[10px] text-[hsl(20_25%_12%/0.5)] hover:text-[hsl(16_65%_48%)]">
                           <MapPin className="h-3 w-3" />{placeName(pid)}
                         </Link>
                       ))}

@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { slugify } from '@/lib/slugify';
 import { Users } from 'lucide-react';
 import { useTransitusData } from '@/contexts/TransitusDataContext';
 import { ROLE_LABELS } from '@/types/transitus';
@@ -73,7 +74,7 @@ export default function StakeholderGraph() {
               const initials = s.name.split(' ').map(n => n[0]).join('').slice(0, 2);
               return (
                 <g key={s.id} opacity={isConnected(s.id) ? 1 : 0.15} style={{ transition: 'opacity 0.2s' }}>
-                  <Link to={`/app/people/${s.id}`}>
+                  <Link to={`/app/people/${slugify(s.name)}`}>
                     <circle cx={pos.x} cy={pos.y} r={NODE_R} fill={color} stroke={hoveredId === s.id ? 'hsl(38 80% 55%)' : 'white'} strokeWidth={hoveredId === s.id ? 3 : 2} onMouseEnter={() => setHoveredId(s.id)} onMouseLeave={() => setHoveredId(null)} style={{ cursor: 'pointer' }} />
                     <text x={pos.x} y={pos.y + 1} textAnchor="middle" dominantBaseline="middle" fontSize="10" fontWeight="600" fill="white" fontFamily="Inter" style={{ pointerEvents: 'none' }}>{initials}</text>
                     <text x={pos.x} y={pos.y + NODE_R + 14} textAnchor="middle" fontSize="9" fill="hsl(20 25% 12% / 0.6)" fontFamily="Inter" style={{ pointerEvents: 'none' }}>{s.name.split(' ')[0]}</text>

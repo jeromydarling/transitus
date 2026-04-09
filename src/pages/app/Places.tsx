@@ -6,6 +6,7 @@
  */
 
 import { Link } from 'react-router-dom';
+import { slugify } from '@/lib/slugify';
 import { MapPin, Globe, Briefcase, Plus } from 'lucide-react';
 import { useTransitusData } from '@/contexts/TransitusDataContext';
 import { CreatePlaceForm } from '@/components/forms/CreatePlaceForm';
@@ -49,7 +50,7 @@ function PlaceCard({ place }: { place: Place }) {
 
   return (
     <Link
-      to={`/app/places/${place.id}`}
+      to={`/app/places/${slugify(place.name)}`}
       className="block rounded-lg bg-white p-4 border border-[hsl(30_18%_82%)] hover:border-[hsl(30_18%_70%)] hover:shadow-md transition-all group"
     >
       {/* Header */}

@@ -7,6 +7,7 @@
 
 import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
+import { slugify, placeSlug } from '@/lib/slugify';
 import { Heart, MapPin, Clock, Shield, User, Plus, Quote } from 'lucide-react';
 import { useTransitusData } from '@/contexts/TransitusDataContext';
 import { CreateCommunityStoryForm } from '@/components/forms/CreateCommunityStoryForm';
@@ -219,7 +220,7 @@ export default function CommunityStories() {
               <div className="flex items-center gap-2 mb-4">
                 <MapPin className="h-4 w-4 text-[hsl(152_40%_30%)]" />
                 <Link
-                  to={`/app/places/${placeId}`}
+                  to={`/app/places/${placeSlug(places, placeId)}`}
                   className="font-serif text-lg font-semibold text-[hsl(20_25%_18%)] hover:text-[hsl(16_65%_48%)] transition-colors"
                 >
                   {placeName}

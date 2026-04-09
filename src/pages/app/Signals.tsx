@@ -7,6 +7,7 @@
 
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { slugify, placeSlug } from '@/lib/slugify';
 import { Radio, MapPin, ExternalLink, Eye, EyeOff, CheckCheck } from 'lucide-react';
 
 import { useTransitusData } from '@/contexts/TransitusDataContext';
@@ -142,7 +143,7 @@ function SignalCard({ signal, isRead, placeName, onToggleRead, places }: { signa
             {signal.place_ids.map((pid) => (
               <Link
                 key={pid}
-                to={`/app/places/${pid}`}
+                to={`/app/places/${placeSlug(places, pid)}`}
                 className="flex items-center gap-1 hover:text-[hsl(16_65%_48%)] transition-colors"
               >
                 <MapPin className="h-2.5 w-2.5" />

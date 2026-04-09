@@ -8,6 +8,7 @@
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, MapPin, NotebookPen, Handshake, Tag, Pencil } from 'lucide-react';
 import { useTransitusData } from '@/contexts/TransitusDataContext';
+import { findByIdOrSlug } from '@/lib/slugify';
 import { ROLE_LABELS, COMMITMENT_STATUS_LABELS } from '@/types/transitus';
 import type { TransitusRole, CommitmentStatus, FieldNoteType } from '@/types/transitus';
 
@@ -97,7 +98,7 @@ export default function PersonDetail() {
   const { id } = useParams<{ id: string }>();
   const { stakeholders, organizations, places, commitments, fieldNotes } = useTransitusData();
 
-  const stakeholder = stakeholders.find((s) => s.id === id);
+  const stakeholder = findByIdOrSlug(stakeholders, id || '');
 
   const orgNameById = (orgId?: string): string | undefined => {
     if (!orgId) return undefined;
@@ -211,7 +212,7 @@ export default function PersonDetail() {
               {stakeholder.place_ids.map((pid) => (
                 <Link
                   key={pid}
-                  to={`/app/places/${pid}`}
+                  to={`/app/places/${placeSlug(places, pid)}`}
                   className="inline-flex items-center gap-1.5 rounded-full bg-[hsl(152_30%_92%)] px-3 py-1 text-xs font-medium text-[hsl(152_45%_30%)] hover:bg-[hsl(152_30%_86%)] transition-colors"
                 >
                   <MapPin className="h-3 w-3" />
