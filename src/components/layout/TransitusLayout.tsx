@@ -10,6 +10,8 @@ import { useState, useCallback, useEffect } from 'react';
 import { Link, useLocation, Outlet } from 'react-router-dom';
 import { NRILauncher } from '@/components/nri/NRILauncher';
 import { TransitusDataProvider } from '@/contexts/TransitusDataContext';
+import { getCurrentSeason, getDayMoment, getWeekRhythm, getNearbyMilestones } from '@/lib/transitionCalendar';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import {
   Home, MapPin, Users, Handshake, NotebookPen,
   Radio, BookOpen, Library, FileText, Globe,
@@ -70,6 +72,67 @@ function isActive(pathname: string, href: string): boolean {
 
 function isInMoreSection(pathname: string): boolean {
   return MORE_ITEMS.some(item => isActive(pathname, item.href));
+}
+
+function SeasonIndicator() {
+  const season = getCurrentSeason();
+  const moment = getDayMoment();
+  const rhythm = getWeekRhythm();
+  const milestones = getNearbyMilestones();
+
+  return (
+    <TooltipProvider delayDuration={200}>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Link
+            to="/app/compass"
+            className="flex items-center gap-2 px-2.5 py-1 rounded-full hover:bg-[hsl(30_18%_82%/0.4)] transition-colors shrink-0"
+          >
+            <span
+              className="w-2 h-2 rounded-full shrink-0"
+              style={{ backgroundColor: season.color }}
+            />
+            <span className="text-[11px] font-medium text-[hsl(20_25%_12%/0.45)] hidden sm:inline">
+              {season.label}
+            </span>
+          </Link>
+        </TooltipTrigger>
+        <TooltipContent
+          side="bottom"
+          align="end"
+          className="max-w-xs p-4 bg-[hsl(20_28%_10%)] text-[hsl(38_35%_90%)] border-[hsl(38_35%_90%/0.1)]"
+        >
+          <div className="space-y-2.5">
+            <div>
+              <p className="text-xs font-semibold" style={{ color: season.color }}>
+                {season.label}
+              </p>
+              <p className="text-[11px] text-[hsl(38_35%_90%/0.7)] italic">
+                {season.posture}
+              </p>
+            </div>
+            <p className="text-[11px] text-[hsl(38_35%_90%/0.55)] leading-relaxed">
+              {season.description}
+            </p>
+            <div className="pt-1 border-t border-[hsl(38_35%_90%/0.1)]">
+              <p className="text-[10px] text-[hsl(38_35%_90%/0.4)]">
+                {moment.label} · {rhythm.focus}
+              </p>
+            </div>
+            {milestones.length > 0 && (
+              <div className="pt-1 border-t border-[hsl(38_35%_90%/0.1)]">
+                {milestones.map(m => (
+                  <p key={m.date} className="text-[10px] text-[hsl(38_80%_55%/0.8)]">
+                    {m.name}
+                  </p>
+                ))}
+              </div>
+            )}
+          </div>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  );
 }
 
 export function TransitusLayout({ title, children }: TransitusLayoutProps) {
@@ -175,7 +238,10 @@ export function TransitusLayout({ title, children }: TransitusLayoutProps) {
           >
             <Menu className="h-5 w-5 text-[hsl(20_25%_12%/0.7)]" />
           </button>
-          <h1 className="font-serif text-lg tracking-tight text-[hsl(20_25%_12%)]">{resolvedTitle}</h1>
+          <h1 className="font-serif text-lg tracking-tight text-[hsl(20_25%_12%)] flex-1">{resolvedTitle}</h1>
+
+          {/* Seasonal indicator */}
+          <SeasonIndicator />
         </header>
 
         {/* Page content — bottom padding on mobile for tab bar */}
