@@ -642,8 +642,13 @@ export default function PlaceDetail() {
           className="h-[300px] mb-6"
         />
 
-        {/* Place header — below map */}
-        <header className="mb-6">
+        {/* Two-column layout starts immediately after map */}
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* ── Main column ── */}
+          <div className="flex-1 min-w-0 space-y-8">
+
+        {/* Place header */}
+        <header>
           <div className="flex items-center gap-2 mb-2">
             <MapPin className="h-4 w-4 text-[hsl(152_45%_30%)]" />
             <span className="text-[11px] font-semibold uppercase tracking-[0.15em] text-[hsl(30_10%_50%)]">
@@ -667,13 +672,13 @@ export default function PlaceDetail() {
               </span>
             )}
           </div>
-          <p className="mt-4 text-sm leading-relaxed text-[hsl(30_10%_35%)] max-w-3xl">
+          <p className="mt-4 text-sm leading-relaxed text-[hsl(30_10%_35%)]">
             {place.description}
           </p>
         </header>
 
-        {/* ── Human Impact Banner — full width ── */}
-        <section className="mb-8">
+        {/* ── Who Lives Here ── */}
+        <section>
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
               <Heart className="h-4 w-4 text-[hsl(16_65%_48%)]" />
@@ -699,10 +704,6 @@ export default function PlaceDetail() {
           )}
         </section>
 
-        {/* Two-column layout */}
-        <div className="flex flex-col lg:flex-row gap-8">
-          {/* ── Main column ── */}
-          <div className="flex-1 min-w-0 space-y-8">
             {/* Environmental Burdens */}
             <section>
               <div className="flex items-center justify-between mb-2">
