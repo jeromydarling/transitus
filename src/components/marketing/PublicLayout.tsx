@@ -104,12 +104,12 @@ export default function PublicLayout({ children }: { children?: React.ReactNode 
               </Link>
             ))}
 
-            <Link to="/login">
+            <Link to="/app">
               <Button
                 size="sm"
-                className="rounded-full bg-[hsl(var(--transitus-forest))] text-[hsl(var(--transitus-sand))] hover:bg-[hsl(var(--transitus-green))] px-5 h-9 text-sm"
+                className="rounded-full bg-[hsl(var(--transitus-terracotta))] text-white hover:bg-[hsl(var(--transitus-terracotta)/0.85)] px-5 h-9 text-sm shadow-sm"
               >
-                Log in
+                Enter App <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
               </Button>
             </Link>
           </nav>
@@ -141,9 +141,9 @@ export default function PublicLayout({ children }: { children?: React.ReactNode 
                 </Link>
               ))}
               <div className="pt-3">
-                <Link to="/login" onClick={() => setMobileOpen(false)}>
-                  <Button className="w-full rounded-full bg-[hsl(var(--transitus-forest))] text-[hsl(var(--transitus-sand))]">
-                    Log in <ArrowRight className="ml-2 h-4 w-4" />
+                <Link to="/app" onClick={() => setMobileOpen(false)}>
+                  <Button className="w-full rounded-full bg-[hsl(var(--transitus-terracotta))] text-white">
+                    Enter App <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </Link>
               </div>

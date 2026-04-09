@@ -1,0 +1,378 @@
+/**
+ * Transitus Home — "Today in your places"
+ *
+ * A calm editorial front page for the Just Transition stewardship platform.
+ * Surfaces what matters without the noise of a KPI dashboard.
+ */
+
+import { Link } from 'react-router-dom';
+import {
+  Radio,
+  Handshake,
+  NotebookPen,
+  Users,
+  MapPin,
+  ChevronRight,
+  AlertTriangle,
+  Clock,
+} from 'lucide-react';
+
+import {
+  MOCK_DASHBOARD,
+  MOCK_PLACES,
+  MOCK_SIGNALS,
+  MOCK_COMMITMENTS,
+  MOCK_FIELD_NOTES,
+  MOCK_STAKEHOLDERS,
+} from '@/lib/mockData';
+
+import {
+  ROLE_LABELS,
+  COMMITMENT_STATUS_LABELS,
+  SIGNAL_SOURCE_LABELS,
+} from '@/types/transitus';
+import type {
+  Signal,
+  Commitment,
+  FieldNote,
+  Stakeholder,
+  CommitmentStatus,
+  FieldNoteType,
+} from '@/types/transitus';
+
+// ── Local helpers ──
+
+const FIELD_NOTE_TYPE_LABELS: Record<FieldNoteType, string> = {
+  site_visit: 'Site Visit',
+  listening_session: 'Listening Session',
+  community_meeting: 'Community Meeting',
+  prayer_vigil: 'Prayer Vigil',
+  utility_meeting: 'Utility Meeting',
+  household_interview: 'Household Interview',
+  corridor_observation: 'Corridor Observation',
+  quick_note: 'Quick Note',
+};
+
+function placeNameById(id: string): string {
+  const place = MOCK_PLACES.find((p) => p.id === id);
+  return place ? place.name : id;
+}
+
+function stakeholderById(id: string): Stakeholder | undefined {
+  return MOCK_STAKEHOLDERS.find((s) => s.id === id);
+}
+
+function formatDate(iso: string): string {
+  const d = new Date(iso);
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+function daysAgo(iso: string): number {
+  const now = new Date();
+  const then = new Date(iso);
+  return Math.floor((now.getTime() - then.getTime()) / (1000 * 60 * 60 * 24));
+}
+
+/** Severity dot color */
+function severityColor(severity?: Signal['severity']): string {
+  switch (severity) {
+    case 'urgent':
+      return 'bg-[hsl(0_72%_51%)]';
+    case 'notable':
+      return 'bg-[hsl(36_77%_49%)]';
+    default:
+      return 'bg-[hsl(210_10%_58%)]';
+  }
+}
+
+/** Commitment status badge styling */
+function statusBadgeClasses(status: CommitmentStatus): string {
+  const base = 'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium';
+  switch (status) {
+    case 'proposed':
+      return `${base} bg-[hsl(205_70%_93%)] text-[hsl(205_70%_35%)]`;
+    case 'acknowledged':
+      return `${base} bg-[hsl(220_40%_92%)] text-[hsl(220_40%_40%)]`;
+    case 'accepted':
+      return `${base} bg-[hsl(180_40%_90%)] text-[hsl(180_40%_32%)]`;
+    case 'in_motion':
+      return `${base} bg-[hsl(152_50%_90%)] text-[hsl(152_50%_28%)]`;
+    case 'delayed':
+      return `${base} bg-[hsl(16_65%_92%)] text-[hsl(16_65%_38%)]`;
+    case 'breached':
+      return `${base} bg-[hsl(0_60%_92%)] text-[hsl(0_60%_38%)]`;
+    case 'repaired':
+      return `${base} bg-[hsl(270_40%_92%)] text-[hsl(270_40%_38%)]`;
+    case 'completed':
+      return `${base} bg-[hsl(160_30%_90%)] text-[hsl(160_30%_32%)]`;
+    default:
+      return `${base} bg-gray-100 text-gray-600`;
+  }
+}
+
+// ── Components ──
+
+function SectionHeader({
+  icon: Icon,
+  label,
+  linkTo,
+}: {
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
+  linkTo?: string;
+}) {
+  return (
+    <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center gap-2">
+        <Icon className="h-4 w-4 text-[hsl(16_65%_48%)]" />
+        <span className="font-sans text-xs font-semibold uppercase tracking-widest text-[hsl(16_65%_48%)]">
+          {label}
+        </span>
+      </div>
+      {linkTo && (
+        <Link
+          to={linkTo}
+          className="flex items-center gap-1 text-xs text-[hsl(16_65%_48%)] hover:text-[hsl(16_65%_38%)] transition-colors"
+        >
+          View all <ChevronRight className="h-3 w-3" />
+        </Link>
+      )}
+    </div>
+  );
+}
+
+function SignalCard({ signal }: { signal: Signal }) {
+  return (
+    <Link
+      to="/app/signals"
+      className="rounded-lg bg-white p-4 border border-[hsl(30_18%_82%)] hover:shadow-md transition-shadow block"
+    >
+      <div className="flex items-start gap-3">
+        <span
+          className={`mt-1.5 h-2 w-2 shrink-0 rounded-full ${severityColor(signal.severity)}`}
+          title={signal.severity ?? 'informational'}
+        />
+        <div className="min-w-0 flex-1">
+          <p className="text-sm font-medium text-[hsl(20_10%_20%)] leading-snug">
+            {signal.title}
+          </p>
+          <p className="mt-1 text-xs text-[hsl(20_8%_48%)] line-clamp-2">
+            {signal.summary}
+          </p>
+          <div className="mt-2 flex flex-wrap items-center gap-2">
+            <span className="inline-flex items-center rounded-full bg-[hsl(30_20%_92%)] px-2 py-0.5 text-[10px] font-medium text-[hsl(20_10%_40%)]">
+              {SIGNAL_SOURCE_LABELS[signal.source]}
+            </span>
+            {signal.place_ids.slice(0, 2).map((pid) => (
+              <span
+                key={pid}
+                className="inline-flex items-center gap-1 text-[10px] text-[hsl(20_8%_52%)]"
+              >
+                <MapPin className="h-2.5 w-2.5" />
+                {placeNameById(pid).length > 28
+                  ? placeNameById(pid).slice(0, 28) + '\u2026'
+                  : placeNameById(pid)}
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+    </Link>
+  );
+}
+
+function CommitmentRow({ commitment }: { commitment: Commitment }) {
+  return (
+    <Link
+      to="/app/commitments"
+      className="flex items-center justify-between gap-4 rounded-lg bg-white px-4 py-3 border border-[hsl(30_18%_82%)] hover:shadow-md transition-shadow"
+    >
+      <div className="min-w-0 flex-1">
+        <p className="text-sm font-medium text-[hsl(20_10%_20%)] truncate">
+          {commitment.title}
+        </p>
+        <div className="mt-1 flex items-center gap-2 text-xs text-[hsl(20_8%_48%)]">
+          {commitment.place_ids.slice(0, 1).map((pid) => (
+            <span key={pid} className="flex items-center gap-1">
+              <MapPin className="h-2.5 w-2.5" />
+              {placeNameById(pid).length > 32
+                ? placeNameById(pid).slice(0, 32) + '\u2026'
+                : placeNameById(pid)}
+            </span>
+          ))}
+        </div>
+      </div>
+      <div className="flex shrink-0 items-center gap-3">
+        {commitment.renewal_date && (
+          <span className="flex items-center gap-1 text-xs text-[hsl(20_8%_48%)]">
+            <Clock className="h-3 w-3" />
+            {formatDate(commitment.renewal_date)}
+          </span>
+        )}
+        <span className={statusBadgeClasses(commitment.status)}>
+          {COMMITMENT_STATUS_LABELS[commitment.status]}
+        </span>
+      </div>
+    </Link>
+  );
+}
+
+function FieldNoteCard({ note }: { note: FieldNote }) {
+  const author = stakeholderById(note.author_id);
+  return (
+    <Link
+      to="/app/field-notes"
+      className="rounded-lg bg-white p-4 border border-[hsl(30_18%_82%)] hover:shadow-md transition-shadow block"
+    >
+      <div className="flex items-center gap-2 mb-2">
+        <span className="inline-flex items-center rounded-full bg-[hsl(30_20%_92%)] px-2 py-0.5 text-[10px] font-medium text-[hsl(20_10%_40%)]">
+          {FIELD_NOTE_TYPE_LABELS[note.note_type]}
+        </span>
+        <span className="flex items-center gap-1 text-[10px] text-[hsl(20_8%_52%)]">
+          <MapPin className="h-2.5 w-2.5" />
+          {placeNameById(note.place_id).length > 30
+            ? placeNameById(note.place_id).slice(0, 30) + '\u2026'
+            : placeNameById(note.place_id)}
+        </span>
+      </div>
+      <p className="text-sm text-[hsl(20_10%_25%)] line-clamp-3 leading-relaxed">
+        {note.content}
+      </p>
+      <div className="mt-3 flex items-center justify-between">
+        <span className="text-xs font-medium text-[hsl(20_10%_35%)]">
+          {author?.name ?? 'Unknown'}
+        </span>
+        <span className="text-[10px] text-[hsl(20_8%_52%)]">
+          {formatDate(note.created_at)}
+        </span>
+      </div>
+    </Link>
+  );
+}
+
+function QuietStakeholderRow({ stakeholder }: { stakeholder: Stakeholder }) {
+  const days = stakeholder.last_contact ? daysAgo(stakeholder.last_contact) : null;
+  return (
+    <Link
+      to="/app/people"
+      className="flex items-center justify-between gap-3 rounded-lg bg-white px-4 py-3 border border-[hsl(30_18%_82%)] hover:shadow-md transition-shadow"
+    >
+      <div className="min-w-0">
+        <p className="text-sm font-medium text-[hsl(20_10%_20%)]">{stakeholder.name}</p>
+        <p className="text-xs text-[hsl(20_8%_48%)]">
+          {ROLE_LABELS[stakeholder.role]}
+          {stakeholder.title ? ` \u00b7 ${stakeholder.title}` : ''}
+        </p>
+      </div>
+      <div className="shrink-0 text-right">
+        {days !== null && (
+          <span className="flex items-center gap-1 text-xs text-[hsl(16_50%_48%)]">
+            <AlertTriangle className="h-3 w-3" />
+            {days}d ago
+          </span>
+        )}
+      </div>
+    </Link>
+  );
+}
+
+// ── Main page ──
+
+export default function Home() {
+  const { weekly_brief, recent_signals, upcoming_renewals, recent_field_notes, quiet_stakeholders } =
+    MOCK_DASHBOARD;
+
+  return (
+    <div className="min-h-screen bg-[hsl(38_30%_95%)]">
+      <div className="mx-auto max-w-4xl px-4 py-10 sm:px-6 lg:px-8">
+        {/* ── Welcome header ── */}
+        <header className="mb-10">
+          <h1 className="font-serif text-2xl font-normal text-[hsl(20_10%_18%)] sm:text-3xl">
+            Today in your places
+          </h1>
+          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-[hsl(20_8%_40%)]">
+            {weekly_brief}
+          </p>
+        </header>
+
+        {/* ── Quick stats (small, editorial, not KPI tiles) ── */}
+        <div className="mb-10 flex gap-4">
+          <div className="flex items-center gap-2 rounded-md border border-[hsl(30_18%_82%)] bg-white px-3 py-2">
+            <MapPin className="h-3.5 w-3.5 text-[hsl(20_8%_48%)]" />
+            <span className="text-xs text-[hsl(20_8%_48%)]">
+              <span className="font-semibold text-[hsl(20_10%_20%)]">{MOCK_DASHBOARD.places_count}</span>{' '}
+              places
+            </span>
+          </div>
+          <div className="flex items-center gap-2 rounded-md border border-[hsl(30_18%_82%)] bg-white px-3 py-2">
+            <Handshake className="h-3.5 w-3.5 text-[hsl(20_8%_48%)]" />
+            <span className="text-xs text-[hsl(20_8%_48%)]">
+              <span className="font-semibold text-[hsl(20_10%_20%)]">{MOCK_DASHBOARD.active_commitments}</span>{' '}
+              active commitments
+            </span>
+          </div>
+        </div>
+
+        {/* ── New Signals ── */}
+        <section className="mb-10">
+          <SectionHeader icon={Radio} label="New Signals" linkTo="/app/signals" />
+          <div className="grid gap-3 sm:grid-cols-2">
+            {recent_signals.map((signal) => (
+              <SignalCard key={signal.id} signal={signal} />
+            ))}
+          </div>
+          {recent_signals.length === 0 && (
+            <p className="text-sm text-[hsl(20_8%_52%)] italic">No unread signals right now.</p>
+          )}
+        </section>
+
+        {/* ── Commitments approaching review ── */}
+        <section className="mb-10">
+          <SectionHeader
+            icon={Handshake}
+            label="Commitments approaching review"
+            linkTo="/app/commitments"
+          />
+          <div className="flex flex-col gap-2">
+            {upcoming_renewals.map((commitment) => (
+              <CommitmentRow key={commitment.id} commitment={commitment} />
+            ))}
+          </div>
+          {upcoming_renewals.length === 0 && (
+            <p className="text-sm text-[hsl(20_8%_52%)] italic">
+              No commitments approaching review.
+            </p>
+          )}
+        </section>
+
+        {/* ── Recent Field Notes ── */}
+        <section className="mb-10">
+          <SectionHeader icon={NotebookPen} label="Recent Field Notes" linkTo="/app/field-notes" />
+          <div className="grid gap-3 sm:grid-cols-3">
+            {recent_field_notes.slice(0, 3).map((note) => (
+              <FieldNoteCard key={note.id} note={note} />
+            ))}
+          </div>
+          {recent_field_notes.length === 0 && (
+            <p className="text-sm text-[hsl(20_8%_52%)] italic">No recent field notes.</p>
+          )}
+        </section>
+
+        {/* ── Quiet Stakeholders ── */}
+        <section className="mb-10">
+          <SectionHeader icon={Users} label="Quiet stakeholders" linkTo="/app/people" />
+          <div className="flex flex-col gap-2">
+            {quiet_stakeholders.map((s) => (
+              <QuietStakeholderRow key={s.id} stakeholder={s} />
+            ))}
+          </div>
+          {quiet_stakeholders.length === 0 && (
+            <p className="text-sm text-[hsl(20_8%_52%)] italic">
+              Everyone has been in touch recently.
+            </p>
+          )}
+        </section>
+      </div>
+    </div>
+  );
+}
