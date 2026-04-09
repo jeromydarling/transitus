@@ -399,11 +399,76 @@ function SidebarJourney({ journey }: { journey: Journey }) {
 
 // ── EJScreen data grid ──
 
+const LAYMAN_NAMES: Record<string, string> = {
+  'PM2.5': 'Air particle pollution',
+  'Diesel PM': 'Diesel exhaust',
+  'Ozone': 'Ozone pollution',
+  'Air Toxics Cancer Risk': 'Cancer risk from air toxics',
+  'Air Toxics Respiratory HI': 'Respiratory risk from air toxics',
+  'Traffic Proximity': 'Traffic pollution',
+  'Lead Paint': 'Lead exposure risk',
+  'Superfund Proximity': 'Superfund site proximity',
+  'RMP Facility Proximity': 'Chemical accident risk',
+  'Hazardous Waste': 'Hazardous waste proximity',
+  'Wastewater Discharge': 'Wastewater pollution',
+  'Underground Storage Tanks': 'Underground tank contamination risk',
+};
+
+function getLaymanDescription(indicator: EJScreenIndicator): string {
+  const pct = indicator.percentile_state;
+  const severity = pct >= 90 ? 'significantly worse' : pct >= 75 ? 'worse' : pct >= 50 ? 'somewhat higher' : 'similar to or better';
+
+  const descriptions: Record<string, string> = {
+    'PM2.5': `Fine particle air pollution here is ${severity} than ${pct}% of communities in the state. Fine particles cause asthma attacks, heart disease, and premature death.`,
+    'Diesel PM': `Diesel exhaust from trucks and equipment is ${severity} than ${pct}% of the state. Children and elderly residents are most vulnerable.`,
+    'Ozone': `Ground-level ozone here is ${severity} than ${pct}% of communities in the state. Ozone triggers asthma and damages lungs, especially on hot days.`,
+    'Air Toxics Cancer Risk': `Cancer risk from air pollution is ${severity} than ${pct}% of the state. Long-term exposure to these toxics increases lifetime cancer risk.`,
+    'Air Toxics Respiratory HI': `Respiratory risk from air toxics is ${severity} than ${pct}% of the state. These pollutants irritate airways and worsen lung disease.`,
+    'Traffic Proximity': `Traffic-related air pollution (from nearby highways and truck routes) is ${severity} than ${pct}% of the state. Families near major roads face higher asthma rates.`,
+    'Lead Paint': `${Math.round(indicator.value * 100)}% of homes were built before lead paint was banned. Children in older housing face ongoing lead exposure risk.`,
+    'Superfund Proximity': `This area's proximity to Superfund toxic cleanup sites is ${severity} than ${pct}% of communities in the state.`,
+    'RMP Facility Proximity': `This neighborhood is closer to chemical facilities with accident risk than ${pct}% of communities in the state. An industrial accident here could affect nearby residents.`,
+    'Hazardous Waste': `Proximity to hazardous waste facilities is ${severity} than ${pct}% of the state. These facilities handle materials that can contaminate soil and groundwater.`,
+    'Wastewater Discharge': `Wastewater pollution in nearby waterways is ${severity} than ${pct}% of the state. Discharge contains chemicals that affect water quality and aquatic life.`,
+    'Underground Storage Tanks': `Proximity to underground storage tanks (which can leak fuel and chemicals) is ${severity} than ${pct}% of the state.`,
+  };
+  return descriptions[indicator.name] || `This measure is at the ${pct}th percentile for the state.`;
+}
+
 function EJScreenIndicatorRow({
   indicator,
+  laymanMode,
 }: {
   indicator: EJScreenIndicator;
+  laymanMode: boolean;
 }) {
+  if (laymanMode) {
+    const laymanName = LAYMAN_NAMES[indicator.name] || indicator.name;
+    return (
+      <div className="py-3 border-b border-[hsl(30_18%_90%)] last:border-0 space-y-1">
+        <div className="flex items-center justify-between">
+          <span className="text-sm font-medium text-[hsl(20_10%_20%)]">{laymanName}</span>
+          <span className="text-xs font-medium text-[hsl(20_10%_35%)] tabular-nums">
+            {indicator.percentile_state}th percentile
+          </span>
+        </div>
+        {/* Severity bar */}
+        <div className="w-full h-1.5 rounded-full bg-[hsl(30_18%_90%)] overflow-hidden">
+          <div
+            className="h-full rounded-full transition-all"
+            style={{
+              width: `${indicator.percentile_state}%`,
+              backgroundColor: indicator.percentile_state >= 90 ? 'hsl(0 60% 50%)' : indicator.percentile_state >= 75 ? 'hsl(25 80% 50%)' : indicator.percentile_state >= 50 ? 'hsl(45 80% 50%)' : 'hsl(152 40% 45%)',
+            }}
+          />
+        </div>
+        <p className="text-xs text-[hsl(20_8%_42%)] leading-relaxed">
+          {getLaymanDescription(indicator)}
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="flex items-center justify-between py-2 border-b border-[hsl(30_18%_90%)] last:border-0">
       <span className="text-sm text-[hsl(20_10%_25%)]">{indicator.name}</span>
@@ -436,6 +501,9 @@ export default function PlaceDetail() {
   const { id } = useParams<{ id: string }>();
   const { places, stakeholders, organizations, commitments, fieldNotes, signals, journeys } = useTransitusData();
   const place = places.find((p) => p.id === id);
+
+  // EJScreen layman mode toggle
+  const [laymanMode, setLaymanMode] = React.useState(true);
 
   // API state
   const [ejData, setEjData] = React.useState<EJScreenResult | null>(null);
