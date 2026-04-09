@@ -26,6 +26,8 @@ import {
   BarChart3,
   Shield,
   Heart,
+  Plus,
+  Pencil,
 } from 'lucide-react';
 
 import { useTransitusData } from '@/contexts/TransitusDataContext';
@@ -34,6 +36,16 @@ import { MOCK_COMMUNITY_STORIES } from '@/lib/mockData';
 import PlaceMap from '@/components/map/PlaceMap';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
+
+import { CreateFieldNoteForm } from '@/components/forms/CreateFieldNoteForm';
+import { CreateCommitmentForm } from '@/components/forms/CreateCommitmentForm';
+import { CreateStakeholderForm } from '@/components/forms/CreateStakeholderForm';
+import { CreateOrganizationForm } from '@/components/forms/CreateOrganizationForm';
+import { CreateSignalForm } from '@/components/forms/CreateSignalForm';
+import { CreateJourneyForm } from '@/components/forms/CreateJourneyForm';
+import { AddBurdenForm } from '@/components/forms/AddBurdenForm';
+import { AddActiveWorkForm } from '@/components/forms/AddActiveWorkForm';
+import { EditHumanImpactForm } from '@/components/forms/EditHumanImpactForm';
 
 import {
   fetchEJScreenData,
@@ -208,168 +220,202 @@ function SectionHeader({
 
 function SidebarStakeholders({
   stakeholders,
+  addButton,
 }: {
   stakeholders: Stakeholder[];
+  addButton?: React.ReactNode;
 }) {
-  if (stakeholders.length === 0) return null;
   return (
     <div>
-      <SectionHeader icon={Users} label="Stakeholders" />
-      <div className="flex flex-col gap-2">
-        {stakeholders.map((s) => (
-          <div
-            key={s.id}
-            className="rounded-lg bg-white p-3 border border-[hsl(30_18%_82%)]"
-          >
-            <p className="text-sm font-medium text-[hsl(20_10%_20%)]">
-              {s.name}
-            </p>
-            <div className="mt-1 flex flex-wrap items-center gap-1.5">
-              <span className="inline-flex items-center rounded-full bg-[hsl(30_20%_92%)] px-2 py-0.5 text-[10px] font-medium text-[hsl(20_10%_40%)]">
-                {ROLE_LABELS[s.role]}
-              </span>
-              {s.trust_level && (
-                <span className="inline-flex items-center rounded-full bg-[hsl(152_30%_92%)] px-2 py-0.5 text-[10px] font-medium text-[hsl(152_45%_30%)]">
-                  {s.trust_level}
+      <div className="flex items-center justify-between mb-2">
+        <SectionHeader icon={Users} label="Stakeholders" />
+        {addButton}
+      </div>
+      {stakeholders.length === 0 ? (
+        <p className="text-xs text-[hsl(20_8%_52%)] italic">No stakeholders linked yet.</p>
+      ) : (
+        <div className="flex flex-col gap-2">
+          {stakeholders.map((s) => (
+            <div
+              key={s.id}
+              className="rounded-lg bg-white p-3 border border-[hsl(30_18%_82%)]"
+            >
+              <p className="text-sm font-medium text-[hsl(20_10%_20%)]">
+                {s.name}
+              </p>
+              <div className="mt-1 flex flex-wrap items-center gap-1.5">
+                <span className="inline-flex items-center rounded-full bg-[hsl(30_20%_92%)] px-2 py-0.5 text-[10px] font-medium text-[hsl(20_10%_40%)]">
+                  {ROLE_LABELS[s.role]}
                 </span>
+                {s.trust_level && (
+                  <span className="inline-flex items-center rounded-full bg-[hsl(152_30%_92%)] px-2 py-0.5 text-[10px] font-medium text-[hsl(152_45%_30%)]">
+                    {s.trust_level}
+                  </span>
+                )}
+              </div>
+              {s.title && (
+                <p className="mt-1 text-[11px] text-[hsl(20_8%_48%)]">
+                  {s.title}
+                </p>
               )}
             </div>
-            {s.title && (
-              <p className="mt-1 text-[11px] text-[hsl(20_8%_48%)]">
-                {s.title}
-              </p>
-            )}
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
 
-function SidebarOrganizations({ orgs }: { orgs: Organization[] }) {
-  if (orgs.length === 0) return null;
+function SidebarOrganizations({ orgs, addButton }: { orgs: Organization[]; addButton?: React.ReactNode }) {
   return (
     <div>
-      <SectionHeader icon={Building2} label="Organizations" />
-      <div className="flex flex-col gap-2">
-        {orgs.map((org) => (
-          <div
-            key={org.id}
-            className="rounded-lg bg-white p-3 border border-[hsl(30_18%_82%)]"
-          >
-            <p className="text-sm font-medium text-[hsl(20_10%_20%)]">
-              {org.name}
-            </p>
-            <span className="inline-flex items-center rounded-full bg-[hsl(30_20%_92%)] mt-1 px-2 py-0.5 text-[10px] font-medium text-[hsl(20_10%_40%)]">
-              {org.org_type.replace(/_/g, ' ')}
-            </span>
-            {org.website && (
-              <a
-                href={org.website}
-                target="_blank"
-                rel="noreferrer"
-                className="mt-1 flex items-center gap-1 text-[11px] text-[hsl(16_65%_48%)] hover:text-[hsl(16_65%_38%)]"
-              >
-                <ExternalLink className="h-2.5 w-2.5" />
-                Website
-              </a>
-            )}
-          </div>
-        ))}
+      <div className="flex items-center justify-between mb-2">
+        <SectionHeader icon={Building2} label="Organizations" />
+        {addButton}
       </div>
+      {orgs.length === 0 ? (
+        <p className="text-xs text-[hsl(20_8%_52%)] italic">No organizations linked yet.</p>
+      ) : (
+        <div className="flex flex-col gap-2">
+          {orgs.map((org) => (
+            <div
+              key={org.id}
+              className="rounded-lg bg-white p-3 border border-[hsl(30_18%_82%)]"
+            >
+              <p className="text-sm font-medium text-[hsl(20_10%_20%)]">
+                {org.name}
+              </p>
+              <span className="inline-flex items-center rounded-full bg-[hsl(30_20%_92%)] mt-1 px-2 py-0.5 text-[10px] font-medium text-[hsl(20_10%_40%)]">
+                {org.org_type.replace(/_/g, ' ')}
+              </span>
+              {org.website && (
+                <a
+                  href={org.website}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-1 flex items-center gap-1 text-[11px] text-[hsl(16_65%_48%)] hover:text-[hsl(16_65%_38%)]"
+                >
+                  <ExternalLink className="h-2.5 w-2.5" />
+                  Website
+                </a>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
 
 function SidebarCommitments({
   commitments,
+  addButton,
 }: {
   commitments: Commitment[];
+  addButton?: React.ReactNode;
 }) {
-  if (commitments.length === 0) return null;
   return (
     <div>
-      <SectionHeader icon={Handshake} label="Commitments" />
-      <div className="flex flex-col gap-2">
-        {commitments.map((c) => (
-          <div
-            key={c.id}
-            className="rounded-lg bg-white p-3 border border-[hsl(30_18%_82%)]"
-          >
-            <p className="text-sm font-medium text-[hsl(20_10%_20%)] leading-snug">
-              {c.title}
-            </p>
-            <div className="mt-1.5 flex items-center gap-2">
-              <span className={statusBadgeClasses(c.status)}>
-                {COMMITMENT_STATUS_LABELS[c.status]}
-              </span>
-            </div>
-            {c.renewal_date && (
-              <p className="mt-1 text-[10px] text-[hsl(20_8%_52%)]">
-                Review: {formatDate(c.renewal_date)}
+      <div className="flex items-center justify-between mb-2">
+        <SectionHeader icon={Handshake} label="Commitments" />
+        {addButton}
+      </div>
+      {commitments.length === 0 ? (
+        <p className="text-xs text-[hsl(20_8%_52%)] italic">No commitments linked yet.</p>
+      ) : (
+        <div className="flex flex-col gap-2">
+          {commitments.map((c) => (
+            <div
+              key={c.id}
+              className="rounded-lg bg-white p-3 border border-[hsl(30_18%_82%)]"
+            >
+              <p className="text-sm font-medium text-[hsl(20_10%_20%)] leading-snug">
+                {c.title}
               </p>
-            )}
-          </div>
-        ))}
-      </div>
+              <div className="mt-1.5 flex items-center gap-2">
+                <span className={statusBadgeClasses(c.status)}>
+                  {COMMITMENT_STATUS_LABELS[c.status]}
+                </span>
+              </div>
+              {c.renewal_date && (
+                <p className="mt-1 text-[10px] text-[hsl(20_8%_52%)]">
+                  Review: {formatDate(c.renewal_date)}
+                </p>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
 
-function SidebarFieldNotes({ notes, stakeholderNameById }: { notes: FieldNote[]; stakeholderNameById: (id: string) => string }) {
-  if (notes.length === 0) return null;
+function SidebarFieldNotes({ notes, stakeholderNameById, addButton }: { notes: FieldNote[]; stakeholderNameById: (id: string) => string; addButton?: React.ReactNode }) {
   return (
     <div>
-      <SectionHeader icon={NotebookPen} label="Field Notes" />
-      <div className="flex flex-col gap-2">
-        {notes.slice(0, 4).map((n) => (
-          <div
-            key={n.id}
-            className="rounded-lg bg-white p-3 border border-[hsl(30_18%_82%)]"
-          >
-            <p className="text-xs text-[hsl(20_10%_25%)] line-clamp-3 leading-relaxed">
-              {n.content}
-            </p>
-            <div className="mt-2 flex items-center justify-between">
-              <span className="text-[10px] font-medium text-[hsl(20_10%_35%)]">
-                {stakeholderNameById(n.author_id)}
-              </span>
-              <span className="text-[10px] text-[hsl(20_8%_52%)]">
-                {formatDate(n.created_at)}
-              </span>
-            </div>
-          </div>
-        ))}
+      <div className="flex items-center justify-between mb-2">
+        <SectionHeader icon={NotebookPen} label="Field Notes" />
+        {addButton}
       </div>
+      {notes.length === 0 ? (
+        <p className="text-xs text-[hsl(20_8%_52%)] italic">No field notes yet.</p>
+      ) : (
+        <div className="flex flex-col gap-2">
+          {notes.slice(0, 4).map((n) => (
+            <div
+              key={n.id}
+              className="rounded-lg bg-white p-3 border border-[hsl(30_18%_82%)]"
+            >
+              <p className="text-xs text-[hsl(20_10%_25%)] line-clamp-3 leading-relaxed">
+                {n.content}
+              </p>
+              <div className="mt-2 flex items-center justify-between">
+                <span className="text-[10px] font-medium text-[hsl(20_10%_35%)]">
+                  {stakeholderNameById(n.author_id)}
+                </span>
+                <span className="text-[10px] text-[hsl(20_8%_52%)]">
+                  {formatDate(n.created_at)}
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
 
-function SidebarSignals({ signals }: { signals: Signal[] }) {
-  if (signals.length === 0) return null;
+function SidebarSignals({ signals, addButton }: { signals: Signal[]; addButton?: React.ReactNode }) {
   return (
     <div>
-      <SectionHeader icon={Radio} label="Signals" />
-      <div className="flex flex-col gap-2">
-        {signals.slice(0, 4).map((s) => (
-          <div
-            key={s.id}
-            className="rounded-lg bg-white p-3 border border-[hsl(30_18%_82%)]"
-          >
-            <p className="text-sm font-medium text-[hsl(20_10%_20%)] leading-snug">
-              {s.title}
-            </p>
-            <div className="mt-1 flex items-center gap-2">
-              <span className="inline-flex items-center rounded-full bg-[hsl(30_20%_92%)] px-2 py-0.5 text-[10px] font-medium text-[hsl(20_10%_40%)]">
-                {SIGNAL_SOURCE_LABELS[s.source]}
-              </span>
-              <span className="text-[10px] text-[hsl(20_8%_52%)]">
-                {formatDate(s.published_at)}
-              </span>
-            </div>
-          </div>
-        ))}
+      <div className="flex items-center justify-between mb-2">
+        <SectionHeader icon={Radio} label="Signals" />
+        {addButton}
       </div>
+      {signals.length === 0 ? (
+        <p className="text-xs text-[hsl(20_8%_52%)] italic">No signals linked yet.</p>
+      ) : (
+        <div className="flex flex-col gap-2">
+          {signals.slice(0, 4).map((s) => (
+            <div
+              key={s.id}
+              className="rounded-lg bg-white p-3 border border-[hsl(30_18%_82%)]"
+            >
+              <p className="text-sm font-medium text-[hsl(20_10%_20%)] leading-snug">
+                {s.title}
+              </p>
+              <div className="mt-1 flex items-center gap-2">
+                <span className="inline-flex items-center rounded-full bg-[hsl(30_20%_92%)] px-2 py-0.5 text-[10px] font-medium text-[hsl(20_10%_40%)]">
+                  {SIGNAL_SOURCE_LABELS[s.source]}
+                </span>
+                <span className="text-[10px] text-[hsl(20_8%_52%)]">
+                  {formatDate(s.published_at)}
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
@@ -602,86 +648,94 @@ export default function PlaceDetail() {
           All Places
         </Link>
 
+        {/* ── Full-width Map — spans both columns ── */}
+        <PlaceMap
+          lat={place.lat}
+          lng={place.lng}
+          name={place.name}
+          environmental_burdens={place.environmental_burdens}
+          facilities={facilities}
+          stakeholderLocations={linkedStakeholders.map((s) => ({
+            id: s.id,
+            name: s.name,
+            role: s.role,
+            initials: s.name.split(' ').map((n) => n[0]).join('').slice(0, 2),
+          }))}
+          activeWork={place.active_work}
+          population={place.population_estimate}
+          className="h-[300px] mb-6"
+        />
+
+        {/* Place header — below map */}
+        <header className="mb-6">
+          <div className="flex items-center gap-2 mb-2">
+            <MapPin className="h-4 w-4 text-[hsl(152_45%_30%)]" />
+            <span className="text-[11px] font-semibold uppercase tracking-[0.15em] text-[hsl(30_10%_50%)]">
+              Place
+            </span>
+          </div>
+          <h1 className="font-serif text-3xl sm:text-4xl tracking-tight text-[hsl(20_28%_15%)]">
+            {place.name}
+          </h1>
+          <div className="mt-3 flex flex-wrap items-center gap-3">
+            <span className="flex items-center gap-1.5 text-sm text-[hsl(30_10%_40%)]">
+              <Globe className="h-4 w-4" />
+              {place.geography}
+            </span>
+            <span className="inline-flex items-center rounded-full bg-[hsl(30_18%_90%)] text-[hsl(30_18%_40%)] px-2.5 py-0.5 text-[11px] font-medium">
+              {placeTypeBadgeLabel(place.place_type)}
+            </span>
+            {place.population_estimate && (
+              <span className="text-sm text-[hsl(30_10%_45%)]">
+                Pop. ~{formatNumber(place.population_estimate)}
+              </span>
+            )}
+          </div>
+          <p className="mt-4 text-sm leading-relaxed text-[hsl(30_10%_35%)] max-w-3xl">
+            {place.description}
+          </p>
+        </header>
+
+        {/* ── Human Impact Banner — full width ── */}
+        <section className="mb-8">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <Heart className="h-4 w-4 text-[hsl(16_65%_48%)]" />
+              <span className="font-sans text-xs font-semibold uppercase tracking-widest text-[hsl(16_65%_48%)]">Who Lives Here</span>
+            </div>
+            <EditHumanImpactForm place={place} />
+          </div>
+          {place.human_impact_summary ? (
+            <div className="rounded-xl bg-white border-l-4 border-[hsl(16_65%_48%)] border-r border-t border-b border-r-[hsl(30_18%_82%)] border-t-[hsl(30_18%_82%)] border-b-[hsl(30_18%_82%)] p-5">
+              {place.population_estimate && (
+                <p className="font-serif text-2xl text-[hsl(20_25%_12%)] mb-2">{place.population_estimate.toLocaleString()} people live here.</p>
+              )}
+              <p className="font-serif-body text-sm text-[hsl(20_25%_12%/0.75)] leading-relaxed mb-3">{place.human_impact_summary}</p>
+              {place.health_snapshot && (
+                <div className="rounded-lg bg-[hsl(0_50%_97%)] border border-[hsl(0_40%_90%)] p-3 mt-3">
+                  <p className="text-xs font-semibold text-[hsl(0_50%_40%)] mb-1">Health Impact</p>
+                  <p className="text-xs text-[hsl(0_40%_30%)]">{place.health_snapshot}</p>
+                </div>
+              )}
+            </div>
+          ) : (
+            <p className="text-xs text-[hsl(20_8%_52%)] italic">No human impact data yet. Click the edit button to add.</p>
+          )}
+        </section>
+
         {/* Two-column layout */}
         <div className="flex flex-col lg:flex-row gap-8">
           {/* ── Main column ── */}
           <div className="flex-1 min-w-0 space-y-8">
-            {/* Place header */}
-            <header>
-              <div className="flex items-center gap-2 mb-2">
-                <MapPin className="h-4 w-4 text-[hsl(152_45%_30%)]" />
-                <span className="text-[11px] font-semibold uppercase tracking-[0.15em] text-[hsl(30_10%_50%)]">
-                  Place
-                </span>
-              </div>
-              <h1 className="font-serif text-3xl sm:text-4xl tracking-tight text-[hsl(20_28%_15%)]">
-                {place.name}
-              </h1>
-              <div className="mt-3 flex flex-wrap items-center gap-3">
-                <span className="flex items-center gap-1.5 text-sm text-[hsl(30_10%_40%)]">
-                  <Globe className="h-4 w-4" />
-                  {place.geography}
-                </span>
-                <span className="inline-flex items-center rounded-full bg-[hsl(30_18%_90%)] text-[hsl(30_18%_40%)] px-2.5 py-0.5 text-[11px] font-medium">
-                  {placeTypeBadgeLabel(place.place_type)}
-                </span>
-                {place.population_estimate && (
-                  <span className="text-sm text-[hsl(30_10%_45%)]">
-                    Pop. ~{formatNumber(place.population_estimate)}
-                  </span>
-                )}
-              </div>
-              <p className="mt-4 text-sm leading-relaxed text-[hsl(30_10%_35%)] max-w-3xl">
-                {place.description}
-              </p>
-            </header>
-
-            {/* ── Human Impact ── */}
-            {place.human_impact_summary && (
-              <section className="mb-8">
-                <div className="flex items-center gap-2 mb-3">
-                  <Heart className="h-4 w-4 text-[hsl(16_65%_48%)]" />
-                  <span className="font-sans text-xs font-semibold uppercase tracking-widest text-[hsl(16_65%_48%)]">Who Lives Here</span>
-                </div>
-                <div className="rounded-xl bg-white border-l-4 border-[hsl(16_65%_48%)] border-r border-t border-b border-r-[hsl(30_18%_82%)] border-t-[hsl(30_18%_82%)] border-b-[hsl(30_18%_82%)] p-5">
-                  {place.population_estimate && (
-                    <p className="font-serif text-2xl text-[hsl(20_25%_12%)] mb-2">{place.population_estimate.toLocaleString()} people live here.</p>
-                  )}
-                  <p className="font-serif-body text-sm text-[hsl(20_25%_12%/0.75)] leading-relaxed mb-3">{place.human_impact_summary}</p>
-                  {place.health_snapshot && (
-                    <div className="rounded-lg bg-[hsl(0_50%_97%)] border border-[hsl(0_40%_90%)] p-3 mt-3">
-                      <p className="text-xs font-semibold text-[hsl(0_50%_40%)] mb-1">Health Impact</p>
-                      <p className="text-xs text-[hsl(0_40%_30%)]">{place.health_snapshot}</p>
-                    </div>
-                  )}
-                </div>
-              </section>
-            )}
-
-            {/* Place Map */}
-            <PlaceMap
-              lat={place.lat}
-              lng={place.lng}
-              name={place.name}
-              environmental_burdens={place.environmental_burdens}
-              facilities={facilities}
-              stakeholderLocations={linkedStakeholders.map((s) => ({
-                id: s.id,
-                name: s.name,
-                role: s.role,
-                initials: s.name.split(' ').map((n) => n[0]).join('').slice(0, 2),
-              }))}
-              activeWork={place.active_work}
-              population={place.population_estimate}
-              className="h-64 sm:h-72"
-            />
-
             {/* Environmental Burdens */}
             <section>
-              <SectionHeader
-                icon={AlertTriangle}
-                label="Environmental Burdens"
-              />
+              <div className="flex items-center justify-between mb-2">
+                <SectionHeader
+                  icon={AlertTriangle}
+                  label="Environmental Burdens"
+                />
+                <AddBurdenForm place={place} />
+              </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {place.environmental_burdens.map((burden, i) => (
                   <div
@@ -717,9 +771,14 @@ export default function PlaceDetail() {
             </section>
 
             {/* Active Work */}
-            {place.active_work.length > 0 && (
-              <section>
+            <section>
+              <div className="flex items-center justify-between mb-2">
                 <SectionHeader icon={Briefcase} label="Active Work" />
+                <AddActiveWorkForm place={place} />
+              </div>
+              {place.active_work.length === 0 ? (
+                <p className="text-xs text-[hsl(20_8%_52%)] italic">No active work yet.</p>
+              ) : (
                 <div className="flex flex-col gap-2">
                   {place.active_work.map((work) => (
                     <div
@@ -751,8 +810,8 @@ export default function PlaceDetail() {
                     </div>
                   ))}
                 </div>
-              </section>
-            )}
+              )}
+            </section>
 
             {/* EJScreen Data */}
             {ejData && (
@@ -1092,16 +1151,74 @@ export default function PlaceDetail() {
 
           {/* ── Sidebar ── */}
           <aside className="w-full lg:w-80 shrink-0 space-y-8">
-            <SidebarStakeholders stakeholders={linkedStakeholders} />
-            <SidebarOrganizations orgs={linkedOrgs} />
-            <SidebarCommitments commitments={linkedCommitments} />
-            <SidebarFieldNotes notes={linkedNotes} stakeholderNameById={stakeholderNameById} />
-            <SidebarSignals signals={linkedSignals} />
-            {linkedJourney && (
-              <SidebarJourney journey={linkedJourney} />
-            )}
+            <SidebarStakeholders
+              stakeholders={linkedStakeholders}
+              addButton={
+                <CreateStakeholderForm
+                  defaultPlaceId={place.id}
+                  trigger={
+                    <button className="p-1 rounded hover:bg-[hsl(30_18%_82%/0.5)] text-[hsl(16_65%_48%)]">
+                      <Plus className="h-4 w-4" />
+                    </button>
+                  }
+                />
+              }
+            />
+            <SidebarOrganizations
+              orgs={linkedOrgs}
+              addButton={
+                <CreateOrganizationForm
+                  defaultPlaceId={place.id}
+                  trigger={
+                    <button className="p-1 rounded hover:bg-[hsl(30_18%_82%/0.5)] text-[hsl(16_65%_48%)]">
+                      <Plus className="h-4 w-4" />
+                    </button>
+                  }
+                />
+              }
+            />
+            <SidebarCommitments
+              commitments={linkedCommitments}
+              addButton={
+                <CreateCommitmentForm
+                  defaultPlaceId={place.id}
+                  trigger={
+                    <button className="p-1 rounded hover:bg-[hsl(30_18%_82%/0.5)] text-[hsl(16_65%_48%)]">
+                      <Plus className="h-4 w-4" />
+                    </button>
+                  }
+                />
+              }
+            />
+            <SidebarFieldNotes
+              notes={linkedNotes}
+              stakeholderNameById={stakeholderNameById}
+              addButton={
+                <CreateFieldNoteForm
+                  defaultPlaceId={place.id}
+                  trigger={
+                    <button className="p-1 rounded hover:bg-[hsl(30_18%_82%/0.5)] text-[hsl(16_65%_48%)]">
+                      <Plus className="h-4 w-4" />
+                    </button>
+                  }
+                />
+              }
+            />
+            <SidebarSignals
+              signals={linkedSignals}
+              addButton={
+                <CreateSignalForm
+                  defaultPlaceId={place.id}
+                  trigger={
+                    <button className="p-1 rounded hover:bg-[hsl(30_18%_82%/0.5)] text-[hsl(16_65%_48%)]">
+                      <Plus className="h-4 w-4" />
+                    </button>
+                  }
+                />
+              }
+            />
 
-            {/* Community Voices */}
+            {/* Community Stories */}
             {(() => {
               const placeStories = MOCK_COMMUNITY_STORIES.filter(
                 (s) => s.place_id === place.id && s.consent_level === 'public'
@@ -1109,7 +1226,7 @@ export default function PlaceDetail() {
               if (placeStories.length === 0) return null;
               return (
                 <div>
-                  <SectionHeader icon={Heart} label="Community Voices" />
+                  <SectionHeader icon={Heart} label="Community Stories" />
                   <div className="flex flex-col gap-3">
                     {placeStories.slice(0, 3).map((story) => (
                       <div
