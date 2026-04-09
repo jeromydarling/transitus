@@ -12,8 +12,9 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from '@/components/ui/select';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Pencil, Check } from 'lucide-react';
+import { Pencil, Check, Sparkles } from 'lucide-react';
 import type { Place } from '@/types/transitus';
+import type { CensusProfile } from '@/lib/api/census';
 
 const DISPLACEMENT_OPTIONS: { value: NonNullable<Place['displacement_pressure']>; label: string }[] = [
   { value: 'low', label: 'Low' },
@@ -44,14 +45,41 @@ const POPULATION_OPTIONS = [
   { value: 'communities_of_color', label: 'Communities of color' },
 ];
 
+/**
+ * Derive suggested populations from Census/ACS data.
+ * These are pre-checked when the form opens if the user hasn't already selected populations.
+ */
+function suggestFromCensus(census?: CensusProfile | null): string[] {
+  if (!census) return [];
+  const suggestions: string[] = [];
+
+  if (census.pct_below_poverty > 20) suggestions.push('low_income_households');
+  if (census.pct_renter_occupied > 50) suggestions.push('renters');
+  if (census.pct_cost_burdened_renters > 40) suggestions.push('renters');
+  if (census.pct_uninsured > 10) suggestions.push('uninsured');
+  if (census.pct_limited_english > 10) suggestions.push('limited_english_speakers');
+  if (census.pct_limited_english > 10) suggestions.push('immigrant_families');
+  if (census.pct_less_than_hs > 25) suggestions.push('low_income_households');
+  if (census.pct_no_vehicle > 15) suggestions.push('people_without_vehicles');
+  if (census.pct_built_before_1960 > 50) suggestions.push('residents_in_pre1960_housing');
+  if (census.pct_white_alone < 50) suggestions.push('communities_of_color');
+  if (census.unemployment_rate > 8) suggestions.push('low_income_households');
+
+  // Deduplicate
+  return [...new Set(suggestions)];
+}
+
 interface EditHumanImpactFormProps {
   place: Place;
+  census?: CensusProfile | null;
   trigger?: React.ReactNode;
 }
 
-export function EditHumanImpactForm({ place, trigger }: EditHumanImpactFormProps) {
+export function EditHumanImpactForm({ place, census, trigger }: EditHumanImpactFormProps) {
   const { updatePlace } = useTransitusData();
   const [open, setOpen] = useState(false);
+
+  const censusSuggestions = suggestFromCensus(census);
 
   const [humanImpactSummary, setHumanImpactSummary] = useState(place.human_impact_summary || '');
   const [healthSnapshot, setHealthSnapshot] = useState(place.health_snapshot || '');
@@ -66,7 +94,10 @@ export function EditHumanImpactForm({ place, trigger }: EditHumanImpactFormProps
     if (isOpen) {
       setHumanImpactSummary(place.human_impact_summary || '');
       setHealthSnapshot(place.health_snapshot || '');
-      setSelectedPopulations(new Set(place.most_affected_populations || []));
+      const existing = place.most_affected_populations || [];
+      // Pre-populate from Census suggestions if user hasn't selected any yet
+      const initial = existing.length > 0 ? existing : censusSuggestions;
+      setSelectedPopulations(new Set(initial));
       setDisplacementPressure(place.displacement_pressure || 'low');
     }
     setOpen(isOpen);
@@ -143,10 +174,18 @@ export function EditHumanImpactForm({ place, trigger }: EditHumanImpactFormProps
               <Label className="text-xs font-semibold uppercase tracking-widest text-[hsl(16_65%_48%)]">
                 Most Affected Populations
               </Label>
-              <p className="text-xs text-muted-foreground mb-2">Select all that apply</p>
+              <p className="text-xs text-muted-foreground mb-2">
+                Select all that apply
+                {censusSuggestions.length > 0 && (
+                  <span className="ml-2 inline-flex items-center gap-1 text-[hsl(198_55%_42%)]">
+                    <Sparkles className="h-3 w-3" /> {censusSuggestions.length} suggested from Census data
+                  </span>
+                )}
+              </p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 max-h-[220px] overflow-y-auto rounded-lg border border-[hsl(30_18%_82%)] bg-white p-2">
                 {POPULATION_OPTIONS.map(opt => {
                   const isSelected = selectedPopulations.has(opt.value);
+                  const isSuggested = censusSuggestions.includes(opt.value);
                   return (
                     <button
                       key={opt.value}
@@ -162,15 +201,18 @@ export function EditHumanImpactForm({ place, trigger }: EditHumanImpactFormProps
                       className={`flex items-center gap-2 px-2.5 py-1.5 rounded-md text-xs text-left transition-colors ${
                         isSelected
                           ? 'bg-[hsl(16_65%_48%/0.1)] text-[hsl(16_65%_48%)] font-medium'
+                          : isSuggested
+                          ? 'bg-[hsl(198_55%_42%/0.06)] text-[hsl(20_25%_12%/0.7)] ring-1 ring-[hsl(198_55%_42%/0.2)]'
                           : 'text-[hsl(20_25%_12%/0.6)] hover:bg-[hsl(30_18%_82%/0.3)]'
                       }`}
                     >
                       <span className={`shrink-0 w-4 h-4 rounded border flex items-center justify-center ${
-                        isSelected ? 'bg-[hsl(16_65%_48%)] border-[hsl(16_65%_48%)]' : 'border-[hsl(30_18%_82%)]'
+                        isSelected ? 'bg-[hsl(16_65%_48%)] border-[hsl(16_65%_48%)]' : isSuggested ? 'border-[hsl(198_55%_42%/0.4)]' : 'border-[hsl(30_18%_82%)]'
                       }`}>
                         {isSelected && <Check className="h-3 w-3 text-white" />}
                       </span>
                       {opt.label}
+                      {isSuggested && !isSelected && <Sparkles className="h-2.5 w-2.5 text-[hsl(198_55%_42%)] ml-auto shrink-0" />}
                     </button>
                   );
                 })}

@@ -197,30 +197,48 @@ export default function Compass() {
 
         {/* ── Compass Cross Layout with SVG Rose ── */}
         <div className="relative mb-8">
-          {/* SVG Compass Rose — faded background */}
-          <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 600 600" preserveAspectRatio="xMidYMid meet" style={{ opacity: 0.06 }}>
-            {/* Outer ring */}
-            <circle cx="300" cy="300" r="260" fill="none" stroke="hsl(20 25% 30%)" strokeWidth="1" />
-            <circle cx="300" cy="300" r="200" fill="none" stroke="hsl(20 25% 30%)" strokeWidth="0.5" strokeDasharray="4 4" />
-            <circle cx="300" cy="300" r="140" fill="none" stroke="hsl(20 25% 30%)" strokeWidth="0.5" strokeDasharray="2 4" />
+          {/* SVG Compass Rose — background */}
+          <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 600 600" preserveAspectRatio="xMidYMid meet" style={{ opacity: 0.12 }}>
+            {/* Rings */}
+            <circle cx="300" cy="300" r="270" fill="none" stroke="hsl(20 25% 30%)" strokeWidth="1.2" />
+            <circle cx="300" cy="300" r="210" fill="none" stroke="hsl(20 25% 30%)" strokeWidth="0.6" strokeDasharray="4 4" />
+            <circle cx="300" cy="300" r="150" fill="none" stroke="hsl(20 25% 30%)" strokeWidth="0.5" strokeDasharray="2 4" />
+            <circle cx="300" cy="300" r="80" fill="none" stroke="hsl(20 25% 30%)" strokeWidth="0.4" strokeDasharray="1 3" />
             {/* Cross lines */}
-            <line x1="300" y1="30" x2="300" y2="570" stroke="hsl(20 25% 30%)" strokeWidth="0.8" />
-            <line x1="30" y1="300" x2="570" y2="300" stroke="hsl(20 25% 30%)" strokeWidth="0.8" />
+            <line x1="300" y1="15" x2="300" y2="585" stroke="hsl(20 25% 30%)" strokeWidth="0.8" />
+            <line x1="15" y1="300" x2="585" y2="300" stroke="hsl(20 25% 30%)" strokeWidth="0.8" />
             {/* Diagonal tick marks */}
-            <line x1="115" y1="115" x2="150" y2="150" stroke="hsl(20 25% 30%)" strokeWidth="0.5" />
-            <line x1="485" y1="115" x2="450" y2="150" stroke="hsl(20 25% 30%)" strokeWidth="0.5" />
-            <line x1="115" y1="485" x2="150" y2="450" stroke="hsl(20 25% 30%)" strokeWidth="0.5" />
-            <line x1="485" y1="485" x2="450" y2="450" stroke="hsl(20 25% 30%)" strokeWidth="0.5" />
-            {/* Cardinal points */}
-            <polygon points="300,50 290,80 310,80" fill="hsl(20 25% 30%)" />
-            <polygon points="550,300 520,290 520,310" fill="hsl(20 25% 30%)" />
-            <polygon points="300,550 290,520 310,520" fill="hsl(20 25% 30%)" />
-            <polygon points="50,300 80,290 80,310" fill="hsl(20 25% 30%)" />
+            <line x1="105" y1="105" x2="145" y2="145" stroke="hsl(20 25% 30%)" strokeWidth="0.6" />
+            <line x1="495" y1="105" x2="455" y2="145" stroke="hsl(20 25% 30%)" strokeWidth="0.6" />
+            <line x1="105" y1="495" x2="145" y2="455" stroke="hsl(20 25% 30%)" strokeWidth="0.6" />
+            <line x1="495" y1="495" x2="455" y2="455" stroke="hsl(20 25% 30%)" strokeWidth="0.6" />
+            {/* Degree tick marks on outer ring */}
+            {Array.from({ length: 36 }, (_, i) => {
+              const angle = (i * 10) * Math.PI / 180;
+              const r1 = 264; const r2 = 276;
+              return <line key={i} x1={300 + r1 * Math.sin(angle)} y1={300 - r1 * Math.cos(angle)} x2={300 + r2 * Math.sin(angle)} y2={300 - r2 * Math.cos(angle)} stroke="hsl(20 25% 30%)" strokeWidth={i % 9 === 0 ? "1.5" : "0.4"} />;
+            })}
+            {/* Cardinal arrows — peeking out from edges */}
+            {/* North arrow */}
+            <polygon points="300,8 293,28 300,22 307,28" fill="hsl(198 55% 42%)" />
+            <line x1="300" y1="28" x2="300" y2="45" stroke="hsl(198 55% 42%)" strokeWidth="1.5" />
+            {/* East arrow */}
+            <polygon points="592,300 572,293 578,300 572,307" fill="hsl(16 65% 48%)" />
+            <line x1="572" y1="300" x2="555" y2="300" stroke="hsl(16 65% 48%)" strokeWidth="1.5" />
+            {/* South arrow */}
+            <polygon points="300,592 293,572 300,578 307,572" fill="hsl(152 40% 28%)" />
+            <line x1="300" y1="572" x2="300" y2="555" stroke="hsl(152 40% 28%)" strokeWidth="1.5" />
+            {/* West arrow */}
+            <polygon points="8,300 28,293 22,300 28,307" fill="hsl(38 80% 55%)" />
+            <line x1="28" y1="300" x2="45" y2="300" stroke="hsl(38 80% 55%)" strokeWidth="1.5" />
             {/* N E S W labels */}
-            <text x="300" y="38" textAnchor="middle" fontSize="14" fontWeight="600" fill="hsl(20 25% 30%)" fontFamily="Inter">N</text>
-            <text x="565" y="305" textAnchor="middle" fontSize="14" fontWeight="600" fill="hsl(20 25% 30%)" fontFamily="Inter">E</text>
-            <text x="300" y="575" textAnchor="middle" fontSize="14" fontWeight="600" fill="hsl(20 25% 30%)" fontFamily="Inter">S</text>
-            <text x="35" y="305" textAnchor="middle" fontSize="14" fontWeight="600" fill="hsl(20 25% 30%)" fontFamily="Inter">W</text>
+            <text x="300" y="65" textAnchor="middle" fontSize="11" fontWeight="700" fill="hsl(198 55% 42%)" fontFamily="Inter" letterSpacing="0.1em">N</text>
+            <text x="545" y="304" textAnchor="middle" fontSize="11" fontWeight="700" fill="hsl(16 65% 48%)" fontFamily="Inter" letterSpacing="0.1em">E</text>
+            <text x="300" y="548" textAnchor="middle" fontSize="11" fontWeight="700" fill="hsl(152 40% 28%)" fontFamily="Inter" letterSpacing="0.1em">S</text>
+            <text x="55" y="304" textAnchor="middle" fontSize="11" fontWeight="700" fill="hsl(38 80% 55%)" fontFamily="Inter" letterSpacing="0.1em">W</text>
+            {/* Center dot */}
+            <circle cx="300" cy="300" r="4" fill="hsl(16 65% 48%)" opacity="0.5" />
+            <circle cx="300" cy="300" r="1.5" fill="hsl(20 25% 30%)" />
           </svg>
 
           {/* Cross grid: North top-center, West left / East right, South bottom-center */}

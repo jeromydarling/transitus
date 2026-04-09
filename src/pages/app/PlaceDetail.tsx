@@ -684,7 +684,7 @@ export default function PlaceDetail() {
               <Heart className="h-4 w-4 text-[hsl(16_65%_48%)]" />
               <span className="font-sans text-xs font-semibold uppercase tracking-widest text-[hsl(16_65%_48%)]">Who Lives Here</span>
             </div>
-            <EditHumanImpactForm place={place} />
+            <EditHumanImpactForm place={place} census={census} />
           </div>
           {place.human_impact_summary ? (
             <div className="rounded-xl bg-white border-l-4 border-[hsl(16_65%_48%)] border-r border-t border-b border-r-[hsl(30_18%_82%)] border-t-[hsl(30_18%_82%)] border-b-[hsl(30_18%_82%)] p-5">
