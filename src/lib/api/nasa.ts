@@ -30,14 +30,15 @@ export interface GIBSLayer {
 
 /** Fetch satellite imagery for a location */
 export async function fetchEarthImagery(lat: number, lng: number, date?: string): Promise<NASAEarthImagery> {
-  // TODO: Wire to https://api.nasa.gov/planetary/earth/imagery?lon={lng}&lat={lat}&date={date}&api_key=DEMO_KEY
+  const d = date || '2024-01-15';
+  const url = `https://api.nasa.gov/planetary/earth/imagery?lon=${lng}&lat=${lat}&date=${d}&dim=0.1&api_key=DEMO_KEY`;
+  // This URL works directly as an image src with DEMO_KEY
   return {
     id: `earth-${lat}-${lng}`,
-    date: date || '2025-09-15',
-    url: `https://api.nasa.gov/planetary/earth/imagery?lon=${lng}&lat=${lat}&date=2025-09-15&dim=0.1&api_key=DEMO_KEY`,
-    cloud_score: 12,
+    date: d,
+    url,
     lat, lng,
-    caption: 'Landsat 8 satellite imagery of the area.',
+    caption: 'Landsat satellite imagery',
   };
 }
 

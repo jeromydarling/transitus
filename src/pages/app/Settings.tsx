@@ -258,7 +258,7 @@ export default function AppSettings() {
                 All data is stored locally in your browser until Supabase integration is complete. Community stories respect consent levels. NRI processes data locally and never sends personal information to external services without your explicit approval.
               </p>
               <Button variant="outline" size="sm" className="text-xs" onClick={() => { localStorage.removeItem('transitus_data'); window.location.reload(); }}>
-                Reset all data to defaults
+                Reset to demo data
               </Button>
             </div>
           </section>

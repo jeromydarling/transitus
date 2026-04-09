@@ -26,6 +26,7 @@ import {
   BarChart3,
   Heart,
   Plus,
+  FileDown,
 } from 'lucide-react';
 
 import { useTransitusData } from '@/contexts/TransitusDataContext';
@@ -52,6 +53,8 @@ import {
   fetchCensusProfile,
   fetchHazardRisks,
 } from '@/lib/api';
+
+import { generatePlaceBriefPdf } from '@/lib/reports/generatePdf';
 
 import {
   ROLE_LABELS,
@@ -671,6 +674,13 @@ export default function PlaceDetail() {
                 Pop. ~{formatNumber(place.population_estimate)}
               </span>
             )}
+            <button
+              onClick={() => generatePlaceBriefPdf(place, linkedCommitments, linkedNotes, linkedSignals, linkedStakeholders)}
+              className="ml-auto inline-flex items-center gap-1.5 rounded-lg bg-[hsl(16_65%_48%)] px-3 py-1.5 text-xs font-medium text-white hover:bg-[hsl(16_65%_42%)] transition-colors"
+            >
+              <FileDown className="h-3.5 w-3.5" />
+              Download Brief
+            </button>
           </div>
           <p className="mt-4 text-sm leading-relaxed text-[hsl(30_10%_35%)]">
             {place.description}

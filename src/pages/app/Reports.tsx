@@ -4,11 +4,12 @@
  * Generated reports and briefs with expandable section details.
  */
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { FileText, MapPin, ChevronDown, ChevronRight } from 'lucide-react';
+import { FileText, MapPin, ChevronDown, ChevronRight, FileDown } from 'lucide-react';
 
 import { useTransitusData } from '@/contexts/TransitusDataContext';
+import { generatePlaceBriefPdf } from '@/lib/reports/generatePdf';
 import type { Report, ReportType, ReportSection } from '@/types/transitus';
 
 // ── Helpers ──
@@ -44,7 +45,7 @@ function formatDate(iso: string): string {
 
 // ── Components ──
 
-function ReportCard({ report, placeName }: { report: Report; placeName: (id: string) => string }) {
+function ReportCard({ report, placeName, onDownloadPdf }: { report: Report; placeName: (id: string) => string; onDownloadPdf?: (report: Report) => void }) {
   const [expanded, setExpanded] = useState(false);
 
   return (
@@ -88,11 +89,27 @@ function ReportCard({ report, placeName }: { report: Report; placeName: (id: str
           {report.content_summary}
         </p>
 
-        {/* Section count */}
-        <p className="mt-2 text-[10px] text-[hsl(20_8%_52%)]">
-          {report.sections.length} section{report.sections.length !== 1 ? 's' : ''}
-        </p>
+        {/* Section count + Download */}
+        <div className="mt-2 flex items-center justify-between">
+          <p className="text-[10px] text-[hsl(20_8%_52%)]">
+            {report.sections.length} section{report.sections.length !== 1 ? 's' : ''}
+          </p>
+        </div>
       </button>
+
+      {/* Download PDF button */}
+      {onDownloadPdf && (
+        <div className="px-4 pb-3 -mt-1">
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); onDownloadPdf(report); }}
+            className="inline-flex items-center gap-1.5 rounded-lg bg-[hsl(16_65%_48%)] px-3 py-1.5 text-xs font-medium text-white hover:bg-[hsl(16_65%_42%)] transition-colors"
+          >
+            <FileDown className="h-3.5 w-3.5" />
+            Download PDF
+          </button>
+        </div>
+      )}
 
       {/* Expanded sections */}
       {expanded && (
@@ -126,12 +143,23 @@ function ReportCard({ report, placeName }: { report: Report; placeName: (id: str
 // ── Main page ──
 
 export default function Reports() {
-  const { reports, places } = useTransitusData();
+  const { reports, places, commitments, fieldNotes, signals, stakeholders } = useTransitusData();
 
   const placeName = (placeId: string): string => {
     const p = places.find((pl) => pl.id === placeId);
     return p ? p.name : placeId;
   };
+
+  const handleDownloadPdf = useCallback((report: Report) => {
+    if (!report.place_id) return;
+    const place = places.find((p) => p.id === report.place_id);
+    if (!place) return;
+    const placeCommitments = commitments.filter((c) => c.place_ids.includes(place.id));
+    const placeNotes = fieldNotes.filter((n) => n.place_id === place.id);
+    const placeSignals = signals.filter((s) => s.place_ids.includes(place.id));
+    const placeStakeholders = stakeholders.filter((s) => s.place_ids.includes(place.id));
+    generatePlaceBriefPdf(place, placeCommitments, placeNotes, placeSignals, placeStakeholders);
+  }, [places, commitments, fieldNotes, signals, stakeholders]);
 
   const sorted = [...reports].sort(
     (a, b) => new Date(b.generated_at).getTime() - new Date(a.generated_at).getTime(),
@@ -158,7 +186,7 @@ export default function Reports() {
         {/* Report cards */}
         <div className="flex flex-col gap-4">
           {sorted.map((report) => (
-            <ReportCard key={report.id} report={report} placeName={placeName} />
+            <ReportCard key={report.id} report={report} placeName={placeName} onDownloadPdf={report.place_id ? handleDownloadPdf : undefined} />
           ))}
           {sorted.length === 0 && (
             <p className="text-sm text-[hsl(20_8%_52%)] italic">

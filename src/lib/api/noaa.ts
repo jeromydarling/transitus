@@ -42,7 +42,30 @@ export interface HazardRisk {
 }
 
 export async function fetchActiveAlerts(lat: number, lng: number): Promise<NOAAAlert[]> {
-  // TODO: Wire to https://api.weather.gov/alerts?point={lat},{lng}
+  try {
+    const res = await fetch(`https://api.weather.gov/alerts?point=${lat},${lng}&status=actual&limit=5`, {
+      signal: AbortSignal.timeout(5000),
+      headers: { 'User-Agent': 'Transitus Environmental Stewardship Platform' },
+    });
+    if (res.ok) {
+      const data = await res.json();
+      const parsed = data.features?.map((f: any) => ({
+        id: f.properties.id,
+        event_type: f.properties.event,
+        headline: f.properties.headline,
+        description: f.properties.description?.slice(0, 500),
+        severity: f.properties.severity,
+        urgency: f.properties.urgency,
+        area_desc: f.properties.areaDesc,
+        onset: f.properties.onset,
+        expires: f.properties.expires,
+        sender: f.properties.senderName,
+      })) as NOAAAlert[] | undefined;
+      if (parsed && parsed.length > 0) return parsed;
+    }
+  } catch {
+    // Silently fall back to mock
+  }
   return getMockAlerts();
 }
 

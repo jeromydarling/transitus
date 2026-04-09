@@ -5,6 +5,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { Link, useLocation, Outlet } from 'react-router-dom';
 import { NRILauncher } from '@/components/nri/NRILauncher';
+import { GlobalSearch } from '@/components/search/GlobalSearch';
 import { TransitusDataProvider } from '@/contexts/TransitusDataContext';
 import { getCurrentSeason, getDayMoment, getWeekRhythm, getNearbyMilestones } from '@/lib/transitionCalendar';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -257,6 +258,7 @@ export function TransitusLayout({ title, children }: TransitusLayoutProps) {
             <Menu className="h-5 w-5 text-[hsl(20_25%_12%/0.6)]" />
           </button>
           <h1 className="font-serif text-base tracking-tight text-[hsl(20_25%_12%)] flex-1">{resolvedTitle}</h1>
+          <GlobalSearch />
           <SeasonIndicator />
         </header>
 
