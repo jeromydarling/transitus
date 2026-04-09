@@ -9,6 +9,7 @@ import { useState } from 'react';
 import { Library as LibraryIcon } from 'lucide-react';
 
 import { MOCK_LIBRARY } from '@/lib/mockData';
+import { useTransitusData } from '@/contexts/TransitusDataContext';
 import type { LibraryItem, LibraryCategory, FormationTrack } from '@/types/transitus';
 
 // ── Helpers ──

@@ -19,6 +19,7 @@ import { checkNriScope } from '@/lib/nri/transitusScopeGuardrails';
 import { getMockNriResponse } from '@/lib/nri/mockNriResponses';
 import { TRANSITUS_QUICK_PROMPTS } from '@/types/nri';
 import type { NRIChatMessage } from '@/types/nri';
+import { useTransitusData } from '@/contexts/TransitusDataContext';
 
 const ICON_MAP: Record<string, React.ElementType> = {
   Radio, NotebookPen, Handshake, Users, MapPin, Leaf, FileText, BookOpen, Sparkles,
@@ -29,15 +30,16 @@ interface NRIChatDrawerProps {
   onClose: () => void;
 }
 
+const WELCOME_MSG: NRIChatMessage = {
+  id: 'welcome',
+  role: 'assistant',
+  content: 'Welcome to Transitus. I\'m NRI — your stewardship companion.\n\nI can help you understand what\'s shifting in your places, check on commitments, prepare for hearings, and draft reports from your field work.\n\nWhat would you like to work on?',
+  timestamp: new Date().toISOString(),
+};
+
 export function NRIChatDrawer({ open, onClose }: NRIChatDrawerProps) {
-  const [messages, setMessages] = useState<NRIChatMessage[]>([
-    {
-      id: 'welcome',
-      role: 'assistant',
-      content: 'Welcome to Transitus. I\'m NRI — your stewardship companion.\n\nI can help you understand what\'s shifting in your places, check on commitments, prepare for hearings, and draft reports from your field work.\n\nWhat would you like to work on?',
-      timestamp: new Date().toISOString(),
-    },
-  ]);
+  const { nriMessages, addNriMessage } = useTransitusData();
+  const messages = nriMessages.length > 0 ? nriMessages : [WELCOME_MSG];
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -71,7 +73,7 @@ export function NRIChatDrawer({ open, onClose }: NRIChatDrawerProps) {
       timestamp: new Date().toISOString(),
       context: { page_route: location.pathname },
     };
-    setMessages(prev => [...prev, userMsg]);
+    addNriMessage(userMsg);
     setInput('');
 
     // Check scope guardrails
@@ -83,7 +85,7 @@ export function NRIChatDrawer({ open, onClose }: NRIChatDrawerProps) {
         content: guardrail.gentle_response || 'I can\'t help with that, but I\'m here for your stewardship work.',
         timestamp: new Date().toISOString(),
       };
-      setMessages(prev => [...prev, blockedMsg]);
+      addNriMessage(blockedMsg);
       return;
     }
 
@@ -102,7 +104,7 @@ export function NRIChatDrawer({ open, onClose }: NRIChatDrawerProps) {
     };
 
     setIsTyping(false);
-    setMessages(prev => [...prev, assistantMsg]);
+    addNriMessage(assistantMsg);
   }, [location.pathname]);
 
   const handleSubmit = (e: React.FormEvent) => {

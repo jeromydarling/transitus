@@ -9,6 +9,7 @@ import { useParams, Link } from 'react-router-dom';
 import { BookOpen, MapPin, AlertTriangle, HelpCircle } from 'lucide-react';
 
 import { MOCK_JOURNEYS, MOCK_PLACES } from '@/lib/mockData';
+import { useTransitusData } from '@/contexts/TransitusDataContext';
 import { CHAPTER_TYPE_LABELS } from '@/types/transitus';
 import type { JourneyType, ChapterType, JourneyChapter } from '@/types/transitus';
 

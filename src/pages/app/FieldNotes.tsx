@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom';
 import { NotebookPen, MapPin, User, Shield } from 'lucide-react';
 
 import { MOCK_FIELD_NOTES, MOCK_STAKEHOLDERS, MOCK_PLACES } from '@/lib/mockData';
+import { useTransitusData } from '@/contexts/TransitusDataContext';
 import { FIELD_NOTE_TAG_LABELS } from '@/types/transitus';
 import type { FieldNote, FieldNoteTag, FieldNoteType } from '@/types/transitus';
 

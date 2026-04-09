@@ -9,6 +9,7 @@ import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { Users, Search, Filter, MapPin } from 'lucide-react';
 import { MOCK_STAKEHOLDERS, MOCK_ORGS } from '@/lib/mockData';
+import { useTransitusData } from '@/contexts/TransitusDataContext';
 import { ROLE_LABELS } from '@/types/transitus';
 import type { Stakeholder, TransitusRole } from '@/types/transitus';
 

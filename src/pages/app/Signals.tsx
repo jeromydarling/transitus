@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom';
 import { Radio, MapPin, ExternalLink } from 'lucide-react';
 
 import { MOCK_SIGNALS, MOCK_PLACES } from '@/lib/mockData';
+import { useTransitusData } from '@/contexts/TransitusDataContext';
 import { SIGNAL_SOURCE_LABELS } from '@/types/transitus';
 import type { Signal, SignalSource, SignalCategory } from '@/types/transitus';
 

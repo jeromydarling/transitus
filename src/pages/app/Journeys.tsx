@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom';
 import { BookOpen, MapPin } from 'lucide-react';
 
 import { MOCK_JOURNEYS, MOCK_PLACES } from '@/lib/mockData';
+import { useTransitusData } from '@/contexts/TransitusDataContext';
 import { CHAPTER_TYPE_LABELS } from '@/types/transitus';
 import type { Journey, JourneyType, ChapterType } from '@/types/transitus';
 

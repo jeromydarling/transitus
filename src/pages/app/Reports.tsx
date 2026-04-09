@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom';
 import { FileText, MapPin, ChevronDown, ChevronRight } from 'lucide-react';
 
 import { MOCK_REPORTS, MOCK_PLACES } from '@/lib/mockData';
+import { useTransitusData } from '@/contexts/TransitusDataContext';
 import type { Report, ReportType, ReportSection } from '@/types/transitus';
 
 // ── Helpers ──

@@ -8,6 +8,7 @@
 import { Link } from 'react-router-dom';
 import { MapPin, Globe, Briefcase } from 'lucide-react';
 import { MOCK_PLACES } from '@/lib/mockData';
+import { useTransitusData } from '@/contexts/TransitusDataContext';
 import type { EnvironmentalBurden, Place } from '@/types/transitus';
 
 // ── Severity badge styles ──

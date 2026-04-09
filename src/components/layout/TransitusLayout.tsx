@@ -9,10 +9,12 @@
 import { useState, useCallback, useEffect } from 'react';
 import { Link, useLocation, Outlet } from 'react-router-dom';
 import { NRILauncher } from '@/components/nri/NRILauncher';
+import { TransitusDataProvider } from '@/contexts/TransitusDataContext';
 import {
   Home, MapPin, Users, Handshake, NotebookPen,
   Radio, BookOpen, Library, FileText, Globe,
   ArrowLeft, Menu, X, MoreHorizontal, ChevronRight,
+  PenLine, Network, Heart, Target, Search,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -38,6 +40,10 @@ const NAV_ITEMS: NavItem[] = [
   { label: 'Journeys',      shortLabel: 'Journeys', href: '/app/journeys',     icon: BookOpen },
   { label: 'Library',       shortLabel: 'Library',  href: '/app/library',      icon: Library },
   { label: 'Reports',       shortLabel: 'Reports',  href: '/app/reports',      icon: FileText },
+  { label: 'Journal',       shortLabel: 'Journal',  href: '/app/journal',      icon: PenLine },
+  { label: 'Coalition',     shortLabel: 'Coalition', href: '/app/coalition',    icon: Network },
+  { label: 'Participation', shortLabel: 'Engage',   href: '/app/participation', icon: Heart },
+  { label: 'Benefits',      shortLabel: 'Benefits', href: '/app/community-benefits', icon: Target },
 ];
 
 // Bottom tab bar shows first 4 + More
@@ -82,6 +88,7 @@ export function TransitusLayout({ title, children }: TransitusLayoutProps) {
   const closeSidebar = useCallback(() => setSidebarOpen(false), []);
 
   return (
+    <TransitusDataProvider>
     <div className="min-h-screen bg-[hsl(38_30%_95%)]">
       {/* ── Mobile overlay backdrop ── */}
       {(sidebarOpen || moreOpen) && (
@@ -267,6 +274,7 @@ export function TransitusLayout({ title, children }: TransitusLayoutProps) {
         </div>
       )}
     </div>
+    </TransitusDataProvider>
   );
 }
 

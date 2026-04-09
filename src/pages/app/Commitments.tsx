@@ -9,6 +9,7 @@ import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { Handshake, Filter, MapPin, CalendarClock, MessageSquareQuote } from 'lucide-react';
 import { MOCK_COMMITMENTS, MOCK_PLACES, MOCK_ORGS } from '@/lib/mockData';
+import { useTransitusData } from '@/contexts/TransitusDataContext';
 import { COMMITMENT_STATUS_LABELS } from '@/types/transitus';
 import type { Commitment, CommitmentStatus } from '@/types/transitus';
 

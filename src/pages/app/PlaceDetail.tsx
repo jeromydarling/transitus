@@ -37,6 +37,8 @@ import {
   MOCK_ORGS,
 } from '@/lib/mockData';
 
+import PlaceMap from '@/components/map/PlaceMap';
+
 import {
   fetchEJScreenData,
   fetchNearbyFacilities,
@@ -567,21 +569,15 @@ export default function PlaceDetail() {
               </p>
             </header>
 
-            {/* Map placeholder */}
-            <div className="relative rounded-lg overflow-hidden border border-[hsl(30_18%_82%)] h-64 sm:h-72">
-              <div className="absolute inset-0 gradient-terrain" />
-              <div className="absolute inset-0 contour-pattern opacity-30" />
-              <div className="absolute inset-0 meridian-grid opacity-15" />
-              <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <MapPin className="h-10 w-10 text-white/70 mb-3 drop-shadow-lg" />
-                <p className="text-sm font-medium text-white/80 tracking-wide">
-                  Map integration coming soon
-                </p>
-                <p className="mt-1 text-xs text-white/50">
-                  {place.lat.toFixed(4)}, {place.lng.toFixed(4)}
-                </p>
-              </div>
-            </div>
+            {/* Place Map */}
+            <PlaceMap
+              lat={place.lat}
+              lng={place.lng}
+              name={place.name}
+              environmental_burdens={place.environmental_burdens}
+              facilityCount={facilities.length}
+              className="h-64 sm:h-72"
+            />
 
             {/* Environmental Burdens */}
             <section>

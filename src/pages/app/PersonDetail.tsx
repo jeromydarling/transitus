@@ -8,6 +8,7 @@
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, MapPin, NotebookPen, Handshake, Tag } from 'lucide-react';
 import { MOCK_STAKEHOLDERS, MOCK_ORGS, MOCK_PLACES, MOCK_COMMITMENTS, MOCK_FIELD_NOTES } from '@/lib/mockData';
+import { useTransitusData } from '@/contexts/TransitusDataContext';
 import { ROLE_LABELS, COMMITMENT_STATUS_LABELS } from '@/types/transitus';
 import type { TransitusRole, CommitmentStatus, FieldNoteType } from '@/types/transitus';
 
