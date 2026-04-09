@@ -749,7 +749,19 @@ export default function PlaceDetail() {
             {/* EJScreen Data */}
             {ejData && (
               <section>
-                <SectionHeader icon={BarChart3} label="EJScreen Data" />
+                <div className="flex items-center justify-between mb-3">
+                  <SectionHeader icon={BarChart3} label="EJScreen Data" />
+                  <div className="flex items-center gap-2">
+                    <Label htmlFor="layman-toggle" className="text-[11px] text-[hsl(20_10%_45%)] cursor-pointer">
+                      {laymanMode ? 'Plain language' : 'Technical data'}
+                    </Label>
+                    <Switch
+                      id="layman-toggle"
+                      checked={laymanMode}
+                      onCheckedChange={setLaymanMode}
+                    />
+                  </div>
+                </div>
                 <div className="rounded-lg bg-white border border-[hsl(30_18%_82%)] overflow-hidden">
                   {/* Demographics summary row */}
                   <div className="px-4 py-3 bg-[hsl(30_20%_96%)] border-b border-[hsl(30_18%_90%)]">
@@ -789,7 +801,7 @@ export default function PlaceDetail() {
                   {/* Indicator rows */}
                   <div className="px-4">
                     {ejIndicators.map((indicator, i) => (
-                      <EJScreenIndicatorRow key={i} indicator={indicator} />
+                      <EJScreenIndicatorRow key={i} indicator={indicator} laymanMode={laymanMode} />
                     ))}
                   </div>
                 </div>
