@@ -35,7 +35,7 @@ export interface SeasonInfo {
 
 // ── Season Definitions ──
 
-const SEASONS: Record<TransitionSeason, Omit<SeasonInfo, 'season'>> = {
+export const SEASONS: Record<TransitionSeason, Omit<SeasonInfo, 'season'>> = {
   preparation: {
     label: 'Preparation',
     posture: 'Waiting and planning',

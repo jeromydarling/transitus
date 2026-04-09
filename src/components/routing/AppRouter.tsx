@@ -38,6 +38,9 @@ const Journeys = lazy(() => import('@/pages/app/Journeys'));
 const JourneyDetail = lazy(() => import('@/pages/app/JourneyDetail'));
 const AppLibrary = lazy(() => import('@/pages/app/Library'));
 const Reports = lazy(() => import('@/pages/app/Reports'));
+const AppFeedback = lazy(() => import('@/pages/app/Feedback'));
+const Seasons = lazy(() => import('@/pages/app/Seasons'));
+const AppSettings = lazy(() => import('@/pages/app/Settings'));
 const Journal = lazy(() => import('@/pages/app/Journal'));
 const CoalitionNetwork = lazy(() => import('@/pages/app/CoalitionNetwork'));
 const Participation = lazy(() => import('@/pages/app/Participation'));
@@ -107,6 +110,9 @@ export function AppRouter() {
         <Route path="community-benefits" element={<Suspense fallback={<AppFallback />}><CommunityBenefits /></Suspense>} />
         <Route path="community-stories" element={<Suspense fallback={<AppFallback />}><CommunityStories /></Suspense>} />
         <Route path="graph" element={<Suspense fallback={<AppFallback />}><StakeholderGraph /></Suspense>} />
+        <Route path="feedback" element={<Suspense fallback={<AppFallback />}><AppFeedback /></Suspense>} />
+        <Route path="seasons" element={<Suspense fallback={<AppFallback />}><Seasons /></Suspense>} />
+        <Route path="settings" element={<Suspense fallback={<AppFallback />}><AppSettings /></Suspense>} />
       </Route>
 
       {/* Catch-all */}

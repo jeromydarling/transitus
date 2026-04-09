@@ -97,12 +97,18 @@ const TransitusDataContext = createContext<TransitusDataContextType | null>(null
 // ── Persistence helpers ──
 
 const STORAGE_KEY = 'transitus_data';
+const STORAGE_VERSION = 2; // Increment when schema changes
 
 function loadFromStorage(): Partial<TransitusDataState> | null {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw);
+    // Check version — if old, clear and return null
+    if (parsed._version !== STORAGE_VERSION) {
+      localStorage.removeItem(STORAGE_KEY);
+      return null;
+    }
     if (parsed.readSignalIds) {
       parsed.readSignalIds = new Set(parsed.readSignalIds);
     }
@@ -115,6 +121,7 @@ function saveToStorage(state: TransitusDataState) {
     const serializable = {
       ...state,
       readSignalIds: Array.from(state.readSignalIds),
+      _version: STORAGE_VERSION,
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(serializable));
   } catch { /* quota exceeded — fail silently */ }

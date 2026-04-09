@@ -8,7 +8,7 @@ import {
   ArrowRight, Heart, MapPin, BookOpen, Check, Globe,
   Users, Handshake, NotebookPen, Radio, Library, FileText,
   Mountain, Waves, TreePine, Compass, Layers, Eye, Leaf,
-  Building2, Landmark, Sprout, Scale, Church,
+  Building2, Landmark, Sprout, Scale, Church, Calendar,
 } from 'lucide-react';
 import type { ArchetypeKey } from '@/config/brand';
 import SeoHead from '@/components/seo/SeoHead';
@@ -205,6 +205,33 @@ export default function Landing() {
                 <BookOpen className="mr-2 h-4 w-4" /> {philosophyPreview.cta}
               </Button>
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* SEASONAL RHYTHM */}
+      <section className="bg-[hsl(var(--transitus-earth))] text-[hsl(var(--transitus-sand))] relative">
+        <div className="absolute inset-0 meridian-grid opacity-15" />
+        <div className="relative marketing-section">
+          <div className="max-w-3xl mx-auto text-center">
+            <Calendar className="h-8 w-8 text-[hsl(var(--transitus-amber))] mx-auto mb-6" />
+            <h2 className="marketing-heading text-white mb-4">Built for the rhythm of real work</h2>
+            <p className="marketing-subheading text-[hsl(var(--transitus-sand)/0.7)] mb-8">
+              Just Transition doesn't follow sprints. It follows seasons — preparation, reckoning, breakthrough, and the long faithful labor that connects them. Transitus knows which season you're in and adjusts its posture to match.
+            </p>
+            <div className="grid sm:grid-cols-4 gap-4 text-left">
+              {([
+                ['Preparation', 'The year turns. Review what was promised. Prepare for the work ahead.'],
+                ['Reckoning', 'Face what\u2019s broken honestly. Which commitments were breached? What needs repair?'],
+                ['Breakthrough', 'Something shifted that nobody expected. New life from what looked dead.'],
+                ['The Long Work', 'The majority of the year. Daily faithfulness, accompaniment, and patience.'],
+              ] as const).map(([name, desc]) => (
+                <div key={name} className="editorial-card-dark p-4">
+                  <h3 className="text-sm font-semibold text-[hsl(var(--transitus-amber))]">{name}</h3>
+                  <p className="text-xs text-[hsl(var(--transitus-sand)/0.5)] mt-1">{desc}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>

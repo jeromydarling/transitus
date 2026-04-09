@@ -32,6 +32,8 @@ import { useTransitusData } from '@/contexts/TransitusDataContext';
 import { MOCK_COMMUNITY_STORIES } from '@/lib/mockData';
 
 import PlaceMap from '@/components/map/PlaceMap';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
 
 import {
   fetchEJScreenData,

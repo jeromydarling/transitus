@@ -17,7 +17,7 @@ import {
   Radio, BookOpen, Library, FileText, Globe,
   ArrowLeft, Menu, X, MoreHorizontal, ChevronRight,
   PenLine, Network, Heart, Target, Search, Quote,
-  Compass,
+  Compass, Settings, MessageSquare,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -49,6 +49,8 @@ const NAV_ITEMS: NavItem[] = [
   { label: 'Participation', shortLabel: 'Engage',   href: '/app/participation', icon: Heart },
   { label: 'Benefits',      shortLabel: 'Benefits', href: '/app/community-benefits', icon: Target },
   { label: 'Stories',       shortLabel: 'Stories',  href: '/app/community-stories',  icon: Quote },
+  { label: 'Settings',      shortLabel: 'Settings', href: '/app/settings',  icon: Settings },
+  { label: 'Feedback',      shortLabel: 'Feedback', href: '/app/feedback',  icon: MessageSquare },
 ];
 
 // Bottom tab bar shows first 4 + More
@@ -93,7 +95,7 @@ function SeasonIndicator() {
               style={{ backgroundColor: season.color }}
             />
             <span className="text-[11px] font-medium text-[hsl(20_25%_12%/0.45)] hidden sm:inline">
-              {season.label}
+              Current Season: {season.label}
             </span>
           </Link>
         </TooltipTrigger>
@@ -105,7 +107,7 @@ function SeasonIndicator() {
           <div className="space-y-2.5">
             <div>
               <p className="text-xs font-semibold" style={{ color: season.color }}>
-                {season.label}
+                Current Season: {season.label}
               </p>
               <p className="text-[11px] text-[hsl(38_35%_90%/0.7)] italic">
                 {season.posture}
@@ -128,6 +130,14 @@ function SeasonIndicator() {
                 ))}
               </div>
             )}
+            <div className="pt-1 border-t border-[hsl(38_35%_90%/0.1)]">
+              <Link
+                to="/app/seasons"
+                className="text-[10px] font-medium text-[hsl(var(--transitus-amber))] hover:underline"
+              >
+                Learn about the seasons →
+              </Link>
+            </div>
           </div>
         </TooltipContent>
       </Tooltip>
