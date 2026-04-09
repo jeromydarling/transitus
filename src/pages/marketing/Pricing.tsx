@@ -33,8 +33,8 @@ export default function Pricing() {
         <div className="marketing-section">
           <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
             {pricingTiers.map((tier) => (
-              <div key={tier.key} className={`editorial-card flex flex-col ${tier.highlighted ? 'ring-2 ring-[hsl(var(--transitus-terracotta))] border-[hsl(var(--transitus-terracotta)/0.3)] relative' : ''}`}>
-                {tier.highlighted && <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-[hsl(var(--transitus-terracotta))] text-white text-xs font-medium">Most popular</div>}
+              <div key={tier.key} className={`editorial-card flex flex-col pt-8 ${tier.highlighted ? 'ring-2 ring-[hsl(var(--transitus-terracotta))] border-[hsl(var(--transitus-terracotta)/0.3)] relative' : ''}`}>
+                {tier.highlighted && <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 px-4 py-1 rounded-full bg-[hsl(var(--transitus-terracotta))] text-white text-xs font-semibold whitespace-nowrap shadow-sm">Most popular</div>}
                 <div className="text-center mb-6">
                   <h2 className="font-sans text-base font-semibold text-[hsl(var(--marketing-earth))] mb-1">{tier.name}</h2>
                   <p className="text-xs text-[hsl(var(--marketing-earth)/0.5)] mb-4">{tier.tagline}</p>

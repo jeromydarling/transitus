@@ -245,7 +245,10 @@ export default function Compass() {
           <div className="relative grid grid-cols-2 gap-4 max-w-3xl mx-auto">
             {/* NORTH — spans both columns, centered */}
             <div className="col-span-2 max-w-md mx-auto w-full">
-              <div className="rounded-xl bg-white/90 backdrop-blur-sm border border-[hsl(30_18%_82%)] p-5" style={{ borderTopWidth: 4, borderTopColor: DIR_COLORS.north }}>
+              <div className="relative rounded-xl bg-white/90 backdrop-blur-sm border border-[hsl(30_18%_82%)] p-5 overflow-hidden" style={{ borderTopWidth: 4, borderTopColor: DIR_COLORS.north }}>
+                {/* Background arrow */}
+                <svg className="absolute right-3 top-1/2 -translate-y-1/2 h-20 w-12 pointer-events-none" viewBox="0 0 40 80" fill="none"><path d="M20 75 L20 5 M20 5 L8 20 M20 5 L32 20" stroke={DIR_COLORS.north} strokeWidth="2.5" strokeLinecap="round" opacity="0.08" /></svg>
+                <div className="relative">
                 <div className="flex items-center gap-2 mb-3">
                   <ArrowUp className="h-4 w-4" style={{ color: DIR_COLORS.north }} />
                   <span className="font-sans text-xs font-semibold uppercase tracking-widest" style={{ color: DIR_COLORS.north }}>North — Place Intelligence</span>
@@ -260,28 +263,36 @@ export default function Compass() {
                   {topSignals.length === 0 && <p className="ml-5 text-xs text-[hsl(20_8%_52%)] italic">No unread signals.</p>}
                 </div>
                 <Link to="/app/signals" className="flex items-center gap-1 text-xs font-medium hover:underline" style={{ color: DIR_COLORS.north }}>View signals <ChevronRight className="h-3 w-3" /></Link>
+                </div>
               </div>
             </div>
 
-            {/* WEST — left column */}
-            <div className="rounded-xl bg-white/90 backdrop-blur-sm border border-[hsl(30_18%_82%)] p-5" style={{ borderLeftWidth: 4, borderLeftColor: DIR_COLORS.west }}>
-              <div className="flex items-center gap-2 mb-3">
-                <ArrowLeft className="h-4 w-4" style={{ color: DIR_COLORS.west }} />
+            {/* WEST — left column, RIGHT-ALIGNED text */}
+            <div className="relative rounded-xl bg-white/90 backdrop-blur-sm border border-[hsl(30_18%_82%)] p-5 overflow-hidden" style={{ borderLeftWidth: 4, borderLeftColor: DIR_COLORS.west }}>
+              {/* Background arrow pointing left */}
+              <svg className="absolute left-3 top-1/2 -translate-y-1/2 h-12 w-20 pointer-events-none" viewBox="0 0 80 40" fill="none"><path d="M75 20 L5 20 M5 20 L20 8 M5 20 L20 32" stroke={DIR_COLORS.west} strokeWidth="2.5" strokeLinecap="round" opacity="0.08" /></svg>
+              <div className="relative text-right">
+              <div className="flex items-center gap-2 mb-3 justify-end">
                 <span className="font-sans text-xs font-semibold uppercase tracking-widest" style={{ color: DIR_COLORS.west }}>West — Stewardship</span>
+                <ArrowLeft className="h-4 w-4" style={{ color: DIR_COLORS.west }} />
               </div>
               <p className="text-xs italic text-[hsl(20_25%_12%/0.5)] mb-3">What needs mending or rest?</p>
               <div className="space-y-2 mb-4">
-                {breached.length > 0 && <div className="flex items-center gap-2 text-sm text-[hsl(0_50%_45%)]"><AlertTriangle className="h-3.5 w-3.5" /><span><strong>{breached.length}</strong> repair ready</span></div>}
-                {delayed.length > 0 && <div className="flex items-center gap-2 text-sm text-[hsl(16_50%_48%)]"><Clock className="h-3.5 w-3.5" /><span><strong>{delayed.length}</strong> conversation needed</span></div>}
-                {heavyEntries.length > 0 && <div className="flex items-center gap-2 text-sm text-[hsl(20_25%_12%)]"><NotebookPen className="h-3.5 w-3.5 text-[hsl(20_8%_48%)]" /><span><strong>{heavyEntries.length}</strong> carrying weight</span></div>}
+                {breached.length > 0 && <div className="flex items-center gap-2 text-sm text-[hsl(0_50%_45%)] justify-end"><span><strong>{breached.length}</strong> repair ready</span><AlertTriangle className="h-3.5 w-3.5" /></div>}
+                {delayed.length > 0 && <div className="flex items-center gap-2 text-sm text-[hsl(16_50%_48%)] justify-end"><span><strong>{delayed.length}</strong> conversation needed</span><Clock className="h-3.5 w-3.5" /></div>}
+                {heavyEntries.length > 0 && <div className="flex items-center gap-2 text-sm text-[hsl(20_25%_12%)] justify-end"><span><strong>{heavyEntries.length}</strong> carrying weight</span><NotebookPen className="h-3.5 w-3.5 text-[hsl(20_8%_48%)]" /></div>}
                 {breached.length === 0 && delayed.length === 0 && heavyEntries.length === 0 && <p className="text-sm text-[hsl(20_8%_52%)] italic">Rest well. Nothing urgent.</p>}
                 <p className="text-xs text-[hsl(20_25%_12%/0.5)] italic mt-2">How is your team's capacity?</p>
               </div>
-              <Link to="/app/journal" className="flex items-center gap-1 text-xs font-medium hover:underline" style={{ color: DIR_COLORS.west }}>Open journal <ChevronRight className="h-3 w-3" /></Link>
+              <Link to="/app/journal" className="inline-flex items-center gap-1 text-xs font-medium hover:underline" style={{ color: DIR_COLORS.west }}>Open journal <ChevronRight className="h-3 w-3" /></Link>
+              </div>
             </div>
 
             {/* EAST — right column */}
-            <div className="rounded-xl bg-white/90 backdrop-blur-sm border border-[hsl(30_18%_82%)] p-5" style={{ borderRightWidth: 4, borderRightColor: DIR_COLORS.east }}>
+            <div className="relative rounded-xl bg-white/90 backdrop-blur-sm border border-[hsl(30_18%_82%)] p-5 overflow-hidden" style={{ borderRightWidth: 4, borderRightColor: DIR_COLORS.east }}>
+              {/* Background arrow pointing right */}
+              <svg className="absolute right-3 top-1/2 -translate-y-1/2 h-12 w-20 pointer-events-none" viewBox="0 0 80 40" fill="none"><path d="M5 20 L75 20 M75 20 L60 8 M75 20 L60 32" stroke={DIR_COLORS.east} strokeWidth="2.5" strokeLinecap="round" opacity="0.08" /></svg>
+              <div className="relative">
               <div className="flex items-center gap-2 mb-3">
                 <ArrowRight className="h-4 w-4" style={{ color: DIR_COLORS.east }} />
                 <span className="font-sans text-xs font-semibold uppercase tracking-widest" style={{ color: DIR_COLORS.east }}>East — Transition</span>
@@ -293,11 +304,15 @@ export default function Compass() {
                 {approachingRenewal.length > 0 && <div className="flex items-center gap-2 text-sm text-[hsl(20_25%_12%)]"><Clock className="h-3.5 w-3.5 text-[hsl(20_8%_48%)]" /><span><strong>{approachingRenewal.length}</strong> approaching renewal</span></div>}
               </div>
               <Link to="/app/commitments" className="flex items-center gap-1 text-xs font-medium hover:underline" style={{ color: DIR_COLORS.east }}>View commitments <ChevronRight className="h-3 w-3" /></Link>
+              </div>
             </div>
 
             {/* SOUTH — spans both columns, centered */}
             <div className="col-span-2 max-w-md mx-auto w-full">
-              <div className="rounded-xl bg-white/90 backdrop-blur-sm border border-[hsl(30_18%_82%)] p-5" style={{ borderBottomWidth: 4, borderBottomColor: DIR_COLORS.south }}>
+              <div className="relative rounded-xl bg-white/90 backdrop-blur-sm border border-[hsl(30_18%_82%)] p-5 overflow-hidden" style={{ borderBottomWidth: 4, borderBottomColor: DIR_COLORS.south }}>
+                {/* Background arrow pointing down */}
+                <svg className="absolute right-3 top-1/2 -translate-y-1/2 h-20 w-12 pointer-events-none" viewBox="0 0 40 80" fill="none"><path d="M20 5 L20 75 M20 75 L8 60 M20 75 L32 60" stroke={DIR_COLORS.south} strokeWidth="2.5" strokeLinecap="round" opacity="0.08" /></svg>
+                <div className="relative">
                 <div className="flex items-center gap-2 mb-3">
                   <ArrowDown className="h-4 w-4" style={{ color: DIR_COLORS.south }} />
                   <span className="font-sans text-xs font-semibold uppercase tracking-widest" style={{ color: DIR_COLORS.south }}>South — Community Presence</span>
@@ -309,6 +324,7 @@ export default function Compass() {
                   <div className="flex items-center gap-2 text-sm text-[hsl(20_25%_12%)]"><NotebookPen className="h-3.5 w-3.5 text-[hsl(20_8%_48%)]" /><span><strong>{recentFieldNotes.length}</strong> field notes this week</span></div>
                 </div>
                 <Link to="/app/people" className="flex items-center gap-1 text-xs font-medium hover:underline" style={{ color: DIR_COLORS.south }}>View people <ChevronRight className="h-3 w-3" /></Link>
+                </div>
               </div>
             </div>
           </div>
