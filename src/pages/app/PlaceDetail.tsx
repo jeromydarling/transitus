@@ -1,122 +1,710 @@
+/**
+ * PlaceDetail — the HERO page of Transitus
+ *
+ * Deep view into a single place: environmental data, stakeholders,
+ * commitments, field notes, signals, and the unfolding journey.
+ * Fetches supplemental data from EPA EJScreen, ECHO, Census, and NOAA stubs.
+ */
+
+import React from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { useState, useEffect } from 'react';
-import { MOCK_PLACES, MOCK_STAKEHOLDERS, MOCK_ORGS, MOCK_COMMITMENTS, MOCK_FIELD_NOTES, MOCK_SIGNALS, MOCK_JOURNEYS } from '@/lib/mockData';
-import { fetchEJScreenData, fetchNearbyFacilities, fetchCensusProfile, fetchHazardRisks } from '@/lib/api';
-import type { EJScreenResult } from '@/lib/api/ejscreen';
+import {
+  MapPin,
+  Globe,
+  AlertTriangle,
+  Briefcase,
+  Users,
+  Building2,
+  Handshake,
+  NotebookPen,
+  Radio,
+  BookOpen,
+  ChevronLeft,
+  ExternalLink,
+  Factory,
+  Thermometer,
+  BarChart3,
+  Shield,
+} from 'lucide-react';
+
+import {
+  MOCK_PLACES,
+  MOCK_STAKEHOLDERS,
+  MOCK_COMMITMENTS,
+  MOCK_FIELD_NOTES,
+  MOCK_SIGNALS,
+  MOCK_JOURNEYS,
+  MOCK_ORGS,
+} from '@/lib/mockData';
+
+import {
+  fetchEJScreenData,
+  fetchNearbyFacilities,
+  fetchCensusProfile,
+  fetchHazardRisks,
+} from '@/lib/api';
+
+import {
+  ROLE_LABELS,
+  COMMITMENT_STATUS_LABELS,
+  SIGNAL_SOURCE_LABELS,
+} from '@/types/transitus';
+
+import type {
+  Place,
+  EnvironmentalBurden,
+  ActiveWork,
+  Stakeholder,
+  Organization,
+  Commitment,
+  FieldNote,
+  Signal,
+  Journey,
+  CommitmentStatus,
+} from '@/types/transitus';
+
+import type { EJScreenResult, EJScreenIndicator } from '@/lib/api/ejscreen';
 import type { ECHOFacility } from '@/lib/api/echo';
 import type { CensusProfile } from '@/lib/api/census';
 import type { HazardRisk } from '@/lib/api/noaa';
-import { COMMITMENT_STATUS_LABELS, ROLE_LABELS } from '@/types/transitus';
-import {
-  MapPin, Users, Handshake, NotebookPen, Radio, BookOpen, Globe,
-  AlertTriangle, Building2, Droplets, Wind, Thermometer, ArrowLeft, Activity,
-} from 'lucide-react';
 
-const severityColors: Record<string, string> = {
-  critical: 'bg-red-100 text-red-700', high: 'bg-orange-100 text-orange-700',
-  moderate: 'bg-amber-100 text-amber-700', low: 'bg-green-100 text-green-700',
+// ── Design tokens ──
+
+const SEVERITY_CLASSES: Record<EnvironmentalBurden['severity'], string> = {
+  critical: 'bg-red-100 text-red-700',
+  high: 'bg-orange-100 text-orange-700',
+  moderate: 'bg-amber-100 text-amber-700',
+  low: 'bg-green-100 text-green-700',
 };
-const statusColors: Record<string, string> = {
-  proposed: 'bg-blue-100 text-blue-700', acknowledged: 'bg-slate-100 text-slate-600',
-  accepted: 'bg-teal-100 text-teal-700', in_motion: 'bg-green-100 text-green-700',
-  delayed: 'bg-amber-100 text-amber-700', breached: 'bg-red-100 text-red-700',
-  repaired: 'bg-purple-100 text-purple-700', completed: 'bg-emerald-100 text-emerald-700',
+
+const HAZARD_RISK_CLASSES: Record<HazardRisk['risk_level'], string> = {
+  low: 'bg-green-100 text-green-700',
+  moderate: 'bg-amber-100 text-amber-700',
+  high: 'bg-orange-100 text-orange-700',
+  very_high: 'bg-red-100 text-red-700',
 };
+
+const COMPLIANCE_CLASSES: Record<ECHOFacility['compliance_status'], string> = {
+  in_compliance: 'bg-green-100 text-green-700',
+  violation: 'bg-orange-100 text-orange-700',
+  significant_violation: 'bg-red-100 text-red-700',
+};
+
+const WORK_TYPE_CLASSES: Record<ActiveWork['type'], string> = {
+  hearing: 'bg-purple-100 text-purple-700',
+  campaign: 'bg-rose-100 text-rose-700',
+  funding_ask: 'bg-emerald-100 text-emerald-700',
+  engagement_round: 'bg-sky-100 text-sky-700',
+  project_milestone: 'bg-indigo-100 text-indigo-700',
+  coalition_meeting: 'bg-amber-100 text-amber-700',
+};
+
+const WORK_STATUS_CLASSES: Record<ActiveWork['status'], string> = {
+  upcoming: 'bg-sky-50 text-sky-600',
+  in_progress: 'bg-amber-50 text-amber-600',
+  completed: 'bg-green-50 text-green-600',
+};
+
+// ── Helpers ──
+
+function formatDate(iso: string): string {
+  const d = new Date(iso);
+  return d.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  });
+}
+
+function formatNumber(n: number): string {
+  return n.toLocaleString('en-US');
+}
+
+function formatCurrency(n: number): string {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    maximumFractionDigits: 0,
+  }).format(n);
+}
+
+function formatWorkType(type: ActiveWork['type']): string {
+  return type
+    .replace(/_/g, ' ')
+    .replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
+function formatHazardType(type: HazardRisk['hazard_type']): string {
+  return type
+    .replace(/_/g, ' ')
+    .replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
+function formatRiskLevel(level: HazardRisk['risk_level']): string {
+  return level
+    .replace(/_/g, ' ')
+    .replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
+function formatComplianceStatus(
+  status: ECHOFacility['compliance_status'],
+): string {
+  return status
+    .replace(/_/g, ' ')
+    .replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
+function statusBadgeClasses(status: CommitmentStatus): string {
+  const base =
+    'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium';
+  switch (status) {
+    case 'proposed':
+      return `${base} bg-[hsl(205_70%_93%)] text-[hsl(205_70%_35%)]`;
+    case 'acknowledged':
+      return `${base} bg-[hsl(220_40%_92%)] text-[hsl(220_40%_40%)]`;
+    case 'accepted':
+      return `${base} bg-[hsl(180_40%_90%)] text-[hsl(180_40%_32%)]`;
+    case 'in_motion':
+      return `${base} bg-[hsl(152_50%_90%)] text-[hsl(152_50%_28%)]`;
+    case 'delayed':
+      return `${base} bg-[hsl(16_65%_92%)] text-[hsl(16_65%_38%)]`;
+    case 'breached':
+      return `${base} bg-[hsl(0_60%_92%)] text-[hsl(0_60%_38%)]`;
+    case 'repaired':
+      return `${base} bg-[hsl(270_40%_92%)] text-[hsl(270_40%_38%)]`;
+    case 'completed':
+      return `${base} bg-[hsl(160_30%_90%)] text-[hsl(160_30%_32%)]`;
+    default:
+      return `${base} bg-gray-100 text-gray-600`;
+  }
+}
+
+function placeTypeBadgeLabel(type: Place['place_type']): string {
+  return type
+    .replace(/_/g, ' ')
+    .replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
+function stakeholderNameById(id: string): string {
+  const s = MOCK_STAKEHOLDERS.find((st) => st.id === id);
+  return s?.name ?? id;
+}
+
+// ── Shared section header ──
+
+function SectionHeader({
+  icon: Icon,
+  label,
+}: {
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
+}) {
+  return (
+    <div className="flex items-center gap-2 mb-4">
+      <Icon className="h-4 w-4 text-[hsl(16_65%_48%)]" />
+      <span className="font-sans text-xs font-semibold uppercase tracking-widest text-[hsl(16_65%_48%)]">
+        {label}
+      </span>
+    </div>
+  );
+}
+
+// ── Sidebar sub-components ──
+
+function SidebarStakeholders({
+  stakeholders,
+}: {
+  stakeholders: Stakeholder[];
+}) {
+  if (stakeholders.length === 0) return null;
+  return (
+    <div>
+      <SectionHeader icon={Users} label="Stakeholders" />
+      <div className="flex flex-col gap-2">
+        {stakeholders.map((s) => (
+          <div
+            key={s.id}
+            className="rounded-lg bg-white p-3 border border-[hsl(30_18%_82%)]"
+          >
+            <p className="text-sm font-medium text-[hsl(20_10%_20%)]">
+              {s.name}
+            </p>
+            <div className="mt-1 flex flex-wrap items-center gap-1.5">
+              <span className="inline-flex items-center rounded-full bg-[hsl(30_20%_92%)] px-2 py-0.5 text-[10px] font-medium text-[hsl(20_10%_40%)]">
+                {ROLE_LABELS[s.role]}
+              </span>
+              {s.trust_level && (
+                <span className="inline-flex items-center rounded-full bg-[hsl(152_30%_92%)] px-2 py-0.5 text-[10px] font-medium text-[hsl(152_45%_30%)]">
+                  {s.trust_level}
+                </span>
+              )}
+            </div>
+            {s.title && (
+              <p className="mt-1 text-[11px] text-[hsl(20_8%_48%)]">
+                {s.title}
+              </p>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function SidebarOrganizations({ orgs }: { orgs: Organization[] }) {
+  if (orgs.length === 0) return null;
+  return (
+    <div>
+      <SectionHeader icon={Building2} label="Organizations" />
+      <div className="flex flex-col gap-2">
+        {orgs.map((org) => (
+          <div
+            key={org.id}
+            className="rounded-lg bg-white p-3 border border-[hsl(30_18%_82%)]"
+          >
+            <p className="text-sm font-medium text-[hsl(20_10%_20%)]">
+              {org.name}
+            </p>
+            <span className="inline-flex items-center rounded-full bg-[hsl(30_20%_92%)] mt-1 px-2 py-0.5 text-[10px] font-medium text-[hsl(20_10%_40%)]">
+              {org.org_type.replace(/_/g, ' ')}
+            </span>
+            {org.website && (
+              <a
+                href={org.website}
+                target="_blank"
+                rel="noreferrer"
+                className="mt-1 flex items-center gap-1 text-[11px] text-[hsl(16_65%_48%)] hover:text-[hsl(16_65%_38%)]"
+              >
+                <ExternalLink className="h-2.5 w-2.5" />
+                Website
+              </a>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function SidebarCommitments({
+  commitments,
+}: {
+  commitments: Commitment[];
+}) {
+  if (commitments.length === 0) return null;
+  return (
+    <div>
+      <SectionHeader icon={Handshake} label="Commitments" />
+      <div className="flex flex-col gap-2">
+        {commitments.map((c) => (
+          <div
+            key={c.id}
+            className="rounded-lg bg-white p-3 border border-[hsl(30_18%_82%)]"
+          >
+            <p className="text-sm font-medium text-[hsl(20_10%_20%)] leading-snug">
+              {c.title}
+            </p>
+            <div className="mt-1.5 flex items-center gap-2">
+              <span className={statusBadgeClasses(c.status)}>
+                {COMMITMENT_STATUS_LABELS[c.status]}
+              </span>
+            </div>
+            {c.renewal_date && (
+              <p className="mt-1 text-[10px] text-[hsl(20_8%_52%)]">
+                Review: {formatDate(c.renewal_date)}
+              </p>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function SidebarFieldNotes({ notes }: { notes: FieldNote[] }) {
+  if (notes.length === 0) return null;
+  return (
+    <div>
+      <SectionHeader icon={NotebookPen} label="Field Notes" />
+      <div className="flex flex-col gap-2">
+        {notes.slice(0, 4).map((n) => (
+          <div
+            key={n.id}
+            className="rounded-lg bg-white p-3 border border-[hsl(30_18%_82%)]"
+          >
+            <p className="text-xs text-[hsl(20_10%_25%)] line-clamp-3 leading-relaxed">
+              {n.content}
+            </p>
+            <div className="mt-2 flex items-center justify-between">
+              <span className="text-[10px] font-medium text-[hsl(20_10%_35%)]">
+                {stakeholderNameById(n.author_id)}
+              </span>
+              <span className="text-[10px] text-[hsl(20_8%_52%)]">
+                {formatDate(n.created_at)}
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function SidebarSignals({ signals }: { signals: Signal[] }) {
+  if (signals.length === 0) return null;
+  return (
+    <div>
+      <SectionHeader icon={Radio} label="Signals" />
+      <div className="flex flex-col gap-2">
+        {signals.slice(0, 4).map((s) => (
+          <div
+            key={s.id}
+            className="rounded-lg bg-white p-3 border border-[hsl(30_18%_82%)]"
+          >
+            <p className="text-sm font-medium text-[hsl(20_10%_20%)] leading-snug">
+              {s.title}
+            </p>
+            <div className="mt-1 flex items-center gap-2">
+              <span className="inline-flex items-center rounded-full bg-[hsl(30_20%_92%)] px-2 py-0.5 text-[10px] font-medium text-[hsl(20_10%_40%)]">
+                {SIGNAL_SOURCE_LABELS[s.source]}
+              </span>
+              <span className="text-[10px] text-[hsl(20_8%_52%)]">
+                {formatDate(s.published_at)}
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function SidebarJourney({ journey }: { journey: Journey }) {
+  return (
+    <div>
+      <SectionHeader icon={BookOpen} label="Journey" />
+      <Link
+        to={`/app/journeys/${journey.id}`}
+        className="block rounded-lg bg-white p-4 border border-[hsl(30_18%_82%)] hover:shadow-md transition-shadow"
+      >
+        <p className="text-sm font-medium text-[hsl(20_10%_20%)]">
+          {journey.title}
+        </p>
+        <p className="mt-1 text-xs text-[hsl(20_8%_48%)] line-clamp-2">
+          {journey.description}
+        </p>
+        <p className="mt-2 text-[10px] font-medium text-[hsl(16_65%_48%)]">
+          {journey.chapters.length} chapter
+          {journey.chapters.length !== 1 ? 's' : ''}
+        </p>
+      </Link>
+    </div>
+  );
+}
+
+// ── EJScreen data grid ──
+
+function EJScreenIndicatorRow({
+  indicator,
+}: {
+  indicator: EJScreenIndicator;
+}) {
+  return (
+    <div className="flex items-center justify-between py-2 border-b border-[hsl(30_18%_90%)] last:border-0">
+      <span className="text-sm text-[hsl(20_10%_25%)]">{indicator.name}</span>
+      <div className="flex items-center gap-4 text-right">
+        <span className="text-sm font-medium text-[hsl(20_10%_15%)] tabular-nums">
+          {indicator.value} {indicator.unit}
+        </span>
+        <div className="flex items-center gap-2 text-[11px] text-[hsl(20_8%_48%)]">
+          <span title="State percentile">
+            State:{' '}
+            <span className="font-medium text-[hsl(20_10%_25%)]">
+              {indicator.percentile_state}th
+            </span>
+          </span>
+          <span title="National percentile">
+            Nat'l:{' '}
+            <span className="font-medium text-[hsl(20_10%_25%)]">
+              {indicator.percentile_national}th
+            </span>
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Main page component ──
 
 export default function PlaceDetail() {
-  const { id } = useParams();
-  const place = MOCK_PLACES.find(p => p.id === id);
-  const [ejData, setEjData] = useState<EJScreenResult | null>(null);
-  const [facilities, setFacilities] = useState<ECHOFacility[]>([]);
-  const [census, setCensus] = useState<CensusProfile | null>(null);
-  const [hazards, setHazards] = useState<HazardRisk[]>([]);
+  const { id } = useParams<{ id: string }>();
+  const place = MOCK_PLACES.find((p) => p.id === id);
 
-  useEffect(() => {
+  // API state
+  const [ejData, setEjData] = React.useState<EJScreenResult | null>(null);
+  const [facilities, setFacilities] = React.useState<ECHOFacility[]>([]);
+  const [census, setCensus] = React.useState<CensusProfile | null>(null);
+  const [hazards, setHazards] = React.useState<HazardRisk[]>([]);
+
+  // Fetch API data when place loads
+  React.useEffect(() => {
     if (!place) return;
+
     fetchEJScreenData(place.lat, place.lng).then(setEjData);
-    fetchNearbyFacilities({ lat: place.lat, lng: place.lng, radius_miles: 3 }).then(setFacilities);
+    fetchNearbyFacilities({
+      lat: place.lat,
+      lng: place.lng,
+      radius_miles: 3,
+    }).then(setFacilities);
     fetchCensusProfile(place.lat, place.lng).then(setCensus);
     fetchHazardRisks(place.lat, place.lng).then(setHazards);
   }, [place]);
 
-  if (!place) return <div className="p-8 text-center">Place not found.</div>;
+  // 404 handling
+  if (!place) {
+    return (
+      <div className="min-h-screen bg-[hsl(38_30%_95%)] flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="font-serif text-2xl text-[hsl(20_10%_20%)] mb-2">
+            Place not found
+          </h1>
+          <p className="text-sm text-[hsl(20_8%_48%)] mb-4">
+            The place you are looking for does not exist.
+          </p>
+          <Link
+            to="/app/places"
+            className="text-sm font-medium text-[hsl(16_65%_48%)] hover:text-[hsl(16_65%_38%)]"
+          >
+            Back to Places
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
-  const stakeholders = MOCK_STAKEHOLDERS.filter(s => s.place_ids.includes(place.id));
-  const orgs = MOCK_ORGS.filter(o => o.place_ids.includes(place.id));
-  const commitments = MOCK_COMMITMENTS.filter(c => c.place_ids.includes(place.id));
-  const notes = MOCK_FIELD_NOTES.filter(n => n.place_id === place.id);
-  const signals = MOCK_SIGNALS.filter(s => s.place_ids.includes(place.id));
-  const journey = MOCK_JOURNEYS.find(j => j.place_id === place.id);
+  // Derived data for sidebar
+  const linkedStakeholders = MOCK_STAKEHOLDERS.filter((s) =>
+    s.place_ids.includes(place.id),
+  );
+  const linkedOrgs = MOCK_ORGS.filter((o) =>
+    o.place_ids.includes(place.id),
+  );
+  const linkedCommitments = MOCK_COMMITMENTS.filter((c) =>
+    c.place_ids.includes(place.id),
+  );
+  const linkedNotes = MOCK_FIELD_NOTES.filter(
+    (n) => n.place_id === place.id,
+  );
+  const linkedSignals = MOCK_SIGNALS.filter((s) =>
+    s.place_ids.includes(place.id),
+  );
+  const linkedJourney = MOCK_JOURNEYS.find(
+    (j) => j.place_id === place.id,
+  );
+
+  // EJScreen indicators for the data grid
+  const ejIndicators: EJScreenIndicator[] = ejData
+    ? [
+        ejData.pm25,
+        ejData.ozone,
+        ejData.diesel_pm,
+        ejData.air_toxics_cancer_risk,
+        ejData.air_toxics_respiratory,
+        ejData.traffic_proximity,
+        ejData.lead_paint,
+        ejData.superfund_proximity,
+        ejData.rmp_proximity,
+        ejData.hazardous_waste,
+        ejData.wastewater_discharge,
+        ejData.ust_proximity,
+      ]
+    : [];
 
   return (
     <div className="min-h-screen bg-[hsl(38_30%_95%)]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6">
-        <Link to="/app/places" className="inline-flex items-center gap-1.5 text-sm text-[hsl(16_65%_48%)] hover:underline mb-4">
-          <ArrowLeft className="h-3.5 w-3.5" /> Back to places
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        {/* Back link */}
+        <Link
+          to="/app/places"
+          className="inline-flex items-center gap-1 text-sm text-[hsl(16_65%_48%)] hover:text-[hsl(16_65%_38%)] transition-colors mb-6"
+        >
+          <ChevronLeft className="h-4 w-4" />
+          All Places
         </Link>
 
-        {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="px-2 py-0.5 rounded text-xs font-medium bg-[hsl(38_80%_55%/0.15)] text-[hsl(32_70%_45%)]">{place.place_type.replace(/_/g, ' ')}</span>
-            <span className="text-sm text-[hsl(20_25%_12%/0.5)]">{place.geography}</span>
-          </div>
-          <h1 className="font-serif text-3xl sm:text-4xl text-[hsl(20_25%_12%)] mb-3">{place.name}</h1>
-          <p className="font-serif-body text-base text-[hsl(20_25%_12%/0.7)] leading-relaxed max-w-3xl">{place.description}</p>
-        </div>
+        {/* Two-column layout */}
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* ── Main column ── */}
+          <div className="flex-1 min-w-0 space-y-8">
+            {/* Place header */}
+            <header>
+              <div className="flex items-center gap-2 mb-2">
+                <MapPin className="h-4 w-4 text-[hsl(152_45%_30%)]" />
+                <span className="text-[11px] font-semibold uppercase tracking-[0.15em] text-[hsl(30_10%_50%)]">
+                  Place
+                </span>
+              </div>
+              <h1 className="font-serif text-3xl sm:text-4xl tracking-tight text-[hsl(20_28%_15%)]">
+                {place.name}
+              </h1>
+              <div className="mt-3 flex flex-wrap items-center gap-3">
+                <span className="flex items-center gap-1.5 text-sm text-[hsl(30_10%_40%)]">
+                  <Globe className="h-4 w-4" />
+                  {place.geography}
+                </span>
+                <span className="inline-flex items-center rounded-full bg-[hsl(30_18%_90%)] text-[hsl(30_18%_40%)] px-2.5 py-0.5 text-[11px] font-medium">
+                  {placeTypeBadgeLabel(place.place_type)}
+                </span>
+                {place.population_estimate && (
+                  <span className="text-sm text-[hsl(30_10%_45%)]">
+                    Pop. ~{formatNumber(place.population_estimate)}
+                  </span>
+                )}
+              </div>
+              <p className="mt-4 text-sm leading-relaxed text-[hsl(30_10%_35%)] max-w-3xl">
+                {place.description}
+              </p>
+            </header>
 
-        <div className="grid lg:grid-cols-[1fr_340px] gap-6">
-          {/* Main Column */}
-          <div className="space-y-6">
-            {/* Map Placeholder */}
-            <div className="rounded-xl overflow-hidden h-64 relative gradient-terrain">
+            {/* Map placeholder */}
+            <div className="relative rounded-lg overflow-hidden border border-[hsl(30_18%_82%)] h-64 sm:h-72">
+              <div className="absolute inset-0 gradient-terrain" />
               <div className="absolute inset-0 contour-pattern opacity-30" />
-              <div className="absolute inset-0 meridian-grid opacity-20" />
-              <div className="absolute inset-0 flex flex-col items-center justify-center text-[hsl(38_35%_90%)]">
-                <Globe className="h-12 w-12 mb-3 opacity-50" />
-                <p className="text-sm font-medium opacity-70">Map integration coming soon</p>
-                <p className="text-xs opacity-50 mt-1">{place.lat.toFixed(4)}°N, {Math.abs(place.lng).toFixed(4)}°W</p>
+              <div className="absolute inset-0 meridian-grid opacity-15" />
+              <div className="absolute inset-0 flex flex-col items-center justify-center">
+                <MapPin className="h-10 w-10 text-white/70 mb-3 drop-shadow-lg" />
+                <p className="text-sm font-medium text-white/80 tracking-wide">
+                  Map integration coming soon
+                </p>
+                <p className="mt-1 text-xs text-white/50">
+                  {place.lat.toFixed(4)}, {place.lng.toFixed(4)}
+                </p>
               </div>
             </div>
 
             {/* Environmental Burdens */}
             <section>
-              <div className="flex items-center gap-2 mb-4">
-                <AlertTriangle className="h-4 w-4 text-[hsl(16_65%_48%)]" />
-                <span className="font-sans text-xs font-semibold uppercase tracking-widest text-[hsl(16_65%_48%)]">Environmental Burdens</span>
-              </div>
-              <div className="grid sm:grid-cols-2 gap-3">
-                {place.environmental_burdens.map((b, i) => (
-                  <div key={i} className="rounded-lg bg-white p-4 border border-[hsl(30_18%_82%)]">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="font-sans text-sm font-semibold text-[hsl(20_25%_12%)]">{b.name}</span>
-                      <span className={`px-2 py-0.5 rounded text-xs font-medium ${severityColors[b.severity]}`}>{b.severity}</span>
+              <SectionHeader
+                icon={AlertTriangle}
+                label="Environmental Burdens"
+              />
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {place.environmental_burdens.map((burden, i) => (
+                  <div
+                    key={i}
+                    className="rounded-lg bg-white p-4 border border-[hsl(30_18%_82%)]"
+                  >
+                    <div className="flex items-start justify-between gap-2 mb-2">
+                      <h4 className="text-sm font-medium text-[hsl(20_10%_20%)] leading-snug">
+                        {burden.name}
+                      </h4>
+                      <span
+                        className={`shrink-0 inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-medium ${SEVERITY_CLASSES[burden.severity]}`}
+                      >
+                        {burden.severity}
+                      </span>
                     </div>
-                    <p className="text-xs text-[hsl(20_25%_12%/0.6)] leading-relaxed">{b.description}</p>
-                    {b.source && <p className="text-[10px] text-[hsl(20_25%_12%/0.4)] mt-2">Source: {b.source}</p>}
+                    <p className="text-xs text-[hsl(20_8%_40%)] leading-relaxed">
+                      {burden.description}
+                    </p>
+                    <div className="mt-2 flex items-center gap-2">
+                      <span className="inline-flex items-center rounded-full bg-[hsl(30_18%_90%)] px-2 py-0.5 text-[10px] font-medium text-[hsl(30_18%_40%)]">
+                        {burden.category}
+                      </span>
+                      {burden.source && (
+                        <span className="text-[10px] text-[hsl(20_8%_52%)]">
+                          Source: {burden.source}
+                        </span>
+                      )}
+                    </div>
                   </div>
                 ))}
               </div>
             </section>
 
+            {/* Active Work */}
+            {place.active_work.length > 0 && (
+              <section>
+                <SectionHeader icon={Briefcase} label="Active Work" />
+                <div className="flex flex-col gap-2">
+                  {place.active_work.map((work) => (
+                    <div
+                      key={work.id}
+                      className="flex items-center justify-between gap-4 rounded-lg bg-white px-4 py-3 border border-[hsl(30_18%_82%)]"
+                    >
+                      <div className="min-w-0 flex-1">
+                        <p className="text-sm font-medium text-[hsl(20_10%_20%)]">
+                          {work.title}
+                        </p>
+                        {work.date && (
+                          <p className="mt-0.5 text-[11px] text-[hsl(20_8%_48%)]">
+                            {formatDate(work.date)}
+                          </p>
+                        )}
+                      </div>
+                      <div className="flex shrink-0 items-center gap-2">
+                        <span
+                          className={`inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-medium ${WORK_TYPE_CLASSES[work.type]}`}
+                        >
+                          {formatWorkType(work.type)}
+                        </span>
+                        <span
+                          className={`inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-medium ${WORK_STATUS_CLASSES[work.status]}`}
+                        >
+                          {work.status.replace(/_/g, ' ')}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+
             {/* EJScreen Data */}
             {ejData && (
               <section>
-                <div className="flex items-center gap-2 mb-4">
-                  <Activity className="h-4 w-4 text-[hsl(198_55%_42%)]" />
-                  <span className="font-sans text-xs font-semibold uppercase tracking-widest text-[hsl(198_55%_42%)]">EPA EJScreen Indicators</span>
-                </div>
-                <div className="rounded-lg bg-white p-5 border border-[hsl(30_18%_82%)]">
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                    {[ejData.pm25, ejData.diesel_pm, ejData.air_toxics_cancer_risk, ejData.traffic_proximity, ejData.rmp_proximity, ejData.hazardous_waste].map((ind) => (
-                      <div key={ind.name}>
-                        <p className="text-[10px] uppercase tracking-wider text-[hsl(20_25%_12%/0.45)] mb-1">{ind.name}</p>
-                        <p className="text-lg font-semibold text-[hsl(20_25%_12%)]">{ind.value} <span className="text-xs font-normal text-[hsl(20_25%_12%/0.5)]">{ind.unit}</span></p>
-                        <div className="flex gap-2 mt-1">
-                          <span className="text-[10px] text-[hsl(20_25%_12%/0.5)]">State: {ind.percentile_state}th</span>
-                          <span className="text-[10px] text-[hsl(20_25%_12%/0.5)]">National: {ind.percentile_national}th</span>
-                        </div>
-                      </div>
+                <SectionHeader icon={BarChart3} label="EJScreen Data" />
+                <div className="rounded-lg bg-white border border-[hsl(30_18%_82%)] overflow-hidden">
+                  {/* Demographics summary row */}
+                  <div className="px-4 py-3 bg-[hsl(30_20%_96%)] border-b border-[hsl(30_18%_90%)]">
+                    <div className="flex flex-wrap gap-4 text-xs">
+                      <span>
+                        Demographic Index:{' '}
+                        <span className="font-semibold text-[hsl(20_10%_15%)]">
+                          {ejData.demographic_index}
+                        </span>
+                      </span>
+                      <span>
+                        Minority:{' '}
+                        <span className="font-semibold text-[hsl(20_10%_15%)]">
+                          {ejData.percent_minority}%
+                        </span>
+                      </span>
+                      <span>
+                        Low Income:{' '}
+                        <span className="font-semibold text-[hsl(20_10%_15%)]">
+                          {ejData.percent_low_income}%
+                        </span>
+                      </span>
+                      <span>
+                        &lt; HS Education:{' '}
+                        <span className="font-semibold text-[hsl(20_10%_15%)]">
+                          {ejData.percent_less_than_hs}%
+                        </span>
+                      </span>
+                      <span>
+                        Limited English:{' '}
+                        <span className="font-semibold text-[hsl(20_10%_15%)]">
+                          {ejData.percent_linguistically_isolated}%
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                  {/* Indicator rows */}
+                  <div className="px-4">
+                    {ejIndicators.map((indicator, i) => (
+                      <EJScreenIndicatorRow key={i} indicator={indicator} />
                     ))}
                   </div>
                 </div>
@@ -126,25 +714,85 @@ export default function PlaceDetail() {
             {/* Census Data */}
             {census && (
               <section>
-                <div className="flex items-center gap-2 mb-4">
-                  <Users className="h-4 w-4 text-[hsl(152_40%_24%)]" />
-                  <span className="font-sans text-xs font-semibold uppercase tracking-widest text-[hsl(152_40%_24%)]">Community Demographics (ACS)</span>
-                </div>
-                <div className="rounded-lg bg-white p-5 border border-[hsl(30_18%_82%)]">
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                <SectionHeader icon={Users} label="Census Data" />
+                <div className="rounded-lg bg-white border border-[hsl(30_18%_82%)] overflow-hidden">
+                  <div className="px-4 py-3 bg-[hsl(30_20%_96%)] border-b border-[hsl(30_18%_90%)]">
+                    <p className="text-xs text-[hsl(20_8%_48%)]">
+                      {census.geo_name} — ACS {census.vintage} estimates
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-px bg-[hsl(30_18%_90%)]">
                     {[
-                      { label: 'Population', value: census.total_population.toLocaleString() },
-                      { label: 'Median Income', value: `$${census.median_household_income.toLocaleString()}` },
-                      { label: 'Below Poverty', value: `${census.pct_below_poverty}%` },
-                      { label: 'Hispanic', value: `${census.pct_hispanic}%` },
-                      { label: 'No Vehicle', value: `${census.pct_no_vehicle}%` },
-                      { label: 'Cost-Burdened Renters', value: `${census.pct_cost_burdened_renters}%` },
-                      { label: 'Pre-1960 Housing', value: `${census.pct_built_before_1960}%` },
-                      { label: 'Uninsured', value: `${census.pct_uninsured}%` },
-                    ].map((stat) => (
-                      <div key={stat.label}>
-                        <p className="text-[10px] uppercase tracking-wider text-[hsl(20_25%_12%/0.45)] mb-1">{stat.label}</p>
-                        <p className="text-lg font-semibold text-[hsl(20_25%_12%)]">{stat.value}</p>
+                      {
+                        label: 'Population',
+                        value: formatNumber(census.total_population),
+                      },
+                      {
+                        label: 'Median Household Income',
+                        value: formatCurrency(
+                          census.median_household_income,
+                        ),
+                      },
+                      {
+                        label: 'Poverty Rate',
+                        value: `${census.pct_below_poverty}%`,
+                      },
+                      {
+                        label: 'Below 200% Poverty',
+                        value: `${census.pct_below_200pct_poverty}%`,
+                      },
+                      {
+                        label: 'Unemployment',
+                        value: `${census.unemployment_rate}%`,
+                      },
+                      {
+                        label: 'Uninsured',
+                        value: `${census.pct_uninsured}%`,
+                      },
+                      {
+                        label: 'Renter Occupied',
+                        value: `${census.pct_renter_occupied}%`,
+                      },
+                      {
+                        label: 'Median Rent',
+                        value: formatCurrency(census.median_rent),
+                      },
+                      {
+                        label: 'Cost-Burdened Renters',
+                        value: `${census.pct_cost_burdened_renters}%`,
+                      },
+                      {
+                        label: 'No Vehicle',
+                        value: `${census.pct_no_vehicle}%`,
+                      },
+                      {
+                        label: 'Hispanic',
+                        value: `${census.pct_hispanic}%`,
+                      },
+                      {
+                        label: 'Black',
+                        value: `${census.pct_black_alone}%`,
+                      },
+                      {
+                        label: 'White',
+                        value: `${census.pct_white_alone}%`,
+                      },
+                      {
+                        label: 'Limited English',
+                        value: `${census.pct_limited_english}%`,
+                      },
+                      {
+                        label: 'Pre-1960 Housing',
+                        value: `${census.pct_built_before_1960}%`,
+                      },
+                    ].map((item) => (
+                      <div key={item.label} className="bg-white px-4 py-3">
+                        <p className="text-[10px] font-medium uppercase tracking-wider text-[hsl(20_8%_52%)]">
+                          {item.label}
+                        </p>
+                        <p className="mt-1 text-sm font-semibold text-[hsl(20_10%_15%)] tabular-nums">
+                          {item.value}
+                        </p>
                       </div>
                     ))}
                   </div>
@@ -155,161 +803,199 @@ export default function PlaceDetail() {
             {/* Hazard Risks */}
             {hazards.length > 0 && (
               <section>
-                <div className="flex items-center gap-2 mb-4">
-                  <Thermometer className="h-4 w-4 text-[hsl(16_65%_48%)]" />
-                  <span className="font-sans text-xs font-semibold uppercase tracking-widest text-[hsl(16_65%_48%)]">Climate & Hazard Risks</span>
-                </div>
-                <div className="grid sm:grid-cols-2 gap-3">
-                  {hazards.map((h) => (
-                    <div key={h.hazard_type} className="rounded-lg bg-white p-4 border border-[hsl(30_18%_82%)]">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="font-sans text-sm font-semibold text-[hsl(20_25%_12%)] capitalize">{h.hazard_type.replace(/_/g, ' ')}</span>
-                        <span className={`px-2 py-0.5 rounded text-xs font-medium ${h.risk_level === 'very_high' ? 'bg-red-100 text-red-700' : h.risk_level === 'high' ? 'bg-orange-100 text-orange-700' : 'bg-amber-100 text-amber-700'}`}>{h.risk_level.replace(/_/g, ' ')}</span>
+                <SectionHeader icon={Thermometer} label="Hazard Risks" />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {hazards.map((hazard, i) => (
+                    <div
+                      key={i}
+                      className="rounded-lg bg-white p-4 border border-[hsl(30_18%_82%)]"
+                    >
+                      <div className="flex items-start justify-between gap-2 mb-2">
+                        <h4 className="text-sm font-medium text-[hsl(20_10%_20%)]">
+                          {formatHazardType(hazard.hazard_type)}
+                        </h4>
+                        <span
+                          className={`shrink-0 inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-medium ${HAZARD_RISK_CLASSES[hazard.risk_level]}`}
+                        >
+                          {formatRiskLevel(hazard.risk_level)}
+                        </span>
                       </div>
-                      <p className="text-xs text-[hsl(20_25%_12%/0.6)] leading-relaxed">{h.description}</p>
-                      <p className="text-[10px] text-[hsl(20_25%_12%/0.4)] mt-2">{h.projected_change}</p>
+                      <p className="text-xs text-[hsl(20_8%_40%)] leading-relaxed">
+                        {hazard.description}
+                      </p>
+                      <div className="mt-2 flex items-center gap-3 text-[10px] text-[hsl(20_8%_52%)]">
+                        <span>
+                          {hazard.historical_events_10yr} events (10yr)
+                        </span>
+                        <span className="italic">
+                          {hazard.projected_change}
+                        </span>
+                      </div>
                     </div>
                   ))}
                 </div>
               </section>
             )}
 
-            {/* Nearby Facilities (ECHO) */}
+            {/* Nearby Facilities (EPA ECHO) */}
             {facilities.length > 0 && (
               <section>
-                <div className="flex items-center gap-2 mb-4">
-                  <Building2 className="h-4 w-4 text-[hsl(20_25%_12%/0.6)]" />
-                  <span className="font-sans text-xs font-semibold uppercase tracking-widest text-[hsl(20_25%_12%/0.6)]">Nearby Regulated Facilities (EPA ECHO)</span>
-                </div>
-                <div className="space-y-3">
+                <SectionHeader
+                  icon={Factory}
+                  label="Nearby Facilities"
+                />
+                <div className="flex flex-col gap-3">
                   {facilities.map((f) => (
-                    <div key={f.registry_id} className="rounded-lg bg-white p-4 border border-[hsl(30_18%_82%)]">
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="font-sans text-sm font-semibold text-[hsl(20_25%_12%)]">{f.facility_name}</span>
-                        <span className={`px-2 py-0.5 rounded text-xs font-medium ${f.compliance_status === 'significant_violation' ? 'bg-red-100 text-red-700' : f.compliance_status === 'violation' ? 'bg-amber-100 text-amber-700' : 'bg-green-100 text-green-700'}`}>{f.compliance_status.replace(/_/g, ' ')}</span>
+                    <div
+                      key={f.registry_id}
+                      className="rounded-lg bg-white p-4 border border-[hsl(30_18%_82%)]"
+                    >
+                      <div className="flex items-start justify-between gap-3 mb-2">
+                        <div className="min-w-0 flex-1">
+                          <h4 className="text-sm font-medium text-[hsl(20_10%_20%)]">
+                            {f.facility_name}
+                          </h4>
+                          <p className="text-[11px] text-[hsl(20_8%_48%)]">
+                            {f.street_address}, {f.city}, {f.state}{' '}
+                            {f.zip}
+                          </p>
+                        </div>
+                        <div className="shrink-0 flex items-center gap-2">
+                          <span
+                            className={`inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-medium ${COMPLIANCE_CLASSES[f.compliance_status]}`}
+                          >
+                            {formatComplianceStatus(
+                              f.compliance_status,
+                            )}
+                          </span>
+                          <span className="text-[10px] text-[hsl(20_8%_52%)]">
+                            {f.distance_miles} mi
+                          </span>
+                        </div>
                       </div>
-                      <p className="text-xs text-[hsl(20_25%_12%/0.5)]">{f.street_address} — {f.distance_miles} mi</p>
-                      <div className="flex flex-wrap gap-1.5 mt-2">
-                        {f.programs.map(p => <span key={p} className="px-1.5 py-0.5 rounded text-[10px] bg-slate-100 text-slate-600">{p}</span>)}
+
+                      <div className="flex flex-wrap gap-1.5 mb-2">
+                        {f.programs.map((prog) => (
+                          <span
+                            key={prog}
+                            className="inline-flex items-center rounded-full bg-[hsl(30_18%_90%)] px-2 py-0.5 text-[10px] font-medium text-[hsl(30_18%_40%)]"
+                          >
+                            {prog}
+                          </span>
+                        ))}
+                        {f.facility_type.map((ft) => (
+                          <span
+                            key={ft}
+                            className="inline-flex items-center rounded-full bg-[hsl(30_20%_92%)] px-2 py-0.5 text-[10px] font-medium text-[hsl(20_10%_40%)]"
+                          >
+                            {ft}
+                          </span>
+                        ))}
                       </div>
-                      {f.top_chemicals && f.top_chemicals.length > 0 && (
-                        <p className="text-[10px] text-[hsl(20_25%_12%/0.4)] mt-2">Top releases: {f.top_chemicals.join(', ')}</p>
-                      )}
+
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-[11px]">
+                        <div>
+                          <p className="text-[hsl(20_8%_52%)]">
+                            Inspections (5yr)
+                          </p>
+                          <p className="font-medium text-[hsl(20_10%_20%)]">
+                            {f.inspection_count_5yr}
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-[hsl(20_8%_52%)]">
+                            Violations (3yr qtrs)
+                          </p>
+                          <p className="font-medium text-[hsl(20_10%_20%)]">
+                            {f.quarters_in_violation_last_3yr}
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-[hsl(20_8%_52%)]">
+                            Enforcement (5yr)
+                          </p>
+                          <p className="font-medium text-[hsl(20_10%_20%)]">
+                            {f.enforcement_actions_5yr}
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-[hsl(20_8%_52%)]">
+                            Penalties (5yr)
+                          </p>
+                          <p className="font-medium text-[hsl(20_10%_20%)]">
+                            {f.penalties_5yr > 0
+                              ? formatCurrency(f.penalties_5yr)
+                              : '--'}
+                          </p>
+                        </div>
+                      </div>
+
+                      {f.top_chemicals &&
+                        f.top_chemicals.length > 0 && (
+                          <div className="mt-2 flex flex-wrap gap-1">
+                            {f.top_chemicals.map((chem) => (
+                              <span
+                                key={chem}
+                                className="inline-flex items-center rounded bg-red-50 px-1.5 py-0.5 text-[10px] text-red-600"
+                              >
+                                {chem}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+
+                      {f.total_releases_lbs != null &&
+                        f.total_releases_lbs > 0 && (
+                          <div className="mt-2 flex items-center gap-3 text-[10px] text-[hsl(20_8%_52%)]">
+                            <span>
+                              Total releases:{' '}
+                              <span className="font-medium text-[hsl(20_10%_25%)]">
+                                {formatNumber(
+                                  f.total_releases_lbs,
+                                )}{' '}
+                                lbs
+                              </span>
+                            </span>
+                            {f.air_releases_lbs != null &&
+                              f.air_releases_lbs > 0 && (
+                                <span>
+                                  Air:{' '}
+                                  {formatNumber(
+                                    f.air_releases_lbs,
+                                  )}{' '}
+                                  lbs
+                                </span>
+                              )}
+                            {f.water_releases_lbs != null &&
+                              f.water_releases_lbs > 0 && (
+                                <span>
+                                  Water:{' '}
+                                  {formatNumber(
+                                    f.water_releases_lbs,
+                                  )}{' '}
+                                  lbs
+                                </span>
+                              )}
+                          </div>
+                        )}
                     </div>
                   ))}
                 </div>
               </section>
             )}
-
-            {/* Active Work */}
-            <section>
-              <div className="flex items-center gap-2 mb-4">
-                <Activity className="h-4 w-4 text-[hsl(152_40%_24%)]" />
-                <span className="font-sans text-xs font-semibold uppercase tracking-widest text-[hsl(152_40%_24%)]">Active Work</span>
-              </div>
-              <div className="space-y-2">
-                {place.active_work.map((w) => (
-                  <div key={w.id} className="rounded-lg bg-white px-4 py-3 border border-[hsl(30_18%_82%)] flex items-center justify-between">
-                    <div>
-                      <span className="text-sm font-medium text-[hsl(20_25%_12%)]">{w.title}</span>
-                      {w.date && <span className="ml-2 text-xs text-[hsl(20_25%_12%/0.5)]">{w.date}</span>}
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="px-2 py-0.5 rounded text-[10px] bg-slate-100 text-slate-600">{w.type.replace(/_/g, ' ')}</span>
-                      <span className={`px-2 py-0.5 rounded text-[10px] ${w.status === 'upcoming' ? 'bg-blue-100 text-blue-700' : w.status === 'in_progress' ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-600'}`}>{w.status.replace(/_/g, ' ')}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </section>
           </div>
 
-          {/* Sidebar */}
-          <div className="space-y-6">
-            {/* Stakeholders */}
-            <div className="rounded-lg bg-white p-4 border border-[hsl(30_18%_82%)]">
-              <div className="flex items-center gap-2 mb-3">
-                <Users className="h-4 w-4 text-[hsl(16_65%_48%)]" />
-                <span className="font-sans text-xs font-semibold uppercase tracking-widest text-[hsl(16_65%_48%)]">Stakeholders</span>
-              </div>
-              <div className="space-y-2">
-                {stakeholders.slice(0, 6).map((s) => (
-                  <Link key={s.id} to={`/app/people/${s.id}`} className="flex items-center gap-2 py-1.5 hover:bg-[hsl(38_30%_95%)] rounded px-1 -mx-1 transition-colors">
-                    <div className="w-7 h-7 rounded-full bg-[hsl(16_65%_48%/0.1)] flex items-center justify-center text-[10px] font-semibold text-[hsl(16_65%_48%)]">{s.name.split(' ').map(n=>n[0]).join('')}</div>
-                    <div>
-                      <p className="text-sm font-medium text-[hsl(20_25%_12%)]">{s.name}</p>
-                      <p className="text-[10px] text-[hsl(20_25%_12%/0.5)]">{ROLE_LABELS[s.role]}</p>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            </div>
-
-            {/* Organizations */}
-            <div className="rounded-lg bg-white p-4 border border-[hsl(30_18%_82%)]">
-              <div className="flex items-center gap-2 mb-3">
-                <Building2 className="h-4 w-4 text-[hsl(198_55%_42%)]" />
-                <span className="font-sans text-xs font-semibold uppercase tracking-widest text-[hsl(198_55%_42%)]">Organizations</span>
-              </div>
-              <div className="space-y-2">
-                {orgs.map((o) => (
-                  <div key={o.id} className="py-1.5">
-                    <p className="text-sm font-medium text-[hsl(20_25%_12%)]">{o.name}</p>
-                    <p className="text-[10px] text-[hsl(20_25%_12%/0.5)]">{o.org_type.replace(/_/g, ' ')}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Commitments */}
-            <div className="rounded-lg bg-white p-4 border border-[hsl(30_18%_82%)]">
-              <div className="flex items-center gap-2 mb-3">
-                <Handshake className="h-4 w-4 text-[hsl(152_40%_24%)]" />
-                <span className="font-sans text-xs font-semibold uppercase tracking-widest text-[hsl(152_40%_24%)]">Commitments</span>
-              </div>
-              <div className="space-y-2">
-                {commitments.map((c) => (
-                  <Link key={c.id} to="/app/commitments" className="block py-1.5 hover:bg-[hsl(38_30%_95%)] rounded px-1 -mx-1 transition-colors">
-                    <div className="flex items-center justify-between">
-                      <p className="text-sm font-medium text-[hsl(20_25%_12%)] truncate pr-2">{c.title}</p>
-                      <span className={`px-1.5 py-0.5 rounded text-[10px] shrink-0 ${statusColors[c.status] || 'bg-slate-100 text-slate-600'}`}>{COMMITMENT_STATUS_LABELS[c.status]}</span>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            </div>
-
-            {/* Field Notes */}
-            <div className="rounded-lg bg-white p-4 border border-[hsl(30_18%_82%)]">
-              <div className="flex items-center gap-2 mb-3">
-                <NotebookPen className="h-4 w-4 text-[hsl(38_80%_55%)]" />
-                <span className="font-sans text-xs font-semibold uppercase tracking-widest text-[hsl(38_80%_55%)]">Recent Notes</span>
-              </div>
-              <div className="space-y-2">
-                {notes.slice(0, 3).map((n) => {
-                  const author = MOCK_STAKEHOLDERS.find(s => s.id === n.author_id);
-                  return (
-                    <Link key={n.id} to="/app/field-notes" className="block py-1.5 hover:bg-[hsl(38_30%_95%)] rounded px-1 -mx-1 transition-colors">
-                      <p className="text-xs text-[hsl(20_25%_12%/0.5)]">{author?.name} — {n.note_type.replace(/_/g, ' ')}</p>
-                      <p className="text-sm text-[hsl(20_25%_12%/0.7)] line-clamp-2">{n.content.slice(0, 100)}...</p>
-                    </Link>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Journey link */}
-            {journey && (
-              <Link to={`/app/journeys/${journey.id}`} className="block rounded-lg bg-white p-4 border border-[hsl(30_18%_82%)] hover:border-[hsl(16_65%_48%/0.3)] transition-colors">
-                <div className="flex items-center gap-2 mb-2">
-                  <BookOpen className="h-4 w-4 text-[hsl(16_65%_48%)]" />
-                  <span className="font-sans text-xs font-semibold uppercase tracking-widest text-[hsl(16_65%_48%)]">Journey</span>
-                </div>
-                <p className="text-sm font-medium text-[hsl(20_25%_12%)]">{journey.title}</p>
-                <p className="text-[10px] text-[hsl(20_25%_12%/0.5)] mt-1">{journey.chapters.length} chapters</p>
-              </Link>
+          {/* ── Sidebar ── */}
+          <aside className="w-full lg:w-80 shrink-0 space-y-8">
+            <SidebarStakeholders stakeholders={linkedStakeholders} />
+            <SidebarOrganizations orgs={linkedOrgs} />
+            <SidebarCommitments commitments={linkedCommitments} />
+            <SidebarFieldNotes notes={linkedNotes} />
+            <SidebarSignals signals={linkedSignals} />
+            {linkedJourney && (
+              <SidebarJourney journey={linkedJourney} />
             )}
-          </div>
+          </aside>
         </div>
       </div>
     </div>
