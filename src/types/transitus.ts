@@ -43,8 +43,34 @@ export interface Place {
   population_estimate?: number;
   environmental_burdens: EnvironmentalBurden[];
   active_work: ActiveWork[];
+
+  // Human dimension
+  human_impact_summary?: string;
+  most_affected_populations?: string[];
+  health_snapshot?: string;
+  displacement_pressure?: 'low' | 'moderate' | 'high' | 'critical';
+
   created_at: string;
   updated_at: string;
+}
+
+// ── Community Stories (the people at the heart of every place) ──
+
+export interface CommunityStory {
+  id: string;
+  person_name: string;
+  location_detail?: string; // e.g. "106th and Burley" or "Block 4200, S. Pulaski"
+  place_id: string;
+  story: string;
+  health_impacts?: string[];
+  years_in_community?: number;
+  family_context?: string; // e.g. "Mother of 3, grandmother lives next door"
+  quote?: string; // A direct quote in their own words
+  consent_level: 'local_only' | 'trusted_allies' | 'institutional' | 'public';
+  collected_by: string; // stakeholder ID of the field agent
+  collected_at: string;
+  tags: string[];
+  photo_description?: string; // Describe the photo, don't store it
 }
 
 export type PlaceType =
