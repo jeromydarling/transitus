@@ -1,7 +1,7 @@
 /**
  * Airtable Connector Adapter
  * 
- * WHAT: Normalizes Airtable export data to CROS entities.
+ * WHAT: Normalizes Airtable export data to Transitus entities.
  * WHERE: Migration harness + fixture tests.
  * WHY: Proves the adapter pattern works across connectors.
  */

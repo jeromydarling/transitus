@@ -3,7 +3,7 @@
  *
  * WHAT: Full narrative page for the Steward role with workspace setup, modules, guides.
  * WHERE: /roles/steward
- * WHY: SEO entry point for workspace admins discovering CROS through role identity.
+ * WHY: SEO entry point for workspace admins discovering Transitus through role identity.
  */
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -21,7 +21,7 @@ import { useRoleCapture } from '@/hooks/useRoleCapture';
 const serif = { fontFamily: 'Georgia, "Times New Roman", serif' };
 
 const features = [
-  { Icon: Settings, title: 'Workspace Setup', subtitle: 'Archetype · Modules · Defaults', description: 'Configure your CROS™ workspace once. Choose your mission archetype, activate the right modules, and let the system adapt to your context.' },
+  { Icon: Settings, title: 'Workspace Setup', subtitle: 'Archetype · Modules · Defaults', description: 'Configure your Transitus™ workspace once. Choose your mission archetype, activate the right modules, and let the system adapt to your context.' },
   { Icon: Users, title: 'Team Management', subtitle: 'Invite · Roles · Permissions', description: 'Invite your team by email. Each person chooses their own role — Shepherd, Companion, or Visitor. Self-selection builds ownership.' },
   { Icon: Plug, title: 'Integrations', subtitle: 'Relatio · Migration · Connectors', description: 'Connect existing tools through Relatio or migrate from a legacy CRM. Your relationship history travels with you.' },
 ];
@@ -36,11 +36,11 @@ export default function RoleSteward() {
     <div className="bg-white">
       <SeoHead
         title="Steward — Tend the Workspace"
-        description="Stewards set up and maintain the CROS™ workspace. See how the admin experience stays simple, human, and focused on your team's needs."
-        keywords={['CROS steward', 'workspace admin', 'nonprofit admin', 'team management', 'CRM setup']}
+        description="Stewards set up and maintain the Transitus™ workspace. See how the admin experience stays simple, human, and focused on your team's needs."
+        keywords={['Transitus steward', 'workspace admin', 'nonprofit admin', 'team management', 'CRM setup']}
         canonical="/roles/steward"
         ogType="article"
-        jsonLd={articleSchema({ headline: 'Steward — Tend the Workspace', description: 'The Steward experience inside CROS™.', url: '/roles/steward' })}
+        jsonLd={articleSchema({ headline: 'Steward — Tend the Workspace', description: 'The Steward experience inside Transitus™.', url: '/roles/steward' })}
       />
 
       <section className="max-w-[720px] mx-auto px-4 sm:px-6 pt-16 sm:pt-24 pb-12 text-center">

@@ -1,5 +1,5 @@
 /**
- * CROS™ Language Switcher Component
+ * Transitus™ Language Switcher Component
  *
  * Drop this into your Header or Sidebar.
  * Uses i18next to switch between English and Spanish.

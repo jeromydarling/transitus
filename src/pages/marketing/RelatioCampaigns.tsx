@@ -28,7 +28,7 @@ const howItWorks = [
   {
     icon: Users,
     title: 'Start with Relationships',
-    body: 'Your contacts, journeys, and reflections already live inside CROS.\nRelatio uses that living context to guide who you reach — and why.',
+    body: 'Your contacts, journeys, and reflections already live inside Transitus.\nRelatio uses that living context to guide who you reach — and why.',
   },
   {
     icon: Mail,
@@ -60,15 +60,15 @@ const comparisonRows: [string, string, string][] = [
   ['Approach', 'Subscriber-first', 'Relationship-first'],
   ['Workflow', 'Automation-heavy', 'Narrative-aware'],
   ['Metrics', 'Growth metrics focused', 'Human-centered outreach'],
-  ['Integration', 'Separate from your CRM', 'Built inside CROS'],
+  ['Integration', 'Separate from your CRM', 'Built inside Transitus'],
   ['Audience', 'Designed for marketers', 'Designed for ministries, nonprofits, and community builders'],
 ];
 
 export default function RelatioCampaigns() {
   useEffect(() => {
-    document.title = 'Relatio Campaigns™ — Relationship-Based Email Outreach Inside CROS';
+    document.title = 'Relatio Campaigns™ — Relationship-Based Email Outreach Inside Transitus';
     const meta = document.querySelector('meta[name="description"]');
-    if (meta) meta.setAttribute('content', 'Send thoughtful outreach through Gmail or Outlook without exporting lists or managing complex marketing systems. Relatio Campaigns connects email directly to your living relationships inside CROS.');
+    if (meta) meta.setAttribute('content', 'Send thoughtful outreach through Gmail or Outlook without exporting lists or managing complex marketing systems. Relatio Campaigns connects email directly to your living relationships inside Transitus.');
   }, []);
 
   return (
@@ -94,7 +94,7 @@ export default function RelatioCampaigns() {
               Relatio Campaigns begins with people you already know.
             </p>
             <p>
-              Instead of exporting contacts into another system, your outreach grows directly from the relationships, journeys, and reflections inside CROS.
+              Instead of exporting contacts into another system, your outreach grows directly from the relationships, journeys, and reflections inside Transitus.
             </p>
           </div>
           <div className="flex flex-wrap gap-3">
@@ -138,7 +138,7 @@ export default function RelatioCampaigns() {
                 Relatio Campaigns removes that friction.
               </p>
               <p>
-                It connects directly to Gmail or Outlook and turns your existing relationships into thoughtful outreach — without leaving CROS.
+                It connects directly to Gmail or Outlook and turns your existing relationships into thoughtful outreach — without leaving Transitus.
               </p>
             </div>
             <ul className="mt-8 space-y-3">
@@ -240,10 +240,10 @@ export default function RelatioCampaigns() {
 
           <div className="mt-10 p-6 rounded-2xl border border-[hsl(var(--marketing-border))] bg-[hsl(var(--marketing-surface))]">
             <p className="text-sm font-semibold text-[hsl(var(--marketing-navy))] mb-2">
-              CROS connects to 30+ platforms — and counting.
+              Transitus connects to 30+ platforms — and counting.
             </p>
             <p className="text-sm text-[hsl(var(--marketing-navy)/0.6)] mb-4">
-              Whether you keep your existing CRM, ChMS, or donor platform as a companion — or let CROS run the whole show — your campaign audiences stay connected to real relationships.
+              Whether you keep your existing CRM, ChMS, or donor platform as a companion — or let Transitus run the whole show — your campaign audiences stay connected to real relationships.
             </p>
             <Link to="/integrations">
               <Button
@@ -273,7 +273,7 @@ export default function RelatioCampaigns() {
                 • Technology supports your mission instead of reshaping it.
               </p>
               <p>
-                You remain the nervous system of CROS.<br />
+                You remain the nervous system of Transitus.<br />
                 Relatio simply amplifies what already exists.
               </p>
             </div>
@@ -337,7 +337,7 @@ export default function RelatioCampaigns() {
             When your relationships begin to speak,<br className="hidden sm:block" /> Relatio helps you listen — and respond.
           </h2>
           <p className="text-[hsl(var(--marketing-navy)/0.6)] text-base sm:text-lg max-w-xl mx-auto mb-8">
-            CROS works beautifully without campaigns. But when your community grows and your voice needs to travel further, Relatio Campaigns is ready.
+            Transitus works beautifully without campaigns. But when your community grows and your voice needs to travel further, Relatio Campaigns is ready.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link to="/pricing">

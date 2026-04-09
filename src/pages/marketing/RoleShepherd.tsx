@@ -3,7 +3,7 @@
  *
  * WHAT: Full narrative page for the Shepherd role with daily rhythm, modules, guides, stories.
  * WHERE: /roles/shepherd
- * WHY: SEO entry point for leadership-minded visitors discovering CROS through role identity.
+ * WHY: SEO entry point for leadership-minded visitors discovering Transitus through role identity.
  */
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -38,7 +38,7 @@ const features = [
     Icon: Eye,
     title: 'Narrative Intelligence',
     subtitle: 'Metro Narrative · Drift signals',
-    description: 'Patterns emerge over time. CROS™ gently surfaces when relationships are deepening, when engagement is drifting, and when a story is worth revisiting.',
+    description: 'Patterns emerge over time. Transitus™ gently surfaces when relationships are deepening, when engagement is drifting, and when a story is worth revisiting.',
   },
 ];
 
@@ -62,13 +62,13 @@ export default function RoleShepherd() {
     <div className="bg-white">
       <SeoHead
         title="Shepherd — Keep the Story"
-        description="Shepherds carry the vision and hold the story. See how CROS™ supports leadership with narrative intelligence, community awareness, and relationship memory."
-        keywords={['CROS shepherd', 'pastoral leadership', 'community leadership', 'narrative intelligence', 'relationship management']}
+        description="Shepherds carry the vision and hold the story. See how Transitus™ supports leadership with narrative intelligence, community awareness, and relationship memory."
+        keywords={['Transitus shepherd', 'pastoral leadership', 'community leadership', 'narrative intelligence', 'relationship management']}
         canonical="/roles/shepherd"
         ogType="article"
         jsonLd={articleSchema({
           headline: 'Shepherd — Keep the Story',
-          description: 'The Shepherd experience inside CROS™ — for leaders who guide with awareness.',
+          description: 'The Shepherd experience inside Transitus™ — for leaders who guide with awareness.',
           url: '/roles/shepherd',
         })}
       />

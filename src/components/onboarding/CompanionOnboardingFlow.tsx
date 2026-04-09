@@ -110,10 +110,10 @@ export function CompanionOnboardingFlow({ onComplete }: Props) {
                 className="text-3xl font-bold text-foreground"
                 style={{ fontFamily: "'Playfair Display', serif" }}
               >
-                Welcome to CROS
+                Welcome to Transitus
               </h1>
               <p className="text-muted-foreground text-lg leading-relaxed">
-                CROS helps you remember the people you're walking with.
+                Transitus helps you remember the people you're walking with.
               </p>
               <Button
                 size="lg"

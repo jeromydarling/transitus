@@ -23,7 +23,7 @@ export function MigrationProgressBar({ status, recordsImported, integrationName 
   const message = {
     pending: `Preparing to bring your relationships from ${integrationName}…`,
     running: `Moving your relationships safely — ${recordsImported} records so far…`,
-    completed: `All done! ${recordsImported} relationships brought into CROS.`,
+    completed: `All done! ${recordsImported} relationships brought into Transitus.`,
     failed: 'Something went wrong. Your original data is untouched.',
   }[status];
 

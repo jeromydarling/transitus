@@ -1,11 +1,11 @@
 /**
- * Calm Mode — Global UX system for CROS operator experience.
+ * Calm Mode — Global UX system for Transitus operator experience.
  *
  * WHAT: Constants + helpers that enforce narrative-first, non-urgent language.
  * WHERE: Used across operator and tenant UI to soften alert language.
- * WHY: CROS believes systems should serve humans gently, not alarm them.
+ * WHY: Transitus believes systems should serve humans gently, not alarm them.
  *
- * Governed by: src/lib/toneCharter.ts (CROS™ Tone & Language Charter)
+ * Governed by: src/lib/toneCharter.ts (Transitus™ Tone & Language Charter)
  */
 
 /** Master toggle — when true, all urgency styling is suppressed. */

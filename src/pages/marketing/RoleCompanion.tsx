@@ -3,7 +3,7 @@
  *
  * WHAT: Full narrative page for the Companion role with daily rhythm, modules, guides, stories.
  * WHERE: /roles/companion
- * WHY: SEO entry point for care workers discovering CROS through role identity.
+ * WHY: SEO entry point for care workers discovering Transitus through role identity.
  */
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -22,9 +22,9 @@ import { useRoleCapture } from '@/hooks/useRoleCapture';
 const serif = { fontFamily: 'Georgia, "Times New Roman", serif' };
 
 const features = [
-  { Icon: Mail, title: 'Email-to-tasks', subtitle: 'Follow-ups that appear naturally', description: 'When an email signals a next step, CROS™ gently surfaces it. No manual entry. No lost threads. Just care that follows through.' },
+  { Icon: Mail, title: 'Email-to-tasks', subtitle: 'Follow-ups that appear naturally', description: 'When an email signals a next step, Transitus™ gently surfaces it. No manual entry. No lost threads. Just care that follows through.' },
   { Icon: PenLine, title: 'Reflections & Journaling', subtitle: 'Impulsus · Private impact journal', description: 'Write what you noticed, felt, or learned from a conversation. Reflections stay private — they\'re for you and the relationship, not a report.' },
-  { Icon: Calendar, title: 'Events & Calendar', subtitle: 'Show up. Connect. Remember.', description: 'See community events, schedule visits, and let CROS™ remember who you met — so every encounter builds on the last.' },
+  { Icon: Calendar, title: 'Events & Calendar', subtitle: 'Show up. Connect. Remember.', description: 'See community events, schedule visits, and let Transitus™ remember who you met — so every encounter builds on the last.' },
 ];
 
 const dailyRhythm = [
@@ -46,11 +46,11 @@ export default function RoleCompanion() {
     <div className="bg-white">
       <SeoHead
         title="Companion — Keep the Thread"
-        description="Companions walk alongside people, keeping the thread of care unbroken. See how CROS™ supports daily relationship work."
-        keywords={['CROS companion', 'care worker', 'relationship management', 'follow-up', 'community care']}
+        description="Companions walk alongside people, keeping the thread of care unbroken. See how Transitus™ supports daily relationship work."
+        keywords={['Transitus companion', 'care worker', 'relationship management', 'follow-up', 'community care']}
         canonical="/roles/companion"
         ogType="article"
-        jsonLd={articleSchema({ headline: 'Companion — Keep the Thread', description: 'The Companion experience inside CROS™.', url: '/roles/companion' })}
+        jsonLd={articleSchema({ headline: 'Companion — Keep the Thread', description: 'The Companion experience inside Transitus™.', url: '/roles/companion' })}
       />
 
       <section className="max-w-[720px] mx-auto px-4 sm:px-6 pt-16 sm:pt-24 pb-12 text-center">

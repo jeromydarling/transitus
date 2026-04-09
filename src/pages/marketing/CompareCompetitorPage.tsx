@@ -1,7 +1,7 @@
 /**
  * CompareCompetitorPage — SEO competitor comparison landing page.
  *
- * WHAT: Structured, narrative comparison page for CROS vs specific competitor.
+ * WHAT: Structured, narrative comparison page for Transitus vs specific competitor.
  * WHERE: /compare/:slug (Bloomerang, Salesforce, HubSpot, Mission Layer)
  * WHY: SEO authority through calm, non-attacking, architecturally precise comparisons.
  */
@@ -79,7 +79,7 @@ function Section({ section }: { section: CompetitorSection }) {
           </div>
           <div className="rounded-xl border border-[hsl(var(--marketing-blue)/0.2)] bg-[hsl(var(--marketing-blue)/0.02)] p-5">
             <span className="text-xs font-semibold text-[hsl(var(--marketing-blue))] uppercase tracking-wider block mb-3">
-              CROS™
+              Transitus™
             </span>
             <ul className="space-y-1.5">
               {section.columns.cros.map((c, i) => (
@@ -229,8 +229,8 @@ export default function CompareCompetitorPage() {
       <SeoInternalLinks
         heading={t('compareCompetitorPage.seoLinksHeading')}
         links={[
-          { label: 'Why CROS', to: '/why-cros', description: 'The philosophy behind the system.' },
-          { label: 'CROS Bridge™', to: '/relatio-campaigns', description: 'Migration and integration options.' },
+          { label: 'Why Transitus', to: '/why-cros', description: 'The philosophy behind the system.' },
+          { label: 'Transitus Bridge™', to: '/relatio-campaigns', description: 'Migration and integration options.' },
           { label: 'NRI™', to: '/nri', description: 'Narrative Relational Intelligence explained.' },
           { label: 'Pricing', to: '/pricing', description: 'Plans for every mission size.' },
         ]}

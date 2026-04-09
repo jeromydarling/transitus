@@ -3,7 +3,7 @@
  *
  * WHAT: Landing page for the "Proof" section linking to cost analysis content.
  * WHERE: /proof route in the marketing site.
- * WHY: Gives prospects a dedicated place to evaluate CROS™ vs fragmented tool stacks.
+ * WHY: Gives prospects a dedicated place to evaluate Transitus™ vs fragmented tool stacks.
  */
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -27,7 +27,7 @@ export default function Proof() {
         </h1>
         <p className="text-lg text-[hsl(var(--marketing-navy)/0.6)] leading-relaxed max-w-2xl mx-auto">
           Most organizations didn't choose complexity — it accumulated over time. See how consolidating
-          your tools with CROS™ can reduce cost and restore clarity.
+          your tools with Transitus™ can reduce cost and restore clarity.
         </p>
       </section>
 
@@ -53,7 +53,7 @@ export default function Proof() {
             Together, they quietly drain time, money, and focus.
           </p>
           <p className="font-medium text-[hsl(var(--marketing-navy))]">
-            CROS™ wasn't built to replace your mission.{' '}
+            Transitus™ wasn't built to replace your mission.{' '}
             It was built to remove the layers between your mission and the people you serve.
           </p>
         </div>
@@ -78,7 +78,7 @@ export default function Proof() {
             Every extra system creates another login, another training session, another place where the story gets lost.
           </p>
           <p className="font-medium text-[hsl(var(--marketing-navy))]">
-            CROS™ keeps the relationship alive — and lets technology serve the human work instead of replacing it.
+            Transitus™ keeps the relationship alive — and lets technology serve the human work instead of replacing it.
           </p>
         </div>
         <div className="mt-10">

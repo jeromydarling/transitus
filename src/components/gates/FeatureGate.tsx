@@ -27,9 +27,9 @@ interface FeatureGateProps {
 }
 
 const tierLabels: Record<string, string> = {
-  core: 'CROS Core',
-  insight: 'CROS Insight',
-  story: 'CROS Story',
+  core: 'Transitus Core',
+  insight: 'Transitus Insight',
+  story: 'Transitus Story',
 };
 
 export function FeatureGate({ featureKey, children, message }: FeatureGateProps) {

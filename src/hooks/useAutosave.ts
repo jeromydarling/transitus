@@ -1,10 +1,10 @@
 /**
- * useAutosave — Universal autosave hook for CROS forms.
+ * useAutosave — Universal autosave hook for Transitus forms.
  *
  * WHAT: Debounced autosave to sessionStorage with silent "Held." confirmation.
  * WHERE: Every form with long-form text or multi-field input.
  * WHY: "There must never be a scenario where long-form work is lost."
- *       — CROS Tone & Language Charter, Autosave Mandate.
+ *       — Transitus Tone & Language Charter, Autosave Mandate.
  *
  * Features:
  *  - Silent save every 3 seconds after typing

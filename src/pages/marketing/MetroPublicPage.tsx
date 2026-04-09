@@ -72,7 +72,7 @@ export default function MetroPublicPage() {
   return (
     <div className="bg-white">
       <SeoHead
-        title={`${metroTitle} — Civic Patterns from the CROS™ Network`}
+        title={`${metroTitle} — Civic Patterns from the Transitus™ Network`}
         description={page.summary || `Discover how community organizations are growing in ${metroTitle}.`}
         canonical={`/metros/${page.slug}`}
         ogType="article"

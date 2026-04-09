@@ -375,7 +375,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
               <div className="w-8 h-8 rounded-lg gradient-primary flex items-center justify-center">
                 <span className="text-white font-bold text-sm">CR</span>
               </div>
-              <span className="font-semibold text-sidebar-foreground">CROS</span>
+              <span className="font-semibold text-sidebar-foreground">Transitus</span>
             </a>
           )}
           {!showLabel && (

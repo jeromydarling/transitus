@@ -85,7 +85,7 @@ export default function UniversalCaseStudy() {
         </div>
       </section>
 
-      {/* SECTION 4 — WHY CROS EXISTS */}
+      {/* SECTION 4 — WHY Transitus EXISTS */}
       <section className="py-16 sm:py-24">
         <div className="max-w-2xl mx-auto px-4 sm:px-6">
           <h2
@@ -95,9 +95,9 @@ export default function UniversalCaseStudy() {
             Putting Humanity Back Into the Work
           </h2>
           <div className="space-y-5 text-[hsl(var(--marketing-navy)/0.7)] leading-relaxed text-base sm:text-lg whitespace-pre-line" style={serif}>
-            <p>CROS was built to restore the story behind the work.</p>
+            <p>Transitus was built to restore the story behind the work.</p>
             <p>
-              {'Instead of forcing humans to translate life into rigid systems,\nCROS listens to the rhythm already present in your relationships.'}
+              {'Instead of forcing humans to translate life into rigid systems,\nTransitus listens to the rhythm already present in your relationships.'}
             </p>
             <p>
               {'Reflections become memory.\nEvents become presence.\nJourneys become growth.'}
@@ -121,7 +121,7 @@ export default function UniversalCaseStudy() {
           </h2>
           <div className="space-y-5 text-[hsl(var(--marketing-navy)/0.7)] leading-relaxed text-base sm:text-lg whitespace-pre-line" style={serif}>
             <p>
-              {'CROS is not the intelligence.\nYou are.'}
+              {'Transitus is not the intelligence.\nYou are.'}
             </p>
             <p>
               {'You are the nervous system.\nThe witness.\nThe one who shows up.'}
@@ -139,7 +139,7 @@ export default function UniversalCaseStudy() {
         </div>
       </section>
 
-      {/* SECTION — PRINCIPLES THAT SHAPED CROS */}
+      {/* SECTION — PRINCIPLES THAT SHAPED Transitus */}
       <section className="py-16 sm:py-24">
         <div className="max-w-2xl mx-auto px-4 sm:px-6">
           <div className="rounded-2xl bg-[hsl(var(--marketing-surface))] border border-[hsl(var(--marketing-border))] px-6 sm:px-10 py-10 sm:py-14">
@@ -150,12 +150,12 @@ export default function UniversalCaseStudy() {
               className="text-2xl sm:text-3xl font-semibold text-[hsl(var(--marketing-navy))] mb-8 tracking-tight"
               style={serif}
             >
-              Principles That Shaped CROS
+              Principles That Shaped Transitus
             </h2>
 
             <div className="space-y-5 text-[hsl(var(--marketing-navy)/0.7)] leading-relaxed text-base sm:text-lg" style={serif}>
               <p>
-                CROS did not begin as a software idea.
+                Transitus did not begin as a software idea.
               </p>
               <p>
                 It grew slowly from years spent in ministry, nonprofit work, and community life — watching how people actually accompany one another through hardship, growth, and hope.
@@ -184,7 +184,7 @@ export default function UniversalCaseStudy() {
               </div>
               <div>
                 <p className="font-medium text-[hsl(var(--marketing-navy))]">— Stewardship of Intelligence.</p>
-                <p className="mt-1">We believe intelligence should be governed, not extracted. CROS was designed so that AI serves the mission — never the other way around.</p>
+                <p className="mt-1">We believe intelligence should be governed, not extracted. Transitus was designed so that AI serves the mission — never the other way around.</p>
               </div>
             </div>
 
@@ -193,7 +193,7 @@ export default function UniversalCaseStudy() {
                 Many of these ideas resonate with traditions of social teaching and Ignatian reflection, but they are offered here simply as human wisdom gathered from lived experience.
               </p>
               <p>
-                CROS exists to support organizations who want technology to feel more like accompaniment than administration.
+                Transitus exists to support organizations who want technology to feel more like accompaniment than administration.
               </p>
             </div>
 
@@ -229,12 +229,12 @@ export default function UniversalCaseStudy() {
               <p>
                 Pier Giorgio's life revealed something deeply practical: love at scale requires discipline.
               </p>
-              <p>CROS™ was born from that realization.</p>
+              <p>Transitus™ was born from that realization.</p>
               <p className="whitespace-pre-line">
                 {'Not to digitize a saint.\nNot to romanticize service.\nBut to build a structure that supports the kind of remembering he practiced naturally.'}
               </p>
               <p>
-                If CROS™ works, it works because it is rooted in a life that proved remembering people changes everything.
+                If Transitus™ works, it works because it is rooted in a life that proved remembering people changes everything.
               </p>
 
               <hr className="border-[hsl(var(--marketing-navy)/0.08)] my-6" />
@@ -244,7 +244,7 @@ export default function UniversalCaseStudy() {
                 I set out to make sense of the work I had been doing for decades — walking with people through recovery, ministry, family life, and community service.
               </p>
               <p className="italic">
-                CROS is not something I invented from a distance.
+                Transitus is not something I invented from a distance.
                 It is something that grew slowly from real relationships, long conversations, and years spent asking how technology could help us stay human instead of becoming more mechanical.
               </p>
               <p className="italic">
@@ -279,7 +279,7 @@ export default function UniversalCaseStudy() {
             {"\"We do not exist to turn people into data.\nWe exist to remember the story of how we loved our neighbor well.\""}
           </blockquote>
           <p className="mt-10 text-sm text-[hsl(var(--marketing-navy)/0.5)]" style={serif}>
-            CROS exists so that organizations can scale their mission{'\n'}
+            Transitus exists so that organizations can scale their mission{'\n'}
             without losing their humanity.
           </p>
         </div>

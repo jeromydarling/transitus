@@ -1,7 +1,7 @@
 /**
  * Roles — Role selector marketing page.
  *
- * WHAT: Presents the three CROS™ human roles: Shepherd, Companion, Visitor.
+ * WHAT: Presents the three Transitus™ human roles: Shepherd, Companion, Visitor.
  * WHERE: /roles
  * WHY: Helps visitors instantly see "this is for me" without jargon overload.
  */
@@ -22,10 +22,10 @@ import { faqSchema } from '@/lib/seo/seoConfig';
 import RelatedNarrativesCard from '@/components/marketing/RelatedNarrativesCard';
 
 const rolesFaq = [
-  { question: 'What is a Shepherd in CROS?', answer: 'A Shepherd carries the vision and holds the story of a community — guiding mission, nurturing long-term relationships, and noticing patterns across people and time.' },
+  { question: 'What is a Shepherd in Transitus?', answer: 'A Shepherd carries the vision and holds the story of a community — guiding mission, nurturing long-term relationships, and noticing patterns across people and time.' },
   { question: 'What is a Companion?', answer: 'A Companion walks alongside people, keeping the thread of care unbroken through follow-ups, reflections, and day-to-day relationship tasks.' },
   { question: 'What is a Visitor?', answer: 'A Visitor shows up where life happens — homes, events, neighborhoods — and captures moments with voice notes instead of forms.' },
-  { question: 'What is a Steward?', answer: 'A Steward is the workspace caretaker — they set up CROS, invite the team, and manage integrations. Often they also serve as a Shepherd or Companion.' },
+  { question: 'What is a Steward?', answer: 'A Steward is the workspace caretaker — they set up Transitus, invite the team, and manage integrations. Often they also serve as a Shepherd or Companion.' },
 ];
 
 type RoleKey = 'shepherd' | 'companion' | 'visitor' | 'steward';
@@ -45,8 +45,8 @@ export default function Roles() {
     <div className="bg-white">
       <SeoHead
         title="Roles — Shepherd, Companion, Visitor"
-        description="CROS™ adapts to how you serve people — whether you lead, walk alongside, or show up in the field."
-        keywords={['CROS roles', 'shepherd', 'companion', 'visitor', 'nonprofit roles', 'community roles']}
+        description="Transitus™ adapts to how you serve people — whether you lead, walk alongside, or show up in the field."
+        keywords={['Transitus roles', 'shepherd', 'companion', 'visitor', 'nonprofit roles', 'community roles']}
         canonical="/roles"
         jsonLd={faqSchema(rolesFaq)}
       />

@@ -20,7 +20,7 @@ export default function ForCaregivers() {
           Accompaniment deserves memory.
         </h1>
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-          CROS™ helps companions remember the people they walk with — not with charts and compliance,
+          Transitus™ helps companions remember the people they walk with — not with charts and compliance,
           but with stories, milestones, and gentle reflection.
         </p>
         <p className="text-sm text-muted-foreground max-w-xl mx-auto italic">
@@ -132,7 +132,7 @@ export default function ForCaregivers() {
           Mentors. Missionaries. Caregivers. Sponsors. Spiritual directors. Volunteers.
         </p>
         <p className="text-center text-muted-foreground leading-relaxed">
-          CROS helps them remember the people they serve, capture moments of care,
+          Transitus helps them remember the people they serve, capture moments of care,
           and follow through on the relationships that matter most.
         </p>
       </div>
@@ -143,7 +143,7 @@ export default function ForCaregivers() {
           Private by default. Share intentionally.
         </p>
         <p className="text-sm text-muted-foreground max-w-xl mx-auto">
-          CROS™ is not compliance software. It's a relationship memory system —
+          Transitus™ is not compliance software. It's a relationship memory system —
           designed for people who accompany others, not corporations that manage them.
         </p>
       </div>

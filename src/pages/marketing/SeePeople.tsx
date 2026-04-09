@@ -207,7 +207,7 @@ const SeePeople = React.forwardRef<HTMLDivElement>(function SeePeople(_props, re
         </Button>
       </section>
 
-      {/* ─── SECTION 5 — Soft Transition to CROS ─── */}
+      {/* ─── SECTION 5 — Soft Transition to Transitus ─── */}
       <section className="bg-[hsl(var(--marketing-surface))] py-16 sm:py-24 text-center">
         <div className="max-w-[640px] mx-auto px-4 sm:px-6">
           <h2

@@ -1,5 +1,5 @@
 /**
- * CROS™ Narrative Voice Validator — Spanish (es)
+ * Transitus™ Narrative Voice Validator — Spanish (es)
  *
  * Ensures all NRI Companion output in Spanish maintains the pastoral,
  * contemplative, Ignatian tone. Blocks urgency patterns, marketing

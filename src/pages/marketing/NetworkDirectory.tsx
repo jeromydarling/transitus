@@ -25,9 +25,9 @@ const ARCHETYPE_LABELS: Record<string, string> = {
 
 export default function NetworkDirectory() {
   useEffect(() => {
-    document.title = 'CROS Network — Community Directory';
+    document.title = 'Transitus Network — Community Directory';
     const meta = document.querySelector('meta[name="description"]');
-    if (meta) meta.setAttribute('content', 'Discover community organizations in the CROS network. A human-first directory of presence, not promotion.');
+    if (meta) meta.setAttribute('content', 'Discover community organizations in the Transitus network. A human-first directory of presence, not promotion.');
   }, []);
 
   const { data: profiles, isLoading } = useQuery({
@@ -50,7 +50,7 @@ export default function NetworkDirectory() {
         <div className="mx-auto w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center">
           <Heart className="h-7 w-7 text-primary" />
         </div>
-        <h1 className="text-3xl md:text-4xl font-bold tracking-tight">The CROS Network</h1>
+        <h1 className="text-3xl md:text-4xl font-bold tracking-tight">The Transitus Network</h1>
         <p className="text-muted-foreground max-w-xl mx-auto font-serif leading-relaxed">
           Organizations sharing their presence with the community.
           No rankings. No metrics. Just human connection.

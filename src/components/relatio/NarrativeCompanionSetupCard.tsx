@@ -3,7 +3,7 @@
  *
  * WHAT: Guides tenant through connecting their ChMS as a silent companion.
  * WHERE: Guided Activation flow, Settings → Integrations.
- * WHY: CROS listens alongside existing systems — never replaces them.
+ * WHY: Transitus listens alongside existing systems — never replaces them.
  */
 
 import { useState } from 'react';

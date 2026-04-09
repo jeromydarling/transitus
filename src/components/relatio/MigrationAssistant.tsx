@@ -82,7 +82,7 @@ export function MigrationAssistant({
             <div className="flex items-center gap-3 p-4 rounded-lg bg-muted/50">
               <Shield className="h-5 w-5 text-primary flex-shrink-0" />
               <p className="text-sm text-foreground">
-                You're moving from <strong>{integrationName}</strong> into CROS.
+                You're moving from <strong>{integrationName}</strong> into Transitus.
                 We'll help you bring your relationships safely — your original data stays untouched.
               </p>
             </div>
@@ -96,7 +96,7 @@ export function MigrationAssistant({
         {step === 2 && (
           <div className="space-y-4">
             <p className="text-sm text-muted-foreground">
-              Here's how your data will be mapped into CROS:
+              Here's how your data will be mapped into Transitus:
             </p>
             <div className="space-y-2">
               {fieldMaps.map((fm) => (

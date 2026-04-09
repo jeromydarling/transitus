@@ -47,7 +47,7 @@ export function GuidedSetupHandRaise({ connectorLabel }: GuidedSetupHandRaisePro
               Guided Setup
             </DialogTitle>
             <DialogDescription>
-              Our team can walk you through connecting {connectorLabel} to CROS in a
+              Our team can walk you through connecting {connectorLabel} to Transitus in a
               live session. We'll handle the technical details so you can focus on
               your mission.
             </DialogDescription>
@@ -74,7 +74,7 @@ export function GuidedSetupHandRaise({ connectorLabel }: GuidedSetupHandRaisePro
                 onClick={() => {
                   setShowModal(false);
                   // In future: navigate to activation session booking
-                  window.open('mailto:hello@thecros.com?subject=Guided Setup Request — ' + connectorLabel, '_blank');
+                  window.open('mailto:hello@transitus.app?subject=Guided Setup Request — ' + connectorLabel, '_blank');
                 }}
                 className="rounded-full flex-1"
               >

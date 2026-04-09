@@ -3,7 +3,7 @@
  *
  * WHAT: Full narrative page for the Visitor role with daily rhythm, voice-note example, guides, stories.
  * WHERE: /roles/visitor
- * WHY: SEO entry point for field workers discovering CROS through role identity.
+ * WHY: SEO entry point for field workers discovering Transitus through role identity.
  */
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -24,7 +24,7 @@ const serif = { fontFamily: 'Georgia, "Times New Roman", serif' };
 const features = [
   { Icon: Mic, title: 'Voice Notes', subtitle: 'Speak it. We remember it.', description: 'Tap record, say what happened. Your voice becomes a transcript, which becomes a Visit Note — and NRI™ can understand it. No typing required.' },
   { Icon: Smartphone, title: 'Mobile-first design', subtitle: 'Works on the device you carry', description: 'Large buttons, simple screens, no clutter. Designed for people who may not be comfortable with complex apps — and for anyone in a hurry.' },
-  { Icon: Wifi, title: 'Works on any device', subtitle: 'Browser-based · No app store needed', description: 'CROS™ runs in your browser on any phone, tablet, or computer. Add it to your home screen and it works like a native app — no download required.' },
+  { Icon: Wifi, title: 'Works on any device', subtitle: 'Browser-based · No app store needed', description: 'Transitus™ runs in your browser on any phone, tablet, or computer. Add it to your home screen and it works like a native app — no download required.' },
 ];
 
 const dailyRhythm = [
@@ -45,11 +45,11 @@ export default function RoleVisitor() {
     <div className="bg-white">
       <SeoHead
         title="Visitor — Keep the Witness"
-        description="Visitors show up where life happens. See how CROS™ makes field work simple with voice notes, mobile-first design, and zero forms."
-        keywords={['CROS visitor', 'home visits', 'field work', 'voice notes', 'mobile CRM', 'volunteer tools']}
+        description="Visitors show up where life happens. See how Transitus™ makes field work simple with voice notes, mobile-first design, and zero forms."
+        keywords={['Transitus visitor', 'home visits', 'field work', 'voice notes', 'mobile CRM', 'volunteer tools']}
         canonical="/roles/visitor"
         ogType="article"
-        jsonLd={articleSchema({ headline: 'Visitor — Keep the Witness', description: 'The Visitor experience inside CROS™.', url: '/roles/visitor' })}
+        jsonLd={articleSchema({ headline: 'Visitor — Keep the Witness', description: 'The Visitor experience inside Transitus™.', url: '/roles/visitor' })}
       />
 
       <section className="max-w-[720px] mx-auto px-4 sm:px-6 pt-16 sm:pt-24 pb-12 text-center">

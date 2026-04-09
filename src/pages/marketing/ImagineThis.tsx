@@ -1,7 +1,7 @@
 /**
  * ImagineThis — Narrative possibility page for nonprofit and ministry leaders.
  *
- * WHAT: Helps leaders imagine how daily work could feel different with CROS.
+ * WHAT: Helps leaders imagine how daily work could feel different with Transitus.
  * WHERE: /imagine-this (public marketing route).
  * WHY: Builds narrative authority through Ignatian reflection, not feature comparison.
  */

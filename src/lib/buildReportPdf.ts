@@ -1,5 +1,5 @@
 /**
- * buildReportPdf — Generates a CROS Build Report PDF.
+ * buildReportPdf — Generates a Transitus Build Report PDF.
  *
  * WHAT: Creates a downloadable PDF summarizing recent build changes.
  * WHERE: Called from any page or utility that needs a build report.

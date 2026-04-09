@@ -24,7 +24,7 @@ export default function MissionAtlas() {
       <SeoHead
         title="Mission Atlas™ — The Living Map of Mission"
         description="Across cities and communities, different missions take shape. The Mission Atlas reveals patterns of care, presence, and relationship across archetypes and geographies."
-        keywords={['mission atlas', 'community relationship patterns', 'nonprofit mission types', 'CROS', 'narrative intelligence']}
+        keywords={['mission atlas', 'community relationship patterns', 'nonprofit mission types', 'Transitus', 'narrative intelligence']}
         canonical="/mission-atlas"
         ogType="article"
         jsonLd={[
@@ -34,7 +34,7 @@ export default function MissionAtlas() {
             url: '/mission-atlas',
           }),
           breadcrumbSchema([
-            { name: 'CROS', url: '/' },
+            { name: 'Transitus', url: '/' },
             { name: 'Mission Atlas', url: '/mission-atlas' },
           ]),
         ]}
@@ -58,7 +58,7 @@ export default function MissionAtlas() {
       {/* Atlas Cards Grid */}
       <section className="max-w-[960px] mx-auto px-4 sm:px-6 pb-16">
         <SeoBreadcrumb items={[
-          { label: 'CROS', to: '/' },
+          { label: 'Transitus', to: '/' },
           { label: 'Mission Atlas' },
         ]} />
         <div className="grid gap-5 sm:grid-cols-2">
@@ -134,7 +134,7 @@ export default function MissionAtlas() {
           { label: 'Archetypes', to: '/archetypes', description: 'See every mission archetype.' },
           { label: 'Roles', to: '/roles', description: 'Shepherd, Companion, Visitor, Steward.' },
           { label: 'NRI', to: '/nri', description: 'Narrative Relational Intelligence explained.' },
-          { label: 'Manifesto', to: '/manifesto', description: 'Why we built CROS.' },
+          { label: 'Manifesto', to: '/manifesto', description: 'Why we built Transitus.' },
         ]}
       />
     </article>

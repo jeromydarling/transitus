@@ -1,7 +1,7 @@
 /**
  * WhyCros — /why-cros
  *
- * WHAT: Philosophy page explaining why CROS exists.
+ * WHAT: Philosophy page explaining why Transitus exists.
  * WHERE: Public marketing site.
  * WHY: Anchors brand narrative and links outward to feature pages.
  */
@@ -21,10 +21,10 @@ export default function WhyCros() {
   return (
     <div className="bg-white">
       <SeoHead
-        title="Why CROS — The Philosophy Behind the System"
-        description="CROS exists because relationships deserve better technology. A system that remembers people, notices community shifts, and preserves the human story."
+        title="Why Transitus — The Philosophy Behind the System"
+        description="Transitus exists because relationships deserve better technology. A system that remembers people, notices community shifts, and preserves the human story."
         keywords={[
-          'why CROS',
+          'why Transitus',
           'community relationship OS',
           'nonprofit philosophy',
           'relationship-centered technology',
@@ -33,13 +33,13 @@ export default function WhyCros() {
         canonical="/why-cros"
         jsonLd={[
           articleSchema({
-            headline: 'Why CROS — The Philosophy Behind the System',
-            description: 'CROS exists because relationships deserve better technology.',
+            headline: 'Why Transitus — The Philosophy Behind the System',
+            description: 'Transitus exists because relationships deserve better technology.',
             url: '/why-cros',
           }),
           breadcrumbSchema([
             { name: 'Home', url: '/' },
-            { name: 'Why CROS', url: '/why-cros' },
+            { name: 'Why Transitus', url: '/why-cros' },
           ]),
         ]}
       />
@@ -59,7 +59,7 @@ export default function WhyCros() {
 
       {/* ─── THE PROBLEM ─── */}
       <section className="max-w-[680px] mx-auto px-4 sm:px-6 pb-16 sm:pb-24">
-        <SeoBreadcrumb items={[{ label: 'Home', to: '/' }, { label: 'Why CROS' }]} />
+        <SeoBreadcrumb items={[{ label: 'Home', to: '/' }, { label: 'Why Transitus' }]} />
         <h2
           className="text-2xl sm:text-3xl text-[hsl(var(--marketing-navy))] leading-snug mb-8"
           style={serif}
@@ -81,14 +81,14 @@ export default function WhyCros() {
         </div>
       </section>
 
-      {/* ─── WHAT CROS BELIEVES ─── */}
+      {/* ─── WHAT Transitus BELIEVES ─── */}
       <section className="bg-[hsl(var(--marketing-surface))] py-16 sm:py-24">
         <div className="max-w-[680px] mx-auto px-4 sm:px-6">
           <h2
             className="text-2xl sm:text-3xl text-[hsl(var(--marketing-navy))] leading-snug mb-8"
             style={serif}
           >
-            What CROS Believes
+            What Transitus Believes
           </h2>
           <div className="space-y-5 text-[hsl(var(--marketing-navy)/0.65)] leading-relaxed text-base sm:text-lg">
             <p>
@@ -117,7 +117,7 @@ export default function WhyCros() {
           className="text-2xl sm:text-3xl text-[hsl(var(--marketing-navy))] leading-snug mb-10"
           style={serif}
         >
-          Three Pillars of CROS
+          Three Pillars of Transitus
         </h2>
         <div className="space-y-8">
           {[
@@ -197,7 +197,7 @@ export default function WhyCros() {
             <p>When relational capital erodes, fundraising becomes reactive.</p>
             <p>When relational capital is strong, revenue stabilizes naturally.</p>
             <p className="text-[hsl(var(--marketing-navy))] font-medium">
-              CROS™ exists to protect relational capital.
+              Transitus™ exists to protect relational capital.
             </p>
             <p>Traditional CRMs protect financial capital.</p>
             <p className="text-[hsl(var(--marketing-navy))] font-medium">
@@ -208,7 +208,7 @@ export default function WhyCros() {
                 to="/cros-donor-humanity"
                 className="text-[hsl(var(--marketing-blue))] hover:underline font-medium text-sm"
               >
-                Learn how CROS preserves donor humanity →
+                Learn how Transitus preserves donor humanity →
               </Link>
             </p>
           </div>
@@ -225,7 +225,7 @@ export default function WhyCros() {
             Ready to Build on Relationships?
           </h2>
           <p className="text-base sm:text-lg text-[hsl(var(--marketing-navy)/0.6)] mb-10 leading-relaxed">
-            CROS helps your organization grow without losing its humanity.
+            Transitus helps your organization grow without losing its humanity.
           </p>
           <Link to="/contact">
             <Button

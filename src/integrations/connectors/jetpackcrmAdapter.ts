@@ -1,7 +1,7 @@
 /**
  * Jetpack CRM Connector Adapter
  *
- * WHAT: Normalizes Jetpack CRM (WordPress) export/API data to CROS entities.
+ * WHAT: Normalizes Jetpack CRM (WordPress) export/API data to Transitus entities.
  * WHERE: Migration harness + fixture tests.
  * WHY: Lightweight WordPress CRM by Automattic — contacts, transactions, events.
  */

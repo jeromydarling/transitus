@@ -32,7 +32,7 @@ const networkThemes: Record<string, NetworkTheme> = {
   'shared-outreach': {
     title: 'Shared Outreach',
     description: 'When organizations in the same region discover they are reaching the same communities — and begin to move together.',
-    seoDesc: 'Shared outreach patterns across the CROS\u2122 network — how organizations discover alignment through anonymized civic signals.',
+    seoDesc: 'Shared outreach patterns across the Transitus\u2122 network — how organizations discover alignment through anonymized civic signals.',
     narrative: 'Shared outreach emerges naturally when multiple organizations serve overlapping communities. Through Communio, these patterns become visible without compromising anyone\u2019s privacy. What was once invisible coordination becomes a gentle current of shared purpose.',
     themes: ['Home visitation', 'Community events', 'Volunteer coordination', 'Resource sharing'],
     archetypes: ['church', 'refugee_support', 'social_enterprise'],
@@ -45,7 +45,7 @@ const networkThemes: Record<string, NetworkTheme> = {
   'civic-convergence': {
     title: 'Civic Convergence',
     description: 'The moment when separate missions begin to align — not through planning, but through the natural gravity of shared place and purpose.',
-    seoDesc: 'Civic convergence patterns in the CROS\u2122 network — how missions naturally align through shared place and purpose.',
+    seoDesc: 'Civic convergence patterns in the Transitus\u2122 network — how missions naturally align through shared place and purpose.',
     narrative: 'Civic convergence is not orchestrated. It happens when organizations rooted in the same neighborhoods begin to notice the same needs, respond to the same signals, and gradually create a fabric of care that no single mission could weave alone.',
     themes: ['Metro-level patterns', 'Cross-archetype alignment', 'Seasonal rhythms', 'Shared momentum'],
     archetypes: ['digital_inclusion', 'workforce', 'library_system'],
@@ -58,8 +58,8 @@ const networkThemes: Record<string, NetworkTheme> = {
   'narrative-solidarity': {
     title: 'Narrative Solidarity',
     description: 'Stories that echo across organizations — the same themes surfacing in different contexts, revealing that the work is connected even when the workers don\u2019t know each other.',
-    seoDesc: 'Narrative solidarity across the CROS\u2122 network — shared storytelling themes that reveal the connectedness of community work.',
-    narrative: 'When a church in one city and a workforce program in another both report the same pattern — families struggling with transportation, or volunteers declining in the same season — that\u2019s not coincidence. That\u2019s narrative solidarity. CROS\u2122 makes these echoes visible.',
+    seoDesc: 'Narrative solidarity across the Transitus\u2122 network — shared storytelling themes that reveal the connectedness of community work.',
+    narrative: 'When a church in one city and a workforce program in another both report the same pattern — families struggling with transportation, or volunteers declining in the same season — that\u2019s not coincidence. That\u2019s narrative solidarity. Transitus\u2122 makes these echoes visible.',
     themes: ['Thematic resonance', 'Cross-metro patterns', 'Storytelling', 'Impact visibility'],
     archetypes: ['church', 'education_access', 'workforce'],
     signals: [
@@ -90,7 +90,7 @@ export default function CommunioNetworkPage() {
   return (
     <>
       <SeoHead
-        title={`${data.title} — CROS\u2122 Network`}
+        title={`${data.title} — Transitus\u2122 Network`}
         description={data.seoDesc}
         canonical={`/network/${themeSlug}`}
         jsonLd={[

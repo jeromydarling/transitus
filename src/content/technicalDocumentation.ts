@@ -1,7 +1,7 @@
 /**
  * technicalDocumentation.ts — Living technical reference for the Gardener.
  *
- * WHAT: Comprehensive developer-level documentation of the CROS platform.
+ * WHAT: Comprehensive developer-level documentation of the Transitus platform.
  * WHERE: Used by buildTechnicalDocPdf.ts to generate a downloadable PDF.
  * WHY: The Gardener needs a single reference document for architecture,
  *       data model, integrations, and operational procedures.
@@ -23,8 +23,8 @@ export interface TechDocChapter {
 }
 
 export const TECH_DOC_META = {
-  title: 'CROS — Technical Architecture Reference',
-  subtitle: 'Communal Relationship Operating System',
+  title: 'Transitus — Technical Architecture Reference',
+  subtitle: 'The Operating System for Places Under Change',
   version: '2.23.0',
   lastUpdated: '2026-03-14',
   audience: 'Gardener / Platform Operator / Developer',
@@ -38,7 +38,7 @@ export const techDocChapters: TechDocChapter[] = [
       {
         id: 'mission',
         title: '1.1 Mission & Identity',
-        content: `CROS (Communal Relationship Operating System) is a human-centered platform for mission-driven organizations. It replaces traditional CRM paradigms with relationship memory, community awareness, and narrative intelligence.
+        content: `Transitus (The Operating System for Places Under Change) is a human-centered platform for mission-driven organizations. It replaces traditional CRM paradigms with relationship memory, community awareness, and narrative intelligence.
 
 NRI (Narrative Relational Intelligence, pronounced "Neary") is the intelligence layer. It follows a core loop: Recognize signals of care and change, Synthesize scattered information into coherent stories, and Prioritize the next faithful step. Unlike artificial intelligence, NRI draws from human reflections, shared experiences, community signals, and relationship history. AI assists — but the intelligence belongs to the relationships. NRI is bounded by design: private by default, non-surveillance, and humans remain responsible for all decisions.
 
@@ -191,7 +191,7 @@ Each adapter implements: mapAccounts, mapContacts, mapTasks, mapEvents, mapActiv
 **recalculate-prospect-priority** — Re-scores prospect priority based on signals + activity.
 **add-and-draft-outreach** — Creates contact + drafts email outreach in one transaction.
 **grant-alignment-callback** — Callback handler for grant alignment automation.
-**hubspot-push** — Pushes CROS data to HubSpot via adapter.
+**hubspot-push** — Pushes Transitus data to HubSpot via adapter.
 **parse-pdf-to-kb** — Extracts markdown from uploaded PDFs for Knowledge Base.
 **ai-chat** — NRI assistant endpoint. Injects company KB context.
 **stripe-webhook** — Handles Stripe payment events for activation sessions.
@@ -304,7 +304,7 @@ Adapters live in src/integrations/connectors/. Currently implemented (Rung 4 —
 - WP ERP (wperpAdapter.ts)
 
 Stub adapters (Rung 1 — registry + onboarding guide):
-- Virtuous CRM (donor_crm — elevated to Rung 2 planning given CROS target market)
+- Virtuous CRM (donor_crm — elevated to Rung 2 planning given Transitus target market)
 - Oracle CRM (general_crm — OAuth 2.0 Client Credentials)
 - Kindful (donor_crm — now Bloomerang-acquired)
 - Zoho CRM (general_crm)
@@ -337,9 +337,9 @@ A workflow stuck in "running" is a failure. No silent branches allowed.`,
       {
         id: 'marketing-pages',
         title: '7.1 Public Pages',
-        content: `**Landing Page (/)** — CROS manifesto, archetype selector, feature highlights, testimonials
+        content: `**Landing Page (/)** — Transitus manifesto, archetype selector, feature highlights, testimonials
 **See People (/see-people)** — Reflection guide with downloadable PDF. Ignatian examen.
-**Features (/features)** — Hybrid narrative + card hub. Includes RelationshipVsTransactionDiagram (CRM vs CROS philosophy), Financial Moments section, and RelationalFlowStrip (Reflection → Participation → Generosity → Collaboration rhythm).
+**Features (/features)** — Hybrid narrative + card hub. Includes RelationshipVsTransactionDiagram (CRM vs Transitus philosophy), Financial Moments section, and RelationalFlowStrip (Reflection → Participation → Generosity → Collaboration rhythm).
 **Pricing (/pricing)** — Tier comparison: Core, Insight, Story, Bridge. Financial Moments pricing (Stripe + 1% platform fee). RelationalFlowStrip.
 **Public Tenant Mirror (/community/:slug)** — Public-facing tenant profile page
 **Archetype Interest Signals** — Anonymous tracking of archetype exploration on landing page`,
@@ -353,7 +353,7 @@ A workflow stuck in "running" is a failure. No silent branches allowed.`,
       {
         id: 'unified-budget',
         title: '8.1 Unified AI Budget & Intelligence Layers',
-        content: `CROS uses a **two-layer Intelligence Governance** model:
+        content: `Transitus uses a **two-layer Intelligence Governance** model:
 
 **Essential Intelligence (Unlimited):**
 - Single-entry summaries, tone rewrites, basic reflections, structured aggregation
@@ -552,7 +552,7 @@ Tenant-facing routes remain eagerly loaded for fastest initial paint.`,
       {
         id: 'compass-overlay',
         title: '12.3 Compass Overlay',
-        content: `Compass directional overlay anchors four CROS values to cardinal directions:
+        content: `Compass directional overlay anchors four Transitus values to cardinal directions:
 
 - **North** — Narrative
 - **East** — Discernment
@@ -755,18 +755,18 @@ Toggled via Garden Pulse header. Persists preference locally. Blends with Provid
   },
   {
     id: 'compass-posture',
-    title: '20. Compass Posture System (CROS Companion)',
+    title: '20. Compass Posture System (Transitus Companion)',
     sections: [
       {
         id: 'compass-overview',
         title: '20.1 Overview',
-        content: `The Compass Posture System replaces the previous chat icon with a compass-based orientation model for the CROS Companion (NRI assistant). The system has three layers:
+        content: `The Compass Posture System replaces the previous chat icon with a compass-based orientation model for the Transitus Companion (NRI assistant). The system has three layers:
 
 **1. Compass Launcher (AIChatButton)**
 - Floating compass icon replaces the Sparkles icon
 - Soft halo glow (4s pulse, primary color at low opacity) when the companion detects "helpful movement"
 - Glow is time-bounded (≤2 minutes) with a 3-minute cooldown to prevent spam
-- aria-label: "Open CROS Companion"
+- aria-label: "Open Transitus Companion"
 
 **2. Compass Glow Logic (useCompassGlow hook)**
 - Reads recent action breadcrumbs from app_event_stream
@@ -808,7 +808,7 @@ Toggled via Garden Pulse header. Persists preference locally. Blends with Provid
       {
         id: 'companion-overview',
         title: '21.1 Overview',
-        content: `CROS supports two Companion paths: Solo (independent) and Organization (team-based). The Companion archetype serves mentors, sponsors, caregivers, spiritual directors, coaches, and anyone who walks closely with others.
+        content: `Transitus supports two Companion paths: Solo (independent) and Organization (team-based). The Companion archetype serves mentors, sponsors, caregivers, spiritual directors, coaches, and anyone who walks closely with others.
 
 **Companion (Solo) Tier:**
 - Free forever, pay-what-you-can support
@@ -939,11 +939,11 @@ Memory Layer toggle shows dimmed/archived stars; never public.
       {
         id: 'ch23-overview',
         title: '23.1 Overview',
-        content: `CROS now supports bi-directional sync with four major enterprise CRMs. Sync direction is controlled per-tenant by Shepherds.
+        content: `Transitus now supports bi-directional sync with four major enterprise CRMs. Sync direction is controlled per-tenant by Shepherds.
 
 **Architecture:**
-- **Inbound:** ConnectorAdapter normalizes vendor → CROS (existing pattern)
-- **Outbound:** OutboundAdapter denormalizes CROS → vendor format
+- **Inbound:** ConnectorAdapter normalizes vendor → Transitus (existing pattern)
+- **Outbound:** OutboundAdapter denormalizes Transitus → vendor format
 - **Conflicts:** sync_conflicts table with flag-for-review resolution
 - **Transport:** Direct Edge Function → Vendor API (no n8n dependency)
 - **Edge Function:** relatio-outbound-sync handles denormalization, conflict detection, and push
@@ -976,8 +976,8 @@ Memory Layer toggle shows dimmed/archived stars; never public.
 - Token endpoint: POST https://login.microsoftonline.com/{tenant_id}/oauth2/v2.0/token
 - Rate limit: 6,000 req / 5-min sliding window
 
-**Field mapping (Dynamics → CROS):**
-| Dynamics Field | CROS Field |
+**Field mapping (Dynamics → Transitus):**
+| Dynamics Field | Transitus Field |
 |---|---|
 | contactid / accountid | external_id |
 | firstname + lastname | name |
@@ -999,11 +999,11 @@ Memory Layer toggle shows dimmed/archived stars; never public.
       {
         id: 'ch23-conflict-resolution',
         title: '23.3 Conflict Resolution',
-        content: `When a record is edited in both CROS and the external CRM between sync cycles, a conflict is created.
+        content: `When a record is edited in both Transitus and the external CRM between sync cycles, a conflict is created.
 
 **Strategy:** Flag for review (human-in-the-loop)
 - Conflicts stored in sync_conflicts table
-- Each conflict shows: CROS data, remote data, conflicting fields
+- Each conflict shows: Transitus data, remote data, conflicting fields
 - Resolution options: accept_cros, accept_remote, merged, dismissed
 
 **Table: sync_conflicts**
@@ -1035,7 +1035,7 @@ Memory Layer toggle shows dimmed/archived stars; never public.
 - Logs every run in automation_runs with deduplication
 
 **Direct sync flow (no n8n):**
-1. CROS record saved → client calls relatio-outbound-sync edge function
+1. Transitus record saved → client calls relatio-outbound-sync edge function
 2. Edge function denormalizes data to vendor format
 3. Edge function fetches remote record for conflict check
 4. If conflicts → flagged for Steward review
@@ -1432,7 +1432,7 @@ Versioning: same-quarter regeneration increments version number.`,
       {
         id: 'generosity-overview',
         title: 'Overview',
-        content: `Generosity is a CROS Core feature for relational memory of financial giving. It is NOT donor management.
+        content: `Generosity is a Transitus Core feature for relational memory of financial giving. It is NOT donor management.
 
 **Architecture:**
 - \`contacts.has_given_financially\` (boolean toggle)
@@ -1473,7 +1473,7 @@ Versioning: same-quarter regeneration increments version number.`,
 - NeonCRM: REST v2.11, HTTP Basic (OrgID:APIKey), page-based, filters SUCCEED/Settled
 - DonorPerfect: Legacy XML API, apikey param, date-window chunking (max 500), MM/DD/YYYY → ISO conversion
 - Little Green Light: REST, Bearer token, offset/limit, amount is string (must cast), 300 calls/5min rate limit
-- CiviCRM: APIv4, Contributions entity, contribution_status_id:label = Completed filter, frequency_unit mapping (month→monthly, year→annually, week→weekly; "day" has no CROS equivalent — emits normalization warning)
+- CiviCRM: APIv4, Contributions entity, contribution_status_id:label = Completed filter, frequency_unit mapping (month→monthly, year→annually, week→weekly; "day" has no Transitus equivalent — emits normalization warning)
 
 **Giving CSV Importers:**
 - GivingCSVImporter: generic with auto-detection for giving columns
@@ -1556,7 +1556,7 @@ Versioning: same-quarter regeneration increments version number.`,
       {
         id: 'tone-overview',
         title: 'Charter Overview',
-        content: `The CROS™ Tone & Language Charter (src/lib/toneCharter.ts) governs all user-facing copy, system messaging, Compass language, and friction moments.
+        content: `The Transitus™ Tone & Language Charter (src/lib/toneCharter.ts) governs all user-facing copy, system messaging, Compass language, and friction moments.
 
 **Core Identity:** Pastoral, steady, human-centered.
 **Never:** Corporate, gamified, transactional, urgent, manipulative.
@@ -1572,8 +1572,8 @@ Versioning: same-quarter regeneration increments version number.`,
       },
       {
         id: 'tone-vocabulary',
-        title: 'CROS Vocabulary',
-        content: `SaaS terms are replaced with CROS equivalents:
+        title: 'Transitus Vocabulary',
+        content: `SaaS terms are replaced with Transitus equivalents:
 - Saved → Held
 - Success → Noted
 - Completed → Follow-through recorded
@@ -1614,7 +1614,7 @@ Expanded with charter vocabulary. Maps harsh system language to warm phrasing.`,
       {
         id: 'a11y-overview',
         title: '25.1 Overview',
-        content: `CROS provides a platform-wide Accessibility Mode that activates WCAG 2.2 AA compliant overrides across all surfaces.
+        content: `Transitus provides a platform-wide Accessibility Mode that activates WCAG 2.2 AA compliant overrides across all surfaces.
 
 **Activation:** User menu toggle → persists to localStorage (key: cros_a11y_mode)
 **Implementation:** useAccessibilityMode hook (src/hooks/useAccessibilityMode.ts) manages the .a11y-mode class on <html>
@@ -1665,7 +1665,7 @@ No database tables required — purely client-side with localStorage persistence
 - MainLayout adds id="main-content" and role="main" to content area
 
 **Compass Drawer ARIA:**
-- SheetContent has aria-label="CROS Companion — NRI Assistant"
+- SheetContent has aria-label="Transitus Companion — NRI Assistant"
 - Chat history wrapped in role="log" aria-live="polite" aria-relevant="additions"
 - Each message bubble: role="article" with aria-label ("You said" / "NRI responded")
 - Loading indicator: role="status" aria-label="NRI is thinking…" with sr-only text
@@ -1729,7 +1729,7 @@ No database tables required — purely client-side with localStorage persistence
       {
         id: 'indoles-overview',
         title: 'Overview',
-        content: `The Indoles module adds personality intelligence to CROS, enabling birthday tracking, zodiac auto-derivation, Enneagram assessments, CliftonStrengths/DISC manual entry, and bio/skills/languages enrichment across Profiles, Contacts, and Volunteers.
+        content: `The Indoles module adds personality intelligence to Transitus, enabling birthday tracking, zodiac auto-derivation, Enneagram assessments, CliftonStrengths/DISC manual entry, and bio/skills/languages enrichment across Profiles, Contacts, and Volunteers.
 
 **Key Components:**
 - \`src/lib/zodiac.ts\` — Client-side zodiac derivation utility

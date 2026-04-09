@@ -90,7 +90,7 @@ export default function IntegrationGuidePanel() {
 
       if (error) throw error;
       setConnected(true);
-      toast.success(`${connector.label} is now listening alongside CROS.`);
+      toast.success(`${connector.label} is now listening alongside Transitus.`);
     } catch {
       toast.error('Could not connect. Please try again.');
     } finally {
@@ -447,7 +447,7 @@ export default function IntegrationGuidePanel() {
               <div>
                 <CardTitle>{connector.label} Connected</CardTitle>
                 <CardDescription>
-                  CROS is now listening alongside your system.
+                  Transitus is now listening alongside your system.
                 </CardDescription>
               </div>
             </div>

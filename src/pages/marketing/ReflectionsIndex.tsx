@@ -115,8 +115,8 @@ export default function ReflectionsIndex() {
   return (
     <>
       <SeoHead
-        title={`${pageTitle} — CROS`}
-        description="Monthly reflections and narrative essays from across the CROS network — observing what moved, what shifted, and what leaders are noticing."
+        title={`${pageTitle} — Transitus`}
+        description="Monthly reflections and narrative essays from across the Transitus network — observing what moved, what shifted, and what leaders are noticing."
         canonical={canonical}
       />
       <SeoBreadcrumb items={[
@@ -130,7 +130,7 @@ export default function ReflectionsIndex() {
         <header className="mb-10">
           <h1 className="text-3xl md:text-4xl font-bold text-foreground font-serif mb-3">{pageTitle}</h1>
           <p className="text-base text-muted-foreground leading-relaxed">
-            Narrative essays and monthly reflections from across the CROS network — observing what moved, what shifted, and what leaders are noticing.
+            Narrative essays and monthly reflections from across the Transitus network — observing what moved, what shifted, and what leaders are noticing.
           </p>
         </header>
 

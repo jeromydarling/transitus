@@ -1,9 +1,9 @@
 /**
- * Integrations — Public catalog of all supported CROS Bridge™ integrations.
+ * Integrations — Public catalog of all supported Transitus Bridge™ integrations.
  *
  * WHAT: Lists every connector with sync direction, coverage mode, and capabilities.
  * WHERE: /integrations (public marketing route).
- * WHY: Prospects need to see what systems CROS connects to — as companion or complete replacement.
+ * WHY: Prospects need to see what systems Transitus connects to — as companion or complete replacement.
  */
 
 import { Link } from 'react-router-dom';
@@ -46,7 +46,7 @@ const integrations: IntegrationEntry[] = [
   { key: 'zoho', name: 'Zoho CRM', category: 'crm', categoryLabel: 'CRM', syncDirection: 'one-way', coverageMode: 'full', auth: 'OAuth 2.0', domains: ['contacts', 'accounts', 'deals', 'activities', 'notes'], polling: 'Hourly', webhook: false, description: 'One-way sync of contacts, accounts, deals, and activity history.' },
   { key: 'virtuous', name: 'Virtuous CRM', category: 'crm', categoryLabel: 'CRM', syncDirection: 'one-way', coverageMode: 'full', auth: 'API Key', domains: ['contacts', 'gifts', 'projects', 'tasks', 'notes'], polling: 'Daily', webhook: true, description: 'Responsive fundraising platform — contacts, gifts, projects, and automation.' },
   { key: 'oracle', name: 'Oracle CRM', category: 'crm', categoryLabel: 'CRM', syncDirection: 'one-way', coverageMode: 'full', auth: 'OAuth 2.0', domains: ['contacts', 'accounts', 'opportunities', 'activities', 'campaigns', 'households'], polling: 'Hourly', webhook: false, description: 'Enterprise CRM (Oracle CX Cloud) — contacts, accounts, opportunities, activities, and campaigns.' },
-  { key: 'airtable', name: 'Airtable', category: 'platform', categoryLabel: 'Platform', syncDirection: 'one-way', coverageMode: 'partial', auth: 'API Key', domains: ['records', 'tables', 'relationships', 'attachments'], polling: 'Daily', webhook: true, description: 'Flexible table import — any Airtable structure mapped to CROS relationships.' },
+  { key: 'airtable', name: 'Airtable', category: 'platform', categoryLabel: 'Platform', syncDirection: 'one-way', coverageMode: 'partial', auth: 'API Key', domains: ['records', 'tables', 'relationships', 'attachments'], polling: 'Daily', webhook: true, description: 'Flexible table import — any Airtable structure mapped to Transitus relationships.' },
 
   // Church Management
   { key: 'planningcenter', name: 'Planning Center', category: 'chms', categoryLabel: 'ChMS', syncDirection: 'one-way', coverageMode: 'full', auth: 'OAuth 2.0', domains: ['people', 'households', 'groups', 'check-ins', 'services'], polling: '5 min', webhook: true, description: 'Real-time people and household sync with webhook support.' },
@@ -71,8 +71,8 @@ const integrations: IntegrationEntry[] = [
 
   // CSV Migration Only
   { key: 'shelbynext', name: 'ShelbyNext Membership', category: 'csv', categoryLabel: 'CSV Migration', syncDirection: 'csv-only', coverageMode: 'minimal', auth: 'CSV Export', domains: ['members', 'families', 'groups', 'contributions'], polling: 'Manual', webhook: false, description: 'No API available — data migrated via CSV export. Guided setup walks you through every step.' },
-  { key: 'servantkeeper', name: 'Servant Keeper', category: 'csv', categoryLabel: 'CSV Migration', syncDirection: 'csv-only', coverageMode: 'minimal', auth: 'CSV Export', domains: ['members', 'families', 'attendance', 'contributions'], polling: 'Manual', webhook: false, description: 'No API available — data migrated via CSV export. CROS maps your fields automatically.' },
-  { key: 'apple_contacts', name: 'Apple Contacts / iCloud', category: 'csv', categoryLabel: 'CSV Migration', syncDirection: 'csv-only', coverageMode: 'minimal', auth: 'vCard Export', domains: ['contacts', 'groups'], polling: 'Manual', webhook: false, description: 'No public API — contacts exported as vCard (.vcf) from iCloud and imported into CROS.' },
+  { key: 'servantkeeper', name: 'Servant Keeper', category: 'csv', categoryLabel: 'CSV Migration', syncDirection: 'csv-only', coverageMode: 'minimal', auth: 'CSV Export', domains: ['members', 'families', 'attendance', 'contributions'], polling: 'Manual', webhook: false, description: 'No API available — data migrated via CSV export. Transitus maps your fields automatically.' },
+  { key: 'apple_contacts', name: 'Apple Contacts / iCloud', category: 'csv', categoryLabel: 'CSV Migration', syncDirection: 'csv-only', coverageMode: 'minimal', auth: 'vCard Export', domains: ['contacts', 'groups'], polling: 'Manual', webhook: false, description: 'No public API — contacts exported as vCard (.vcf) from iCloud and imported into Transitus.' },
 
   // Personal / Address Book
   { key: 'google_contacts', name: 'Google Contacts', category: 'platform', categoryLabel: 'Platform', syncDirection: 'two-way', coverageMode: 'partial', auth: 'OAuth 2.0', domains: ['contacts', 'groups', 'labels'], polling: 'Daily', webhook: false, description: 'Bi-directional sync via Google People API — contacts, groups, and labels flow both ways.' },
@@ -119,9 +119,9 @@ export default function Integrations() {
     <TooltipProvider delayDuration={200}>
       <div className="bg-white">
         <SeoHead
-          title="Integrations — CROS Bridge™"
-          description="See every CRM, ChMS, and nonprofit platform that CROS connects to. 31+ integrations — two-way sync with HubSpot, Salesforce, Dynamics 365, Blackbaud RE NXT, CiviCRM, Google Contacts, and Outlook. Financial data syncs inbound only."
-          keywords={['CROS integrations', 'CRM integration', 'church management sync', 'nonprofit CRM bridge', 'Microsoft Dynamics 365', 'Salesforce two-way sync', 'Google Contacts sync', 'Outlook contacts integration', 'CiviCRM integration']}
+          title="Integrations — Transitus Bridge™"
+          description="See every CRM, ChMS, and nonprofit platform that Transitus connects to. 31+ integrations — two-way sync with HubSpot, Salesforce, Dynamics 365, Blackbaud RE NXT, CiviCRM, Google Contacts, and Outlook. Financial data syncs inbound only."
+          keywords={['Transitus integrations', 'CRM integration', 'church management sync', 'nonprofit CRM bridge', 'Microsoft Dynamics 365', 'Salesforce two-way sync', 'Google Contacts sync', 'Outlook contacts integration', 'CiviCRM integration']}
           canonical="/integrations"
         />
 
@@ -131,13 +131,13 @@ export default function Integrations() {
           <div className="text-center mb-12">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[hsl(var(--marketing-surface))] border border-[hsl(var(--marketing-border))] mb-4">
               <Link2 className="h-4 w-4 text-[hsl(var(--marketing-blue))]" />
-              <span className="text-xs font-medium text-[hsl(var(--marketing-navy)/0.6)]">CROS Bridge™ Add-on</span>
+              <span className="text-xs font-medium text-[hsl(var(--marketing-navy)/0.6)]">Transitus Bridge™ Add-on</span>
             </div>
             <h1 className="text-3xl sm:text-4xl font-bold text-[hsl(var(--marketing-navy))] mb-4">
               {integrations.length} integrations — companion, complement, or complete
             </h1>
             <p className="text-[hsl(var(--marketing-navy)/0.55)] max-w-xl mx-auto mb-2">
-              CROS works alongside your existing tools — or runs the whole show. Whether you need a relationship layer on top of what you have, or a full operating system for your mission, Bridge meets you where you are.
+              Transitus works alongside your existing tools — or runs the whole show. Whether you need a relationship layer on top of what you have, or a full operating system for your mission, Bridge meets you where you are.
             </p>
             <p className="text-sm text-[hsl(var(--marketing-navy)/0.4)] max-w-md mx-auto">
               HubSpot, Salesforce, Microsoft Dynamics 365, Blackbaud RE NXT, Google Contacts, and Outlook Contacts support full two-way sync with conflict detection. All other integrations are read-only narrative companions.
@@ -149,13 +149,13 @@ export default function Integrations() {
           {/* Before / After */}
           <div className="grid sm:grid-cols-2 gap-6 mb-14 max-w-3xl mx-auto">
             <div className="rounded-2xl border border-[hsl(var(--marketing-border))] p-6 bg-[hsl(var(--marketing-navy)/0.02)]">
-              <p className="text-xs font-semibold text-[hsl(var(--marketing-navy)/0.4)] uppercase tracking-wider mb-2">Before CROS</p>
+              <p className="text-xs font-semibold text-[hsl(var(--marketing-navy)/0.4)] uppercase tracking-wider mb-2">Before Transitus</p>
               <p className="text-sm text-[hsl(var(--marketing-navy)/0.6)] leading-relaxed">
                 Data trapped inside disconnected systems. Relationships scattered across spreadsheets, inboxes, and forgotten logins.
               </p>
             </div>
             <div className="rounded-2xl border border-emerald-200 p-6 bg-emerald-50/30">
-              <p className="text-xs font-semibold text-emerald-700 uppercase tracking-wider mb-2">After CROS</p>
+              <p className="text-xs font-semibold text-emerald-700 uppercase tracking-wider mb-2">After Transitus</p>
               <p className="text-sm text-[hsl(var(--marketing-navy)/0.6)] leading-relaxed">
                 Memory flows into a living narrative. Every relationship, every touchpoint, every story — connected and purposeful.
               </p>
@@ -210,7 +210,7 @@ export default function Integrations() {
                     <TooltipContent className="text-xs">
                       {int.syncDirection === 'two-way' ? 'Two-way sync — data flows both directions'
                         : int.syncDirection === 'csv-only' ? 'CSV migration — no live API, guided export process'
-                        : 'One-way read — CROS listens, never writes back'}
+                        : 'One-way read — Transitus listens, never writes back'}
                     </TooltipContent>
                   </Tooltip>
                 </div>
@@ -254,7 +254,7 @@ export default function Integrations() {
           {/* CTA */}
           <div className="mt-16 text-center">
             <p className="text-sm text-[hsl(var(--marketing-navy)/0.5)] mb-4">
-              Bridge is available as an add-on to any CROS plan for <strong className="text-[hsl(var(--marketing-navy))]">$49/mo</strong>.
+              Bridge is available as an add-on to any Transitus plan for <strong className="text-[hsl(var(--marketing-navy))]">$49/mo</strong>.
             </p>
             <div className="flex flex-wrap items-center justify-center gap-3">
               <Link to="/pricing">

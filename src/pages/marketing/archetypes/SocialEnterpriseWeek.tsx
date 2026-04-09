@@ -4,7 +4,7 @@ const sections: WeekDay[] = [
   {
     day: 'Monday',
     title: 'Revenue and Roots',
-    narrative: `Tomás runs a social enterprise that employs refugee women to make artisan soaps. Twelve employees. Three retail partners. One mission: dignified work for people rebuilding their lives.\n\nMonday morning, he opens CROS™ — not a sales dashboard. He starts with the Metro Narrative.\n\nOver the weekend, one of his retail partners — a boutique downtown called The Olive Branch — posted on social media about their best-selling product: his team's lavender soap. A Companion who manages that account logged a Reflection: "Owner mentioned they're expanding to a second location in March. Asked if we could increase volume."\n\nTomás doesn't see this as a sales opportunity. He sees it as a question: can his team handle more production without burning out? He opens the Journey for The Olive Branch and types: "Expansion talk. Need to check in with Fatima about production capacity before saying yes."`,
+    narrative: `Tomás runs a social enterprise that employs refugee women to make artisan soaps. Twelve employees. Three retail partners. One mission: dignified work for people rebuilding their lives.\n\nMonday morning, he opens Transitus™ — not a sales dashboard. He starts with the Metro Narrative.\n\nOver the weekend, one of his retail partners — a boutique downtown called The Olive Branch — posted on social media about their best-selling product: his team's lavender soap. A Companion who manages that account logged a Reflection: "Owner mentioned they're expanding to a second location in March. Asked if we could increase volume."\n\nTomás doesn't see this as a sales opportunity. He sees it as a question: can his team handle more production without burning out? He opens the Journey for The Olive Branch and types: "Expansion talk. Need to check in with Fatima about production capacity before saying yes."`,
   },
   {
     day: 'Tuesday',
@@ -14,12 +14,12 @@ const sections: WeekDay[] = [
   {
     day: 'Wednesday',
     title: 'A Partner Stops By',
-    narrative: `Elena, who runs a fair-trade café across the street, stops by the workshop. She's not a customer — she's a neighbor. But she mentions that a local food co-op is looking for locally made products to stock.\n\nTomás creates a new Opportunity in CROS™: "Green Valley Co-op — intro via Elena." He doesn't add revenue projections or pipeline stages. He adds a note: "Elena vouched for us. Relationship-first approach. Visit the co-op before pitching."\n\nHe tags the Opportunity to the metro. If someone else in CROS™'s network is already connected to the co-op, the system might gently surface that later. No pressure. Just awareness.`,
+    narrative: `Elena, who runs a fair-trade café across the street, stops by the workshop. She's not a customer — she's a neighbor. But she mentions that a local food co-op is looking for locally made products to stock.\n\nTomás creates a new Opportunity in Transitus™: "Green Valley Co-op — intro via Elena." He doesn't add revenue projections or pipeline stages. He adds a note: "Elena vouched for us. Relationship-first approach. Visit the co-op before pitching."\n\nHe tags the Opportunity to the metro. If someone else in Transitus™'s network is already connected to the co-op, the system might gently surface that later. No pressure. Just awareness.`,
   },
   {
     day: 'Thursday',
     title: 'The Stories Behind the Soap',
-    narrative: `Tomás spends Thursday doing something most business owners skip: listening.\n\nHe sits with Amira during her break. She's been quiet lately. She tells him her daughter started school this week — first time in an American classroom. "She came home crying. She said nobody talked to her."\n\nTomás doesn't log this in CROS™. Some things aren't for the system. But he does log a general Reflection later: "Team morale check — some personal stress this week. Be gentle with production expectations."\n\nThis is the line CROS™ respects. Reflections are private. They hold what the person chooses to share. The system never asks for more.\n\nThat evening, NRI's weekly rhythm surfaces a quiet observation: "Production Reflections this month mention pace and capacity more than quality. The team may be approaching a natural growth boundary."`,
+    narrative: `Tomás spends Thursday doing something most business owners skip: listening.\n\nHe sits with Amira during her break. She's been quiet lately. She tells him her daughter started school this week — first time in an American classroom. "She came home crying. She said nobody talked to her."\n\nTomás doesn't log this in Transitus™. Some things aren't for the system. But he does log a general Reflection later: "Team morale check — some personal stress this week. Be gentle with production expectations."\n\nThis is the line Transitus™ respects. Reflections are private. They hold what the person chooses to share. The system never asks for more.\n\nThat evening, NRI's weekly rhythm surfaces a quiet observation: "Production Reflections this month mention pace and capacity more than quality. The team may be approaching a natural growth boundary."`,
   },
   {
     day: 'Friday',
@@ -29,12 +29,12 @@ const sections: WeekDay[] = [
   {
     day: 'Saturday',
     title: 'Farmers Market Morning',
-    narrative: `Saturday is market day. The team sets up their booth at 7 AM.\n\nTomás watches Fatima explain the soap-making process to a customer. She's confident, clear, articulate. Three years ago, she could barely make eye contact with strangers.\n\nHe doesn't say anything. He just watches.\n\nAfter the market, he opens CROS™ and writes: "Fatima owned the booth today. She explained the cold-process method to at least ten people. She's not just a production lead anymore — she's the face of this enterprise."\n\nDrift Detection notes that one retail partner — a gift shop on the north side — hasn't placed an order in two months. It doesn't flag this as a problem. It says: "You might want to check in with Wren & Thistle — it's been a while."\n\nTomás makes a mental note to call them Monday.`,
+    narrative: `Saturday is market day. The team sets up their booth at 7 AM.\n\nTomás watches Fatima explain the soap-making process to a customer. She's confident, clear, articulate. Three years ago, she could barely make eye contact with strangers.\n\nHe doesn't say anything. He just watches.\n\nAfter the market, he opens Transitus™ and writes: "Fatima owned the booth today. She explained the cold-process method to at least ten people. She's not just a production lead anymore — she's the face of this enterprise."\n\nDrift Detection notes that one retail partner — a gift shop on the north side — hasn't placed an order in two months. It doesn't flag this as a problem. It says: "You might want to check in with Wren & Thistle — it's been a while."\n\nTomás makes a mental note to call them Monday.`,
   },
   {
     day: 'Sunday',
     title: 'The Week in Full',
-    narrative: `Sunday is rest. But the week told a story.\n\nTomás knows things no quarterly report could hold:\n\n• The Olive Branch wants to grow, but his team needs six weeks first.\n• A co-op connection came through a neighbor, not a pitch.\n• Amira's daughter is struggling at school, and that matters to everything.\n• Fatima has become something more than an employee — she's a leader.\n• A grant opportunity appeared at exactly the right time.\n• A retail partner has gone quiet, and that's worth a gentle call.\n\nThe business plan says "scale production by Q3." The Metro Narrative says something more honest: "This enterprise is growing at the speed of trust."\n\nCROS™ didn't build this business. Tomás and his team did — through patience, craft, and showing up for each other.\n\nCROS™ just held the thread.`,
+    narrative: `Sunday is rest. But the week told a story.\n\nTomás knows things no quarterly report could hold:\n\n• The Olive Branch wants to grow, but his team needs six weeks first.\n• A co-op connection came through a neighbor, not a pitch.\n• Amira's daughter is struggling at school, and that matters to everything.\n• Fatima has become something more than an employee — she's a leader.\n• A grant opportunity appeared at exactly the right time.\n• A retail partner has gone quiet, and that's worth a gentle call.\n\nThe business plan says "scale production by Q3." The Metro Narrative says something more honest: "This enterprise is growing at the speed of trust."\n\nTransitus didn't build this business. Tomás and his team did — through patience, craft, and showing up for each other.\n\nTransitus just held the thread.`,
   },
 ];
 
@@ -42,9 +42,9 @@ export default function SocialEnterpriseWeek() {
   return (
     <ArchetypeWeekTemplate
       archetypeTitle="Social Enterprise"
-      introLine="See how a mission-driven business uses CROS™ to stay close to community partners, protect team pace, and grow impact without losing the human thread."
+      introLine="See how a mission-driven business uses Transitus™ to stay close to community partners, protect team pace, and grow impact without losing the human thread."
       sections={sections}
-      closingReflection="CROS™ didn't build this business. The team did — through patience, craft, and showing up for each other. CROS™ just held the thread."
+      closingReflection="Transitus™ didn't build this business. The team did — through patience, craft, and showing up for each other. Transitus™ just held the thread."
       slug="social-enterprise-week"
     />
   );

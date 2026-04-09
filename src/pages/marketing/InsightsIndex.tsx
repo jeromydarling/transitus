@@ -19,7 +19,7 @@ export default function InsightsIndex() {
       <SeoHead
         title="Insights"
         description="Narrative essays on relationship memory, community awareness, and the future of mission-driven technology."
-        keywords={['CROS insights', 'nonprofit technology essays', 'community relationship thought leadership']}
+        keywords={['Transitus insights', 'nonprofit technology essays', 'community relationship thought leadership']}
         canonical="/insights"
       />
 

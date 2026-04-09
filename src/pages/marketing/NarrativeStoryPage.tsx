@@ -143,7 +143,7 @@ export default function NarrativeStoryPage({ skipDbLookup }: NarrativeStoryPageP
         {roleNode && (
           <div className="mt-10 rounded-2xl bg-[hsl(var(--marketing-surface))] p-6">
             <h3 className="text-sm font-semibold text-[hsl(var(--marketing-navy)/0.5)] uppercase tracking-wider mb-3">
-              {roleLabel} in CROS™
+              {roleLabel} in Transitus™
             </h3>
             <p className="text-sm text-[hsl(var(--marketing-navy)/0.55)] mb-3">
               {roleNode.motto} — {roleNode.modules.map((m) => m.name).join(', ')}.

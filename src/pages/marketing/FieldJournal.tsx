@@ -27,13 +27,13 @@ export default function FieldJournal() {
   return (
     <article>
       <SeoHead
-        title="The Living Field Journal — CROS™"
+        title="The Living Field Journal — Transitus™"
         description="Not every story is a success story. But every moment teaches us something about presence. Reflective field notes from relational mission work."
         keywords={['field journal', 'nonprofit stories', 'volunteer management', 'relationship-centered', 'mission work']}
         canonical="/field-journal"
         jsonLd={[
           articleSchema({ headline: 'The Living Field Journal', description: 'Reflective field notes from relational mission work.', url: '/field-journal' }),
-          breadcrumbSchema([{ name: 'CROS', url: '/' }, { name: 'Field Journal', url: '/field-journal' }]),
+          breadcrumbSchema([{ name: 'Transitus', url: '/' }, { name: 'Field Journal', url: '/field-journal' }]),
         ]}
       />
 
@@ -46,7 +46,7 @@ export default function FieldJournal() {
       </header>
 
       <section className="max-w-[960px] mx-auto px-4 sm:px-6 pb-16 grid gap-4 sm:grid-cols-2">
-        <SeoBreadcrumb items={[{ label: 'CROS', to: '/' }, { label: 'Field Journal' }]} />
+        <SeoBreadcrumb items={[{ label: 'Transitus', to: '/' }, { label: 'Field Journal' }]} />
         {FIELD_JOURNAL.map((entry) => (
           <Link
             key={entry.slug}

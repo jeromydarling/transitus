@@ -36,8 +36,8 @@ const callingContent: Record<string, CallingData> = {
   'home-visitation': {
     title: 'Home Visitation',
     description: 'The ministry of presence — going where people are, listening before speaking, and carrying stories back.',
-    seoDesc: 'Home visitation ministry and outreach — how CROS\u2122 supports teams who go where the people are.',
-    narrative: 'Home visitation is one of the oldest forms of community care. It requires trust, consistency, and the ability to hold stories gently. CROS\u2122 was built with this rhythm in mind — mobile-first field notes, voice capture, and relationship memory that keeps the thread between visits.',
+    seoDesc: 'Home visitation ministry and outreach — how Transitus\u2122 supports teams who go where the people are.',
+    narrative: 'Home visitation is one of the oldest forms of community care. It requires trust, consistency, and the ability to hold stories gently. Transitus\u2122 was built with this rhythm in mind — mobile-first field notes, voice capture, and relationship memory that keeps the thread between visits.',
     themes: ['Field presence', 'Voice-to-transcript notes', 'Relationship continuity', 'Drift detection'],
     archetypes: ['church', 'refugee_support'],
     roles: [
@@ -46,15 +46,15 @@ const callingContent: Record<string, CallingData> = {
       { slug: 'shepherd', label: 'Shepherd', why: 'Shepherds hold the longer arc — noticing when families drift and guiding the team\u2019s response.' },
     ],
     faq: [
-      { question: 'How does CROS\u2122 support home visitation teams?', answer: 'CROS\u2122 provides mobile-first voice notes, field note capture, and relationship memory so nothing is lost between visits.' },
-      { question: 'Can Visitors use CROS\u2122 without a laptop?', answer: 'Yes. CROS\u2122 is designed mobile-first — Visitors can record voice notes, update journeys, and capture moments entirely from their phone.' },
+      { question: 'How does Transitus\u2122 support home visitation teams?', answer: 'Transitus\u2122 provides mobile-first voice notes, field note capture, and relationship memory so nothing is lost between visits.' },
+      { question: 'Can Visitors use Transitus\u2122 without a laptop?', answer: 'Yes. Transitus\u2122 is designed mobile-first — Visitors can record voice notes, update journeys, and capture moments entirely from their phone.' },
     ],
   },
   'parish-outreach': {
     title: 'Parish Outreach',
     description: 'Reaching beyond the walls — connecting with the neighborhood, the overlooked, and the not-yet-known.',
-    seoDesc: 'Parish outreach and community engagement — how CROS\u2122 helps faith communities extend their reach with care.',
-    narrative: 'Parish outreach is not a program — it\u2019s a posture. It means showing up in the neighborhood, noticing who isn\u2019t at the table, and building bridges that didn\u2019t exist before. CROS\u2122 supports this by tracking community signals, surfacing local events, and remembering the relationships that matter most.',
+    seoDesc: 'Parish outreach and community engagement — how Transitus\u2122 helps faith communities extend their reach with care.',
+    narrative: 'Parish outreach is not a program — it\u2019s a posture. It means showing up in the neighborhood, noticing who isn\u2019t at the table, and building bridges that didn\u2019t exist before. Transitus\u2122 supports this by tracking community signals, surfacing local events, and remembering the relationships that matter most.',
     themes: ['Community signals', 'Event discovery', 'Volunteer coordination', 'Narrative storytelling'],
     archetypes: ['church', 'social_enterprise'],
     roles: [
@@ -63,15 +63,15 @@ const callingContent: Record<string, CallingData> = {
       { slug: 'steward', label: 'Steward', why: 'Stewards keep the systems running — managing volunteer data, event tracking, and reporting.' },
     ],
     faq: [
-      { question: 'How is CROS\u2122 different from a church management system?', answer: 'CROS\u2122 is not a church management system. It\u2019s a relationship operating system that helps you remember, notice, and serve people — without reducing them to data points.' },
-      { question: 'Can CROS\u2122 help with volunteer coordination?', answer: 'Yes. Volunt\u0101rium tracks volunteer hours, availability, and engagement patterns so your outreach team stays coordinated.' },
+      { question: 'How is Transitus\u2122 different from a church management system?', answer: 'Transitus\u2122 is not a church management system. It\u2019s a relationship operating system that helps you remember, notice, and serve people — without reducing them to data points.' },
+      { question: 'Can Transitus\u2122 help with volunteer coordination?', answer: 'Yes. Volunt\u0101rium tracks volunteer hours, availability, and engagement patterns so your outreach team stays coordinated.' },
     ],
   },
   'community-support': {
     title: 'Community Support',
     description: 'Sustaining the daily work of caring — for neighbors, families, and the systems that hold them.',
-    seoDesc: 'Community support and social services — how CROS\u2122 helps organizations sustain the daily work of caring.',
-    narrative: 'Community support work is relentless and often invisible. It requires remembering who needs what, when they last received it, and what changed since then. CROS\u2122 brings relationship memory to this work — so nothing falls through the cracks and every interaction builds on the last.',
+    seoDesc: 'Community support and social services — how Transitus\u2122 helps organizations sustain the daily work of caring.',
+    narrative: 'Community support work is relentless and often invisible. It requires remembering who needs what, when they last received it, and what changed since then. Transitus\u2122 brings relationship memory to this work — so nothing falls through the cracks and every interaction builds on the last.',
     themes: ['Case continuity', 'Partner journeys', 'Resource coordination', 'Impact storytelling'],
     archetypes: ['digital_inclusion', 'workforce', 'education_access'],
     roles: [
@@ -80,8 +80,8 @@ const callingContent: Record<string, CallingData> = {
       { slug: 'visitor', label: 'Visitor', why: 'Visitors bring field intelligence back to the team — what\u2019s actually happening in people\u2019s lives.' },
     ],
     faq: [
-      { question: 'Can CROS\u2122 replace our case management system?', answer: 'CROS\u2122 is not a case management system, but it complements one. It focuses on the relational layer — the human memory that case files can\u2019t capture.' },
-      { question: 'How does CROS\u2122 handle sensitive data?', answer: 'CROS\u2122 is privacy-first. Reflections are sacred and private. No PII appears in public narratives. All data is tenant-isolated.' },
+      { question: 'Can Transitus\u2122 replace our case management system?', answer: 'Transitus\u2122 is not a case management system, but it complements one. It focuses on the relational layer — the human memory that case files can\u2019t capture.' },
+      { question: 'How does Transitus\u2122 handle sensitive data?', answer: 'Transitus\u2122 is privacy-first. Reflections are sacred and private. No PII appears in public narratives. All data is tenant-isolated.' },
     ],
   },
 };
@@ -108,7 +108,7 @@ export default function CallingPage() {
   return (
     <>
       <SeoHead
-        title={`${data.title} — CROS\u2122`}
+        title={`${data.title} — Transitus\u2122`}
         description={data.seoDesc}
         canonical={`/calling/${themeSlug}`}
         jsonLd={[

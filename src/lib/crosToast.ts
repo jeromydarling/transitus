@@ -1,7 +1,7 @@
 /**
- * CROS Toast — Charter-compliant notification system.
+ * Transitus Toast — Charter-compliant notification system.
  *
- * WHAT: Wraps sonner toast with CROS vocabulary enforcement.
+ * WHAT: Wraps sonner toast with Transitus vocabulary enforcement.
  * WHERE: Import this instead of raw `toast` from sonner in all components.
  * WHY: Prevents SaaS-tone drift in confirmation and error messages.
  */
@@ -11,7 +11,7 @@ import { crosText, FRICTION_COPY } from '@/lib/toneCharter';
 type ToastData = ExternalToast;
 
 /**
- * CROS-compliant toast functions.
+ * Transitus-compliant toast functions.
  *
  * Usage:
  *   import { crosToast } from '@/lib/crosToast';

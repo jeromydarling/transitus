@@ -1,7 +1,7 @@
 /**
  * StoryPage — Narrative story page at /stories/:slug.
  *
- * WHAT: Timeline-based story showing CROS in action for a specific archetype.
+ * WHAT: Timeline-based story showing Transitus in action for a specific archetype.
  * WHERE: /stories/:slug
  * WHY: SEO authority through realistic narrative examples of platform usage.
  */

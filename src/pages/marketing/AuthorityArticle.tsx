@@ -58,13 +58,13 @@ export default function AuthorityArticle() {
   return (
     <article>
       <SeoHead
-        title={`${section.title} — CROS Authority`}
+        title={`${section.title} — Transitus Authority`}
         description={section.description}
         canonical={`/authority/${category}/${slug}`}
         jsonLd={[
           articleSchema({ headline: section.title, description: section.description, url: `/authority/${category}/${slug}` }),
           breadcrumbSchema([
-            { name: 'CROS', url: '/' },
+            { name: 'Transitus', url: '/' },
             { name: 'Authority', url: '/authority' },
             { name: CATEGORY_LABELS[section.category], url: categoryRoute },
             { name: section.title, url: `/authority/${category}/${slug}` },
@@ -104,7 +104,7 @@ export default function AuthorityArticle() {
       {/* Body */}
       <section className="max-w-[720px] mx-auto px-4 sm:px-6 py-12">
         <SeoBreadcrumb items={[
-          { label: 'CROS', to: '/' },
+          { label: 'Transitus', to: '/' },
           { label: 'Authority', to: '/authority' },
           { label: CATEGORY_LABELS[section.category], to: categoryRoute },
           { label: section.title },
@@ -149,7 +149,7 @@ export default function AuthorityArticle() {
 
       {/* Share */}
       <section className="max-w-[720px] mx-auto px-4 sm:px-6 pb-8">
-        <AuthorityShareCard path={`/authority/${category}/${slug}`} title={`${section.title} — CROS Authority`} />
+        <AuthorityShareCard path={`/authority/${category}/${slug}`} title={`${section.title} — Transitus Authority`} />
       </section>
 
       <div className="max-w-[720px] mx-auto px-4 sm:px-6 pb-8">

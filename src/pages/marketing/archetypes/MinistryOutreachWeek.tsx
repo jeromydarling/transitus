@@ -4,7 +4,7 @@ const sections: WeekDay[] = [
   {
     day: 'Monday',
     title: 'The Intake That Wasn\'t',
-    narrative: `Angela runs a workforce development program out of a converted storefront on the west side. Her team serves adults who've been out of work for a long time — some returning from incarceration, some recovering from addiction, some just stuck.\n\nMonday morning, she opens CROS™. Not to check KPIs. To read what happened last week.\n\nA Companion named Marcus logged a Reflection on Friday: "Raymond came in for his appointment but we didn't do the intake form. He wasn't ready. We just talked. He told me about his daughter's birthday party — first one he's been to in three years. We'll try the paperwork next week."\n\nAngela doesn't flag this as a missed milestone. She opens Raymond's Journey and types: "Not ready for intake yet. That's okay. The birthday party matters. Marcus is building trust."\n\nThe system doesn't penalize patience. It holds it.`,
+    narrative: `Angela runs a workforce development program out of a converted storefront on the west side. Her team serves adults who've been out of work for a long time — some returning from incarceration, some recovering from addiction, some just stuck.\n\nMonday morning, she opens Transitus™. Not to check KPIs. To read what happened last week.\n\nA Companion named Marcus logged a Reflection on Friday: "Raymond came in for his appointment but we didn't do the intake form. He wasn't ready. We just talked. He told me about his daughter's birthday party — first one he's been to in three years. We'll try the paperwork next week."\n\nAngela doesn't flag this as a missed milestone. She opens Raymond's Journey and types: "Not ready for intake yet. That's okay. The birthday party matters. Marcus is building trust."\n\nThe system doesn't penalize patience. It holds it.`,
   },
   {
     day: 'Tuesday',
@@ -34,7 +34,7 @@ const sections: WeekDay[] = [
   {
     day: 'Sunday',
     title: 'The Real Outcomes',
-    narrative: `Sunday is closed. But the week left something behind.\n\nAngela knows things no outcome report could capture:\n\n• Raymond isn't ready for intake, but he's ready for coffee on Saturday mornings. That's the beginning.\n• DeShawn needs a shuttle, a patient employer, and someone who doesn't rush him through email setup.\n• Terrence wore a tie and practiced his handshake three times. His grandmother believes in him.\n• Monique's barrier wasn't motivation — it was childcare. Her mother solved it.\n• Andre got a job and didn't tell anyone. The help that mattered most was invisible even to him.\n• The program doesn't need more curriculum. It needs more Marcus.\n\nThe funder report will say "23 participants enrolled, 8 placed." The Metro Narrative will say: "People are showing up before they're ready, and the ones who stay are finding their way."\n\nCROS™ didn't develop anyone's workforce. The participants did — through showing up scared, trying again, and letting someone walk beside them.\n\nCROS™ just kept the door open.`,
+    narrative: `Sunday is closed. But the week left something behind.\n\nAngela knows things no outcome report could capture:\n\n• Raymond isn't ready for intake, but he's ready for coffee on Saturday mornings. That's the beginning.\n• DeShawn needs a shuttle, a patient employer, and someone who doesn't rush him through email setup.\n• Terrence wore a tie and practiced his handshake three times. His grandmother believes in him.\n• Monique's barrier wasn't motivation — it was childcare. Her mother solved it.\n• Andre got a job and didn't tell anyone. The help that mattered most was invisible even to him.\n• The program doesn't need more curriculum. It needs more Marcus.\n\nThe funder report will say "23 participants enrolled, 8 placed." The Metro Narrative will say: "People are showing up before they're ready, and the ones who stay are finding their way."\n\nTransitus didn't develop anyone's workforce. The participants did — through showing up scared, trying again, and letting someone walk beside them.\n\nTransitus just kept the door open.`,
   },
 ];
 
@@ -42,9 +42,9 @@ export default function MinistryOutreachWeek() {
   return (
     <ArchetypeWeekTemplate
       archetypeTitle="Workforce Development"
-      introLine="See how a workforce development program uses CROS™ to walk alongside participants, track employer relationships, and notice the barriers that intake forms miss."
+      introLine="See how a workforce development program uses Transitus™ to walk alongside participants, track employer relationships, and notice the barriers that intake forms miss."
       sections={sections}
-      closingReflection="CROS™ didn't develop anyone's workforce. The participants did — through showing up scared, trying again, and letting someone walk beside them. CROS™ just kept the door open."
+      closingReflection="Transitus™ didn't develop anyone's workforce. The participants did — through showing up scared, trying again, and letting someone walk beside them. Transitus™ just kept the door open."
       slug="ministry-outreach-week"
     />
   );

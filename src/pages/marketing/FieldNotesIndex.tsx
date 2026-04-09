@@ -31,7 +31,7 @@ export default function FieldNotesIndex() {
   return (
     <>
       <SeoHead
-        title="Field Notes — CROS"
+        title="Field Notes — Transitus"
         description="Short observations from the network — emerging patterns, localized movement, and signals worth noticing."
         canonical="/field-notes-library"
       />

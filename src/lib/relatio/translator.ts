@@ -1,9 +1,9 @@
 /**
  * translator — Narrative Translation Layer for Relatio Companion Mode.
  *
- * WHAT: Converts external ChMS events into CROS narrative signals.
+ * WHAT: Converts external ChMS events into Transitus narrative signals.
  * WHERE: Used by relatio-sync-runner edge function and staging processors.
- * WHY: CROS does not import data — it translates activity into narrative signals.
+ * WHY: Transitus does not import data — it translates activity into narrative signals.
  */
 
 export type ExternalEventType =
@@ -99,7 +99,7 @@ const TRANSLATION_MAP: Record<ExternalEventType, TranslationResult> = {
 };
 
 /**
- * Translates an external ChMS event into a CROS narrative signal.
+ * Translates an external ChMS event into a Transitus narrative signal.
  * Returns null if the event type is unknown.
  */
 export function translateExternalEvent(eventType: string): TranslationResult | null {

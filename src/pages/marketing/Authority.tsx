@@ -1,9 +1,9 @@
 /**
  * Authority — Public authority hub landing page.
  *
- * WHAT: Overview landing for the CROS Authority knowledge library with featured essays, reading path, and category navigation.
+ * WHAT: Overview landing for the Transitus Authority knowledge library with featured essays, reading path, and category navigation.
  * WHERE: /authority (public marketing route).
- * WHY: Positions CROS as the leading voice in human-centered relational systems.
+ * WHY: Positions Transitus as the leading voice in human-centered relational systems.
  */
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -35,13 +35,13 @@ export default function Authority() {
   return (
     <article>
       <SeoHead
-        title="Authority Hub — CROS\u2122"
-        description="The CROS Authority Hub: narrative knowledge for human-centered relational systems. Week stories, adoption guidance, leadership reflections, field dispatches, and essays on mission work."
-        keywords={['CROS authority', 'nonprofit knowledge', 'relational systems', 'mission leadership', 'field dispatches', 'leadership reflections']}
+        title="Authority Hub — Transitus\u2122"
+        description="The Transitus Authority Hub: narrative knowledge for human-centered relational systems. Week stories, adoption guidance, leadership reflections, field dispatches, and essays on mission work."
+        keywords={['Transitus authority', 'nonprofit knowledge', 'relational systems', 'mission leadership', 'field dispatches', 'leadership reflections']}
         canonical="/authority"
         jsonLd={[
-          articleSchema({ headline: 'CROS Authority Hub', description: 'Narrative knowledge for human-centered relational systems.', url: '/authority' }),
-          breadcrumbSchema([{ name: 'CROS', url: '/' }, { name: 'Authority', url: '/authority' }]),
+          articleSchema({ headline: 'Transitus Authority Hub', description: 'Narrative knowledge for human-centered relational systems.', url: '/authority' }),
+          breadcrumbSchema([{ name: 'Transitus', url: '/' }, { name: 'Authority', url: '/authority' }]),
         ]}
       />
 
@@ -58,7 +58,7 @@ export default function Authority() {
 
       {/* Reading path intro */}
       <section className="max-w-[720px] mx-auto px-4 sm:px-6 pt-10 pb-6">
-        <SeoBreadcrumb items={[{ label: 'CROS', to: '/' }, { label: 'Authority' }]} />
+        <SeoBreadcrumb items={[{ label: 'Transitus', to: '/' }, { label: 'Authority' }]} />
         <div className="mt-6 p-6 rounded-2xl bg-[hsl(var(--marketing-surface))] border border-[hsl(var(--marketing-border))]">
           <div className="flex items-center gap-2 mb-3">
             <Sparkles className="h-4 w-4 text-[hsl(var(--marketing-blue))]" />
@@ -130,7 +130,7 @@ export default function Authority() {
 
       {/* Share card */}
       <section className="max-w-[720px] mx-auto px-4 sm:px-6 pb-8">
-        <AuthorityShareCard path="/authority" title="Knowledge for Living Mission — CROS Authority Hub" />
+        <AuthorityShareCard path="/authority" title="Knowledge for Living Mission — Transitus Authority Hub" />
       </section>
 
       {/* Soft conversion */}

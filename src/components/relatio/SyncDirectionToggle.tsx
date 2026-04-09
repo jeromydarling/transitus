@@ -3,7 +3,7 @@
  *
  * WHAT: Inline toggle to switch between inbound-only and bi-directional sync.
  * WHERE: ConnectorCard and SyncSettingsPanel.
- * WHY: Shepherds control whether CROS writes back to the external CRM.
+ * WHY: Shepherds control whether Transitus writes back to the external CRM.
  */
 
 import { useState } from 'react';
@@ -73,8 +73,8 @@ export function SyncDirectionToggle({
     }
     toast.success(
       checked
-        ? 'Two-way sync enabled — CROS will write back to this system'
-        : 'Returned to read-only — CROS will only listen'
+        ? 'Two-way sync enabled — Transitus will write back to this system'
+        : 'Returned to read-only — Transitus will only listen'
     );
     onDirectionChange?.(newDirection);
   };
@@ -102,8 +102,8 @@ export function SyncDirectionToggle({
           </TooltipTrigger>
           <TooltipContent className="text-xs max-w-48">
             {isBidirectional
-              ? 'Two-way sync active — CROS writes back'
-              : 'Read-only — CROS listens only'}
+              ? 'Two-way sync active — Transitus writes back'
+              : 'Read-only — Transitus listens only'}
             {!isShepherd && <p className="text-muted-foreground mt-1">Only Shepherds can change this.</p>}
           </TooltipContent>
         </Tooltip>
@@ -125,8 +125,8 @@ export function SyncDirectionToggle({
           </Label>
           <p className="text-xs text-muted-foreground truncate">
             {isBidirectional
-              ? 'Changes in CROS flow back to this system'
-              : 'CROS reads from this system but never writes back'}
+              ? 'Changes in Transitus flow back to this system'
+              : 'Transitus reads from this system but never writes back'}
           </p>
         </div>
       </div>

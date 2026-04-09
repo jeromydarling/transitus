@@ -55,7 +55,7 @@ export function StripeConnectCard() {
         {!status?.connected && (
           <>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              Payments flow directly to your organization. CROS facilitates the connection but never holds funds.
+              Payments flow directly to your organization. Transitus facilitates the connection but never holds funds.
               Stripe handles KYC verification, payouts, tax forms, and compliance.
             </p>
             <Button onClick={handleConnect} disabled={onboard.isPending}>
@@ -91,7 +91,7 @@ export function StripeConnectCard() {
               <p className="text-sm font-medium">Ready to receive payments</p>
               <p className="text-xs text-muted-foreground">
                 Invoices, payment links, and event payments will route funds directly to your Stripe account.
-                A small 1% platform fee supports CROS infrastructure.
+                A small 1% platform fee supports Transitus infrastructure.
               </p>
               {status.onboarding_completed_at && (
                 <p className="text-xs text-muted-foreground">

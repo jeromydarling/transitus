@@ -3,7 +3,7 @@
  *
  * WHAT: SEO landing page on relational donor stewardship philosophy.
  * WHERE: Public marketing site.
- * WHY: Positions CROS as the relational layer above fundraising CRMs.
+ * WHY: Positions Transitus as the relational layer above fundraising CRMs.
  */
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -24,21 +24,21 @@ export default function DonorHumanity() {
     <div className="bg-white">
       <SeoHead
         title="Donors Are People Too | Relational Donor Stewardship"
-        description="Most CRMs track donations. CROS™ preserves the human story behind every gift. Restore donor dignity and relational continuity in your nonprofit."
+        description="Most CRMs track donations. Transitus™ preserves the human story behind every gift. Restore donor dignity and relational continuity in your nonprofit."
         keywords={[
           'donor stewardship',
           'relational fundraising',
           'nonprofit CRM alternative',
           'donor management system',
           'relationship-centered fundraising',
-          'CROS donor humanity',
+          'Transitus donor humanity',
         ]}
         canonical="/cros-donor-humanity"
         jsonLd={[
           articleSchema({
-            headline: 'Donors Are People Too — Relational Donor Stewardship with CROS™',
+            headline: 'Donors Are People Too — Relational Donor Stewardship with Transitus™',
             description:
-              'Most CRMs track donations. CROS™ preserves the human story behind every gift.',
+              'Most CRMs track donations. Transitus™ preserves the human story behind every gift.',
             url: '/cros-donor-humanity',
           }),
           breadcrumbSchema([
@@ -47,14 +47,14 @@ export default function DonorHumanity() {
           ]),
           faqSchema([
             {
-              question: 'Does CROS replace my donor management system?',
+              question: 'Does Transitus replace my donor management system?',
               answer:
-                'No. CROS layers above your existing fundraising CRM to preserve the relational story behind every gift. Your CRM tracks gifts — CROS preserves people.',
+                'No. Transitus layers above your existing fundraising CRM to preserve the relational story behind every gift. Your CRM tracks gifts — Transitus preserves people.',
             },
             {
-              question: 'What integrations does CROS Bridge support?',
+              question: 'What integrations does Transitus Bridge support?',
               answer:
-                'CROS Bridge integrates with Salesforce, Bloomerang, HubSpot, Planning Center, Dynamics, Blackbaud, and CiviCRM.',
+                'Transitus Bridge integrates with Salesforce, Bloomerang, HubSpot, Planning Center, Dynamics, Blackbaud, and CiviCRM.',
             },
           ]),
         ]}
@@ -76,7 +76,7 @@ export default function DonorHumanity() {
             Your Donors Are Not Revenue Streams.
           </h1>
           <p className="text-base sm:text-lg text-[hsl(var(--marketing-navy)/0.6)] leading-relaxed max-w-lg mx-auto mb-10">
-            CROS™ helps you remember the human story behind every gift.
+            Transitus™ helps you remember the human story behind every gift.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link to="/see-people">
@@ -84,14 +84,14 @@ export default function DonorHumanity() {
                 size="lg"
                 className="rounded-full bg-[hsl(var(--marketing-navy))] text-white hover:bg-[hsl(var(--marketing-navy)/0.9)] px-8 h-12 text-base"
               >
-                See How CROS Honors Donor Relationships <ArrowRight className="ml-2 h-4 w-4" />
+                See How Transitus Honors Donor Relationships <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </Link>
             <Link
               to="/relatio-campaigns"
               className="text-sm text-[hsl(var(--marketing-blue))] hover:underline"
             >
-              Explore CROS Bridge™
+              Explore Transitus Bridge™
             </Link>
           </div>
         </div>
@@ -174,7 +174,7 @@ export default function DonorHumanity() {
         </div>
       </section>
 
-      {/* ─── SECTION 3 — WHAT CROS RESTORES ─── */}
+      {/* ─── SECTION 3 — WHAT Transitus RESTORES ─── */}
       <section className="max-w-[680px] mx-auto px-4 sm:px-6 py-16 sm:py-24">
         <img
           src={manuscriptImg}
@@ -186,14 +186,14 @@ export default function DonorHumanity() {
           className="text-2xl sm:text-3xl text-[hsl(var(--marketing-navy))] leading-snug mb-8"
           style={serif}
         >
-          CROS Restores Donor Humanity.
+          Transitus Restores Donor Humanity.
         </h2>
         <div className="space-y-5 text-[hsl(var(--marketing-navy)/0.65)] leading-relaxed text-base sm:text-lg">
-          <p>CROS does not replace your donation infrastructure.</p>
+          <p>Transitus does not replace your donation infrastructure.</p>
           <p className="text-[hsl(var(--marketing-navy))] font-medium">
             It restores relationship continuity.
           </p>
-          <p>In CROS, a donor is not a giving record.</p>
+          <p>In Transitus, a donor is not a giving record.</p>
           <p>A donor is:</p>
           <ul className="space-y-1.5 pl-1">
             {['A person', 'A partner', 'A companion in mission', 'A story unfolding over time'].map((t) => (
@@ -253,7 +253,7 @@ export default function DonorHumanity() {
             {/* Right */}
             <div className="rounded-xl border border-[hsl(var(--marketing-blue)/0.25)] bg-white p-6 sm:p-8">
               <p className="text-xs font-semibold uppercase tracking-wider text-[hsl(var(--marketing-blue))] mb-4">
-                CROS Preserves
+                Transitus Preserves
               </p>
               <ul className="space-y-2.5">
                 {[
@@ -325,10 +325,10 @@ export default function DonorHumanity() {
             className="text-2xl sm:text-3xl text-[hsl(var(--marketing-navy))] leading-snug mb-8"
             style={serif}
           >
-            CROS Is the Relational Layer Above Your Fundraising System.
+            Transitus Is the Relational Layer Above Your Fundraising System.
           </h2>
           <div className="space-y-5 text-[hsl(var(--marketing-navy)/0.65)] leading-relaxed text-base sm:text-lg">
-            <p>CROS does not replace:</p>
+            <p>Transitus does not replace:</p>
             <ul className="space-y-1.5 pl-1">
               {['Donation processing', 'Tax receipts', 'Campaign reporting'].map((t) => (
                 <li key={t} className="flex items-center gap-3">
@@ -342,11 +342,11 @@ export default function DonorHumanity() {
               Your CRM tracks gifts.
             </p>
             <p className="text-[hsl(var(--marketing-navy))] font-medium">
-              CROS preserves people.
+              Transitus preserves people.
             </p>
             <p className="mt-6">
               <Link to="/relatio-campaigns" className="text-[hsl(var(--marketing-blue))] hover:underline font-medium">
-                CROS Bridge™
+                Transitus Bridge™
               </Link>{' '}
               integrates with:
             </p>
@@ -362,10 +362,10 @@ export default function DonorHumanity() {
             </div>
             <div className="flex flex-wrap gap-x-6 gap-y-2 mt-6 text-sm">
               <Link to="/relatio-campaigns" className="text-[hsl(var(--marketing-blue))] hover:underline">
-                CROS Bridge™ →
+                Transitus Bridge™ →
               </Link>
               <Link to="/why-cros" className="text-[hsl(var(--marketing-blue))] hover:underline">
-                Why CROS →
+                Why Transitus →
               </Link>
               <Link to="/compare" className="text-[hsl(var(--marketing-blue))] hover:underline">
                 Compare →

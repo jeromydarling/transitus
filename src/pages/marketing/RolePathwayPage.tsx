@@ -34,7 +34,7 @@ const roleContent: Record<string, RoleData> = {
     title: 'The Shepherd',
     identity: 'You might be a Shepherd if\u2026',
     description: 'You hold the longer story. You notice when someone drifts. You carry the mission forward even when no one is watching.',
-    seoDesc: 'Discover the Shepherd pathway in CROS\u2122 \u2014 for those who hold the longer story of their community.',
+    seoDesc: 'Discover the Shepherd pathway in Transitus\u2122 \u2014 for those who hold the longer story of their community.',
     signals: [
       'You notice when a family stops showing up before anyone else does.',
       'You think in seasons, not sprints.',
@@ -50,7 +50,7 @@ const roleContent: Record<string, RoleData> = {
     ],
     archetypes: ['church', 'refugee_support', 'social_enterprise'],
     faq: [
-      { question: 'What does a Shepherd do in CROS\u2122?', answer: 'A Shepherd holds the longer narrative of a community \u2014 tracking mission continuity, drift detection, and reflective leadership.' },
+      { question: 'What does a Shepherd do in Transitus\u2122?', answer: 'A Shepherd holds the longer narrative of a community \u2014 tracking mission continuity, drift detection, and reflective leadership.' },
       { question: 'Is the Shepherd role for pastors only?', answer: 'No. Any mission leader, executive director, or program visionary can serve as a Shepherd.' },
     ],
   },
@@ -58,7 +58,7 @@ const roleContent: Record<string, RoleData> = {
     title: 'The Companion',
     identity: 'You might be a Companion if\u2026',
     description: 'You keep the thread. You follow up. You remember the small details that make people feel known.',
-    seoDesc: 'Discover the Companion pathway in CROS\u2122 \u2014 for those who keep the thread of daily relationship work.',
+    seoDesc: 'Discover the Companion pathway in Transitus\u2122 \u2014 for those who keep the thread of daily relationship work.',
     signals: [
       'You\u2019re the one who remembers birthdays, check-ins, and last conversations.',
       'You turn emails into action without being asked.',
@@ -74,7 +74,7 @@ const roleContent: Record<string, RoleData> = {
     ],
     archetypes: ['church', 'digital_inclusion', 'education_access'],
     faq: [
-      { question: 'What does a Companion do in CROS\u2122?', answer: 'A Companion handles day-to-day relationship work \u2014 follow-ups, email-to-task flows, and maintaining the human connection.' },
+      { question: 'What does a Companion do in Transitus\u2122?', answer: 'A Companion handles day-to-day relationship work \u2014 follow-ups, email-to-task flows, and maintaining the human connection.' },
       { question: 'Do I need to be full-time to be a Companion?', answer: 'No. Many Companions are part-time staff or dedicated volunteers who simply care about keeping relationships alive.' },
     ],
   },
@@ -82,7 +82,7 @@ const roleContent: Record<string, RoleData> = {
     title: 'The Steward',
     identity: 'You might be a Steward if\u2026',
     description: 'You keep the systems running. You make sure the data is clean, the tools are ready, and the team can focus on people.',
-    seoDesc: 'Discover the Steward pathway in CROS\u2122 \u2014 for those who keep the systems running behind the mission.',
+    seoDesc: 'Discover the Steward pathway in Transitus\u2122 \u2014 for those who keep the systems running behind the mission.',
     signals: [
       'You care about clean data as much as good relationships.',
       'You\u2019re the one who sets up the tools so others can do the work.',
@@ -98,15 +98,15 @@ const roleContent: Record<string, RoleData> = {
     ],
     archetypes: ['digital_inclusion', 'library_system', 'workforce'],
     faq: [
-      { question: 'What does a Steward do in CROS\u2122?', answer: 'A Steward manages the operational layer \u2014 data imports, integrations, provisions, and reporting.' },
-      { question: 'Is the Steward role technical?', answer: 'It can be, but CROS\u2122 is designed so that Stewards don\u2019t need engineering skills \u2014 just care and attention.' },
+      { question: 'What does a Steward do in Transitus\u2122?', answer: 'A Steward manages the operational layer \u2014 data imports, integrations, provisions, and reporting.' },
+      { question: 'Is the Steward role technical?', answer: 'It can be, but Transitus\u2122 is designed so that Stewards don\u2019t need engineering skills \u2014 just care and attention.' },
     ],
   },
   visitor: {
     title: 'The Visitor',
     identity: 'You might be a Visitor if\u2026',
     description: 'You go where the people are. You listen first. You bring back stories that change how the mission moves.',
-    seoDesc: 'Discover the Visitor pathway in CROS\u2122 \u2014 for those who carry the witness through mobile-first field work.',
+    seoDesc: 'Discover the Visitor pathway in Transitus\u2122 \u2014 for those who carry the witness through mobile-first field work.',
     signals: [
       'You spend more time in the field than at a desk.',
       'You capture moments \u2014 voice notes, quick observations, quiet realizations.',
@@ -122,8 +122,8 @@ const roleContent: Record<string, RoleData> = {
     ],
     archetypes: ['church', 'refugee_support', 'education_access'],
     faq: [
-      { question: 'What does a Visitor do in CROS\u2122?', answer: 'A Visitor works mobile-first in the field \u2014 recording voice notes, capturing moments, and bringing stories back to the team.' },
-      { question: 'Do Visitors need a laptop?', answer: 'No. CROS\u2122 is designed mobile-first, so Visitors can do everything from their phone.' },
+      { question: 'What does a Visitor do in Transitus\u2122?', answer: 'A Visitor works mobile-first in the field \u2014 recording voice notes, capturing moments, and bringing stories back to the team.' },
+      { question: 'Do Visitors need a laptop?', answer: 'No. Transitus\u2122 is designed mobile-first, so Visitors can do everything from their phone.' },
     ],
   },
 };
@@ -150,7 +150,7 @@ export default function RolePathwayPage() {
   return (
     <>
       <SeoHead
-        title={`${data.title} Pathway — CROS\u2122`}
+        title={`${data.title} Pathway — Transitus\u2122`}
         description={data.seoDesc}
         canonical={`/path/${roleSlug}`}
         jsonLd={[

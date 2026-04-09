@@ -1,5 +1,5 @@
 /**
- * EssaysIndex — Public index of published CROS essays.
+ * EssaysIndex — Public index of published Transitus essays.
  *
  * WHAT: Lists published narrative essays grouped by Reflection Cycle.
  * WHERE: /essays or /essays?cycle=YYYY-MM
@@ -68,8 +68,8 @@ export default function EssaysIndex() {
     '@type': 'CollectionPage',
     name: pageTitle,
     description: `Reflections from the ${formatCycleLabel(activeCycle)} cycle.`,
-    url: `https://thecros.lovable.app${canonical}`,
-    isPartOf: { '@type': 'WebSite', name: 'CROS™', url: 'https://thecros.lovable.app' },
+    url: `https://transitus.app${canonical}`,
+    isPartOf: { '@type': 'WebSite', name: 'Transitus™', url: 'https://transitus.app' },
   } : undefined;
 
   return (

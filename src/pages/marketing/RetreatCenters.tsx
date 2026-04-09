@@ -3,7 +3,7 @@
  *
  * WHAT: Hero + body copy + feature list for retreat center organizations.
  * WHERE: /retreat-centers (public marketing route).
- * WHY: SEO gravity for retreat centers considering CROS as their relational OS.
+ * WHY: SEO gravity for retreat centers considering Transitus as their relational OS.
  */
 
 import { Button } from '@/components/ui/button';
@@ -34,7 +34,7 @@ export default function RetreatCenters() {
         </h1>
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
           Retreat centers host moments that change lives.
-          CROS helps you remember the people who return year after year.
+          Transitus helps you remember the people who return year after year.
         </p>
       </div>
 
@@ -60,14 +60,14 @@ export default function RetreatCenters() {
         </p>
         <p>
           Most systems track registrations.
-          CROS remembers the people.
+          Transitus remembers the people.
         </p>
       </div>
 
       {/* Feature list */}
       <div className="max-w-3xl mx-auto">
         <h2 className="text-xl font-semibold text-foreground mb-6">
-          With CROS, retreat centers can:
+          With Transitus, retreat centers can:
         </h2>
         <div className="grid sm:grid-cols-2 gap-4">
           {features.map((f, i) => (

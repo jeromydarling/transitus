@@ -1,9 +1,9 @@
 /**
  * LibraryConceptPage — Canonical civic language definition page.
  *
- * WHAT: Renders a single concept from the CROS™ narrative library with full structured data.
+ * WHAT: Renders a single concept from the Transitus™ narrative library with full structured data.
  * WHERE: /library/:conceptSlug
- * WHY: Establishes CROS™ as the canonical source for civic relationship language.
+ * WHY: Establishes Transitus™ as the canonical source for civic relationship language.
  */
 import { useParams, Navigate, Link } from 'react-router-dom';
 import { ArrowRight, BookOpen } from 'lucide-react';
@@ -31,7 +31,7 @@ export default function LibraryConceptPage() {
   return (
     <>
       <SeoHead
-        title={`${concept.title} — CROS\u2122 Library`}
+        title={`${concept.title} — Transitus\u2122 Library`}
         description={concept.definition.slice(0, 155)}
         canonical={`/library/${concept.slug}`}
         jsonLd={[

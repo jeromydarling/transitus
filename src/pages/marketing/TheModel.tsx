@@ -1,7 +1,7 @@
 /**
  * TheModel — Foundational narrative page: Pier Giorgio Frassati.
  *
- * WHAT: Long-form contemplative essay about the life that inspired CROS™.
+ * WHAT: Long-form contemplative essay about the life that inspired Transitus™.
  * WHERE: /the-model (primary marketing nav).
  * WHY: Establishes the spiritual and relational DNA of the platform.
  */
@@ -55,8 +55,8 @@ function ReflectionSection() {
             Context. Continuity. Story. Memory.
           </p>
 
-          <p className="pt-2">CROS™ exists to close that gap.</p>
-          <p className="font-medium text-[hsl(var(--marketing-navy))]">CROS™ is the digital discipline of remembrance.</p>
+          <p className="pt-2">Transitus™ exists to close that gap.</p>
+          <p className="font-medium text-[hsl(var(--marketing-navy))]">Transitus™ is the digital discipline of remembrance.</p>
 
           <p className="pt-2">It mirrors his notebooks:</p>
           <ul className="space-y-1.5 pl-1">
@@ -68,7 +68,7 @@ function ReflectionSection() {
           </ul>
 
           <p className="pt-4">Every person has a thread.</p>
-          <p>CROS helps you hold it.</p>
+          <p>Transitus helps you hold it.</p>
           <p>Across time.<br />Across staff turnover.<br />Across seasons.</p>
 
           <p className="pt-4">The logic is simple:</p>
@@ -86,10 +86,10 @@ export default function TheModel() {
   return (
     <div className="bg-white">
       <SeoHead
-        title="The Model | Pier Giorgio Frassati and the Vision Behind CROS™"
-        description="The life of Pier Giorgio Frassati — the relational discipline that shaped CROS™ and its commitment to remembering every person."
+        title="The Model | Pier Giorgio Frassati and the Vision Behind Transitus™"
+        description="The life of Pier Giorgio Frassati — the relational discipline that shaped Transitus™ and its commitment to remembering every person."
         canonical="/the-model"
-        keywords={['Pier Giorgio Frassati', 'CROS', 'relationship memory', 'Catholic Social Teaching', 'relational care', 'community service']}
+        keywords={['Pier Giorgio Frassati', 'Transitus', 'relationship memory', 'Catholic Social Teaching', 'relational care', 'community service']}
       />
 
       {/* ─── HERO ─── */}
@@ -110,7 +110,7 @@ export default function TheModel() {
           className="text-base text-[hsl(var(--marketing-navy)/0.45)] italic"
           style={serif}
         >
-          CROS™ was not born from a feature roadmap. It was born from a life.
+          Transitus™ was not born from a feature roadmap. It was born from a life.
         </p>
       </header>
 
@@ -134,7 +134,7 @@ export default function TheModel() {
               He Remembered Everyone
             </h2>
             <p className="text-lg text-[hsl(var(--marketing-navy)/0.5)]" style={serif}>
-              The Life of Pier Giorgio Frassati and the Vision That Became CROS™
+              The Life of Pier Giorgio Frassati and the Vision That Became Transitus™
             </p>
           </div>
 
@@ -152,7 +152,7 @@ export default function TheModel() {
 
             <p>He had never told them. That was the point. He was not building a reputation. He was building relationships — one person at a time, tracked in the kind of careful, attentive detail that most people reserve for people who matter. To Pier Giorgio, they all mattered.</p>
 
-            <p>CROS™ was built in his memory. Not as a monument to a saint, but as an answer to a question his life raises for every caregiver, mentor, and servant today: what if we had a system that helped us do what he did by nature — remember everyone, track every relationship, and carry the thread of each person's story forward across time?</p>
+            <p>Transitus™ was built in his memory. Not as a monument to a saint, but as an answer to a question his life raises for every caregiver, mentor, and servant today: what if we had a system that helped us do what he did by nature — remember everyone, track every relationship, and carry the thread of each person's story forward across time?</p>
           </div>
 
           {/* A Wealthy Son */}
@@ -204,19 +204,19 @@ export default function TheModel() {
 
             <p>But they are overwhelmed. They use tools built for transactions, not relationships. They track donations and appointments, not the moment when someone's grief shifted, or the conversation that changed a child's trajectory, or the small act of care that kept a family together. The relational texture of their work disappears into spreadsheets and case management software that was never designed to hold it.</p>
 
-            <p>That gap is why CROS™ exists.</p>
+            <p>That gap is why Transitus™ exists.</p>
           </div>
 
-          {/* CROS Built for the Work */}
+          {/* Transitus Built for the Work */}
           <h2 className="text-2xl sm:text-3xl font-bold text-[hsl(var(--marketing-navy))] pt-10 leading-tight">
-            CROS™: Built for the Work He Did
+            Transitus™: Built for the Work He Did
           </h2>
           <div className="space-y-6 text-[hsl(var(--marketing-navy)/0.65)] leading-[1.85] text-base sm:text-lg">
-            <p>CROS™ — Community Rhythm of Service — is a platform designed for people in relational care roles: caregivers, mentors, volunteers, pastoral workers, social workers, case managers, and anyone whose work is fundamentally about accompanying another human being through time. It is grounded in Catholic Social Teaching and the Ignatian rhythm of action and reflection.</p>
+            <p>Transitus™ — Community Rhythm of Service — is a platform designed for people in relational care roles: caregivers, mentors, volunteers, pastoral workers, social workers, case managers, and anyone whose work is fundamentally about accompanying another human being through time. It is grounded in Catholic Social Teaching and the Ignatian rhythm of action and reflection.</p>
 
-            <p>Its architecture reflects Pier Giorgio's actual practice. A journey, in CROS™, is not a program. It is a relationship — with a beginning, a history, a set of chapters that accumulate meaning over time. Each person you serve has their own journey. You can record what happened. You can note what you observed. You can track what you promised and what remains unfinished. You can come back months later and find the thread exactly where you left it.</p>
+            <p>Its architecture reflects Pier Giorgio's actual practice. A journey, in Transitus™, is not a program. It is a relationship — with a beginning, a history, a set of chapters that accumulate meaning over time. Each person you serve has their own journey. You can record what happened. You can note what you observed. You can track what you promised and what remains unfinished. You can come back months later and find the thread exactly where you left it.</p>
 
-            <p>The notebooks Pier Giorgio kept were analog. CROS™ is digital. But the logic is identical: every person deserves to be remembered. Every relationship deserves a record. Every act of service deserves a place in a story that does not end when you close your browser window.</p>
+            <p>The notebooks Pier Giorgio kept were analog. Transitus™ is digital. But the logic is identical: every person deserves to be remembered. Every relationship deserves a record. Every act of service deserves a place in a story that does not end when you close your browser window.</p>
 
             <blockquote className="border-l-2 border-[hsl(var(--marketing-navy)/0.15)] pl-6 my-10 text-[hsl(var(--marketing-navy)/0.5)] italic">
               "Verso l'alto — To the heights."
@@ -225,7 +225,7 @@ export default function TheModel() {
 
             <p>He wrote those words — <em>Verso l'alto</em>, to the heights — on a photograph taken during his last mountain climb. It was not a sentiment about ambition. It was a direction of movement: upward, always, in every dimension of life. Toward God. Toward the person in front of you. Toward the fullness of what service can be.</p>
 
-            <p>That is the aspiration behind CROS™. Not to manage relationships, but to honor them. Not to organize the poor, but to remember them. Not to close cases, but to accompany people — the way a twenty-four-year-old with paralyzed hands used his last moments to make sure that Converso would not be forgotten.</p>
+            <p>That is the aspiration behind Transitus™. Not to manage relationships, but to honor them. Not to organize the poor, but to remember them. Not to close cases, but to accompany people — the way a twenty-four-year-old with paralyzed hands used his last moments to make sure that Converso would not be forgotten.</p>
           </div>
 
           {/* A Patron */}
@@ -237,7 +237,7 @@ export default function TheModel() {
 
             <p>He was canonized not for the grand gestures but for the quiet ones. For the notebooks. For running home. For the note about Converso. For the thousands who came to his funeral and surprised his family by knowing his name.</p>
 
-            <p>CROS™ is dedicated to that same discipline: the slow, faithful, careful work of remembering people. Of tracking their stories. Of following through. Of treating every relationship as something sacred enough to write down.</p>
+            <p>Transitus™ is dedicated to that same discipline: the slow, faithful, careful work of remembering people. Of tracking their stories. Of following through. Of treating every relationship as something sacred enough to write down.</p>
 
             <p className="italic text-[hsl(var(--marketing-navy))] font-medium">Verso l'alto. To the heights.</p>
           </div>
@@ -248,7 +248,7 @@ export default function TheModel() {
               Pier Giorgio Frassati (April 6, 1901 – July 4, 1925) · Canonized September 7, 2025
             </p>
             <p className="text-sm text-[hsl(var(--marketing-navy)/0.35)] mt-1 leading-relaxed">
-              CROS™ is an independent platform developed in his spirit, grounded in Catholic Social Teaching and the Ignatian rhythm of service.
+              Transitus™ is an independent platform developed in his spirit, grounded in Catholic Social Teaching and the Ignatian rhythm of service.
             </p>
           </div>
         </div>
@@ -272,7 +272,7 @@ export default function TheModel() {
                 size="lg"
                 className="rounded-full bg-[hsl(var(--marketing-navy))] text-white hover:bg-[hsl(var(--marketing-navy)/0.9)] px-8 h-12 text-base"
               >
-                Explore CROS <ArrowRight className="ml-2 h-4 w-4" />
+                Explore Transitus <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </Link>
             <Link to="/manifesto">
@@ -281,7 +281,7 @@ export default function TheModel() {
                 size="lg"
                 className="rounded-full border-[hsl(var(--marketing-navy)/0.2)] text-[hsl(var(--marketing-navy)/0.7)] hover:text-[hsl(var(--marketing-navy))] px-8 h-12 text-base"
               >
-                Read Why CROS <ArrowRight className="ml-2 h-4 w-4" />
+                Read Why Transitus <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </Link>
           </div>

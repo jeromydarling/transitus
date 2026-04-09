@@ -4,7 +4,7 @@ const sections: WeekDay[] = [
   {
     day: 'Monday',
     title: 'The Quiet Map',
-    narrative: `Marisol arrives at the community tech center before anyone else. She turns on the lights in the lab, sets out the sign-in binder, and opens CROS™ on her laptop.\n\nShe doesn't start with a task list. She starts with the Metro Narrative.\n\nOver the weekend, three families completed the digital literacy course. One participant — Mr. Okonkwo — submitted his first online job application during Saturday's open lab. A Companion logged a quick Reflection: "He was nervous but he stayed until he finished. His daughter helped him with the password."\n\nMarisol reads it twice. She's been working with Mr. Okonkwo for four months. She remembers the first day he came in — he didn't know how to turn on the computer.\n\nShe types a note in his Journey: "First application submitted. Daughter involved — family support is real." Then she moves on. No report to file. No metric to update. Just a moment worth holding.`,
+    narrative: `Marisol arrives at the community tech center before anyone else. She turns on the lights in the lab, sets out the sign-in binder, and opens Transitus™ on her laptop.\n\nShe doesn't start with a task list. She starts with the Metro Narrative.\n\nOver the weekend, three families completed the digital literacy course. One participant — Mr. Okonkwo — submitted his first online job application during Saturday's open lab. A Companion logged a quick Reflection: "He was nervous but he stayed until he finished. His daughter helped him with the password."\n\nMarisol reads it twice. She's been working with Mr. Okonkwo for four months. She remembers the first day he came in — he didn't know how to turn on the computer.\n\nShe types a note in his Journey: "First application submitted. Daughter involved — family support is real." Then she moves on. No report to file. No metric to update. Just a moment worth holding.`,
   },
   {
     day: 'Tuesday',
@@ -14,7 +14,7 @@ const sections: WeekDay[] = [
   {
     day: 'Wednesday',
     title: 'The Visit That Mattered',
-    narrative: `Marisol visits the Riverside Towers senior complex. Mrs. Chen is waiting in the community room with three neighbors.\n\nThey don't want a class. They want someone to sit with them and show them how to video-call their grandchildren.\n\nMarisol spends two hours there. No curriculum. No slides. Just four women and a tablet, learning to tap the green button.\n\nAfterward, she opens CROS™ in her car and records a voice note: "Visited Riverside. Mrs. Chen and three neighbors — video calling lesson. Mrs. Alvarez cried when she saw her grandson in California. These aren't 'digital literacy outcomes.' These are people reconnecting."\n\nThe voice note is transcribed. It becomes a Visit activity linked to the Riverside Towers Opportunity. The system doesn't try to score it. It just keeps it safe.`,
+    narrative: `Marisol visits the Riverside Towers senior complex. Mrs. Chen is waiting in the community room with three neighbors.\n\nThey don't want a class. They want someone to sit with them and show them how to video-call their grandchildren.\n\nMarisol spends two hours there. No curriculum. No slides. Just four women and a tablet, learning to tap the green button.\n\nAfterward, she opens Transitus™ in her car and records a voice note: "Visited Riverside. Mrs. Chen and three neighbors — video calling lesson. Mrs. Alvarez cried when she saw her grandson in California. These aren't 'digital literacy outcomes.' These are people reconnecting."\n\nThe voice note is transcribed. It becomes a Visit activity linked to the Riverside Towers Opportunity. The system doesn't try to score it. It just keeps it safe.`,
   },
   {
     day: 'Thursday',
@@ -34,7 +34,7 @@ const sections: WeekDay[] = [
   {
     day: 'Sunday',
     title: 'What the Week Held',
-    narrative: `The center is closed on Sunday. But the week's story is complete.\n\nMarisol knows things no spreadsheet could capture:\n\n• Mr. Okonkwo has gone from learner to teacher in four months.\n• Mrs. Chen and her neighbors don't need digital literacy — they need digital belonging.\n• Two neighborhoods are showing growing demand at the same time.\n• A health clinic wants help, and the help they need is exactly what the program offers.\n• James got a job. Priya moved. Both are signs of lives in motion.\n• Two Somali women found the library because a friend translated for them.\n\nThe grant report will say "47 participants served this quarter." The Metro Narrative will say something truer.\n\nCROS™ didn't create any of this impact. The community did — by showing up, asking questions, and helping each other.\n\nCROS™ just paid attention.`,
+    narrative: `The center is closed on Sunday. But the week's story is complete.\n\nMarisol knows things no spreadsheet could capture:\n\n• Mr. Okonkwo has gone from learner to teacher in four months.\n• Mrs. Chen and her neighbors don't need digital literacy — they need digital belonging.\n• Two neighborhoods are showing growing demand at the same time.\n• A health clinic wants help, and the help they need is exactly what the program offers.\n• James got a job. Priya moved. Both are signs of lives in motion.\n• Two Somali women found the library because a friend translated for them.\n\nThe grant report will say "47 participants served this quarter." The Metro Narrative will say something truer.\n\nTransitus didn't create any of this impact. The community did — by showing up, asking questions, and helping each other.\n\nTransitus just paid attention.`,
   },
 ];
 
@@ -42,9 +42,9 @@ export default function NonprofitWeek() {
   return (
     <ArchetypeWeekTemplate
       archetypeTitle="Digital Inclusion Nonprofit"
-      introLine="See how a digital inclusion team uses CROS™ to remember participants, notice neighborhood patterns, and serve with patient continuity."
+      introLine="See how a digital inclusion team uses Transitus™ to remember participants, notice neighborhood patterns, and serve with patient continuity."
       sections={sections}
-      closingReflection="CROS™ didn't create any of this impact. The community did — by showing up, asking questions, and helping each other. CROS™ just paid attention."
+      closingReflection="Transitus™ didn't create any of this impact. The community did — by showing up, asking questions, and helping each other. Transitus™ just paid attention."
       slug="nonprofit-week"
     />
   );

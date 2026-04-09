@@ -1,9 +1,9 @@
 /**
- * LexiconTerm — Dynamic detail page for a single CROS Lexicon™ entry.
+ * LexiconTerm — Dynamic detail page for a single Transitus Lexicon™ entry.
  *
  * WHAT: Renders the full narrative definition, related terms, and cross-links.
  * WHERE: /lexicon/:slug (public marketing route).
- * WHY: Creates deep SEO pages for each concept in the CROS worldview.
+ * WHY: Creates deep SEO pages for each concept in the Transitus worldview.
  */
 import { useParams, Navigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -38,9 +38,9 @@ export default function LexiconTerm() {
   return (
     <article>
       <SeoHead
-        title={`${entry.title} — CROS Lexicon™`}
+        title={`${entry.title} — Transitus Lexicon™`}
         description={entry.summary}
-        keywords={[entry.title.toLowerCase(), entry.category.toLowerCase(), 'CROS', 'narrative intelligence', 'mission terminology']}
+        keywords={[entry.title.toLowerCase(), entry.category.toLowerCase(), 'Transitus', 'narrative intelligence', 'mission terminology']}
         canonical={`/lexicon/${entry.slug}`}
         ogType="article"
         jsonLd={[
@@ -51,11 +51,11 @@ export default function LexiconTerm() {
             description: entry.summary,
             inDefinedTermSet: {
               '@type': 'DefinedTermSet',
-              name: 'The CROS Lexicon™',
+              name: 'The Transitus Lexicon™',
             },
           },
           breadcrumbSchema([
-            { name: 'CROS', url: '/' },
+            { name: 'Transitus', url: '/' },
             { name: 'Lexicon', url: '/lexicon' },
             { name: entry.title, url: `/lexicon/${entry.slug}` },
           ]),
@@ -63,7 +63,7 @@ export default function LexiconTerm() {
       />
 
       <SeoBreadcrumb items={[
-        { label: 'CROS', to: '/' },
+        { label: 'Transitus', to: '/' },
         { label: 'Lexicon', to: '/lexicon' },
         { label: entry.title },
       ]} />
@@ -105,7 +105,7 @@ export default function LexiconTerm() {
       {entry.appearsIn && entry.appearsIn.length > 0 && (
         <section className="max-w-[720px] mx-auto px-4 sm:px-6 pb-10">
           <h2 className="text-xs font-medium uppercase tracking-wider text-[hsl(var(--marketing-navy)/0.35)] mb-3">
-            Where this appears in CROS
+            Where this appears in Transitus
           </h2>
           <div className="flex flex-wrap gap-2">
             {entry.appearsIn.map((path) => (
@@ -156,7 +156,7 @@ export default function LexiconTerm() {
       <SeoInternalLinks
         heading={t('featurePage.seoLinksHeading')}
         links={[
-          { label: 'Lexicon', to: '/lexicon', description: 'The full CROS vocabulary.' },
+          { label: 'Lexicon', to: '/lexicon', description: 'The full Transitus vocabulary.' },
           { label: 'Archetypes', to: '/archetypes', description: 'Find your mission pattern.' },
           { label: 'Mission Atlas', to: '/mission-atlas', description: 'Patterns across contexts.' },
           { label: 'NRI', to: '/nri', description: 'Narrative Relational Intelligence.' },

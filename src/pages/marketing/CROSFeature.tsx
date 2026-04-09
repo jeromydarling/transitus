@@ -9,11 +9,11 @@ import SeoBreadcrumb from '@/components/seo/SeoBreadcrumb';
 
 const serif = { fontFamily: 'Georgia, "Times New Roman", serif' };
 
-export default function CROSFeature() {
+export default function TransitusFeature() {
   const { t } = useTranslation('marketing');
   return (
     <div className="bg-white">
-      <SeoHead title="CROS™ — The Operating System Built for Relationships" description="Where traditional systems manage files and workflows, CROS manages living networks of people, partners, and communities." canonical="/cros" />
+      <SeoHead title="Transitus™ — The Operating System Built for Relationships" description="Where traditional systems manage files and workflows, Transitus manages living networks of people, partners, and communities." canonical="/cros" />
 
       <header className="relative overflow-hidden">
         <img src={crosHero} alt="" aria-hidden="true" loading="eager" className="pointer-events-none absolute inset-0 w-full h-full opacity-[0.15] object-cover object-center scale-[2.4] origin-top" />
@@ -25,7 +25,7 @@ export default function CROSFeature() {
       </header>
 
       <section className="max-w-3xl mx-auto px-4 sm:px-6 pt-12 sm:pt-16 pb-16">
-        <SeoBreadcrumb items={[{ label: 'Home', to: '/' }, { label: 'CROS™' }]} />
+        <SeoBreadcrumb items={[{ label: 'Home', to: '/' }, { label: 'Transitus™' }]} />
         <div className="space-y-6">
           {crosPage.body.map((p, i) => (
             <p key={i} className="text-[hsl(var(--marketing-navy)/0.65)] leading-relaxed whitespace-pre-line text-base sm:text-lg">{p}</p>

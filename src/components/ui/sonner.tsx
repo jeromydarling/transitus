@@ -28,7 +28,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
 /**
  * Charter-compliant toast wrapper.
  *
- * WHAT: Wraps sonner's toast with CROS vocabulary mapping.
+ * WHAT: Wraps sonner's toast with Transitus vocabulary mapping.
  * WHERE: Import { toast } from '@/components/ui/sonner' everywhere.
  * WHY: Automatically translates SaaS-tone messages to charter language.
  *

@@ -67,7 +67,7 @@ export default function RelatioImportSuccessModal({ open, onOpenChange, result, 
                   <MissingItem label="We didn't receive historical events from this source. You can connect an integration later if you wish." />
                 )}
                 {!result.hasActivities && result.coverageMode === 'A' && (
-                  <MissingItem label="No activity history was included. You'll build this naturally as you use CROS." />
+                  <MissingItem label="No activity history was included. You'll build this naturally as you use Transitus." />
                 )}
                 {!result.hasNotes && result.coverageMode === 'A' && (
                   <MissingItem label="No notes or touchpoints were included. You can add reflections at any time." />

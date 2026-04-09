@@ -35,7 +35,7 @@ export default function FieldJournalEntryPage() {
         ogType="article"
         jsonLd={[
           articleSchema({ headline: entry.title, description: entry.summary, url: `/field-journal/${entry.slug}`, datePublished: entry.publishedDate }),
-          breadcrumbSchema([{ name: 'CROS', url: '/' }, { name: 'Field Journal', url: '/field-journal' }, { name: entry.title, url: `/field-journal/${entry.slug}` }]),
+          breadcrumbSchema([{ name: 'Transitus', url: '/' }, { name: 'Field Journal', url: '/field-journal' }, { name: entry.title, url: `/field-journal/${entry.slug}` }]),
         ]}
       />
 
@@ -56,7 +56,7 @@ export default function FieldJournalEntryPage() {
       </header>
 
       <section className="max-w-[720px] mx-auto px-4 sm:px-6 pb-10 space-y-5">
-        <SeoBreadcrumb items={[{ label: 'CROS', to: '/' }, { label: 'Field Journal', to: '/field-journal' }, { label: entry.title }]} />
+        <SeoBreadcrumb items={[{ label: 'Transitus', to: '/' }, { label: 'Field Journal', to: '/field-journal' }, { label: entry.title }]} />
         {paragraphs.map((p, i) => (
           <p key={i} className="text-[15px] text-[hsl(var(--marketing-navy)/0.7)] leading-[1.85]" style={serif}>{p}</p>
         ))}

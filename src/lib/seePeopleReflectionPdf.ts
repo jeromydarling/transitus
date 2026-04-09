@@ -112,8 +112,8 @@ export function downloadSeePeopleReflectionPdf() {
     const h = doc.internal.pageSize.getHeight();
     doc.setFontSize(7);
     doc.setTextColor(160);
-    doc.text(`${brand.appName}\u2122 • thecros.lovable.app • Page ${i} of ${pageCount}`, PAGE_W / 2, h - 8, { align: 'center' });
+    doc.text(`${brand.appName}\u2122 • transitus.app • Page ${i} of ${pageCount}`, PAGE_W / 2, h - 8, { align: 'center' });
   }
 
-  doc.save('CROS-See-People-Reflection-Guide.pdf');
+  doc.save('Transitus-See-People-Reflection-Guide.pdf');
 }

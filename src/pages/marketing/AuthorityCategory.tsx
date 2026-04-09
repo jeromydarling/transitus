@@ -37,9 +37,9 @@ export default function AuthorityCategory() {
 
   return (
     <article>
-      <SeoHead title={`${t(`authorityCategoryPage.categories.${category}.label`)} — CROS Authority`} description={t(`authorityCategoryPage.categories.${category}.description`)} canonical={`/authority/${category}`}
+      <SeoHead title={`${t(`authorityCategoryPage.categories.${category}.label`)} — Transitus Authority`} description={t(`authorityCategoryPage.categories.${category}.description`)} canonical={`/authority/${category}`}
         jsonLd={[articleSchema({ headline: t(`authorityCategoryPage.categories.${category}.label`), description: t(`authorityCategoryPage.categories.${category}.description`), url: `/authority/${category}` }),
-          breadcrumbSchema([{ name: 'CROS', url: '/' }, { name: 'Authority', url: '/authority' }, { name: t(`authorityCategoryPage.categories.${category}.label`), url: `/authority/${category}` }])]} />
+          breadcrumbSchema([{ name: 'Transitus', url: '/' }, { name: 'Authority', url: '/authority' }, { name: t(`authorityCategoryPage.categories.${category}.label`), url: `/authority/${category}` }])]} />
 
       {/* Hero with category image */}
       <header className="relative overflow-hidden bg-[hsl(var(--marketing-surface))]">
@@ -74,7 +74,7 @@ export default function AuthorityCategory() {
       </nav>
 
       <section className="max-w-[720px] mx-auto px-4 sm:px-6 pt-8 pb-4">
-        <SeoBreadcrumb items={[{ label: 'CROS', to: '/' }, { label: 'Authority', to: '/authority' }, { label: t(`authorityCategoryPage.categories.${category}.label`) }]} />
+        <SeoBreadcrumb items={[{ label: 'Transitus', to: '/' }, { label: 'Authority', to: '/authority' }, { label: t(`authorityCategoryPage.categories.${category}.label`) }]} />
       </section>
 
       {/* Articles */}
@@ -137,7 +137,7 @@ export default function AuthorityCategory() {
 
       {/* Share card */}
       <section className="max-w-[720px] mx-auto px-4 sm:px-6 pb-8">
-        <AuthorityShareCard path={`/authority/${category}`} title={`${t(`authorityCategoryPage.categories.${category}.label`)} — CROS Authority`} />
+        <AuthorityShareCard path={`/authority/${category}`} title={`${t(`authorityCategoryPage.categories.${category}.label`)} — Transitus Authority`} />
       </section>
 
       {/* Soft conversion */}

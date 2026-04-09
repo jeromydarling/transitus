@@ -1,5 +1,5 @@
 /**
- * TenantPublicMirror — Optional public profile page for CROS™ tenants.
+ * TenantPublicMirror — Optional public profile page for Transitus™ tenants.
  *
  * WHAT: Displays an organization's public presence — archetype, calling, metro, narrative themes.
  * WHERE: /public/:tenantSlug
@@ -84,13 +84,13 @@ export default function TenantPublicMirror() {
   return (
     <>
       <SeoHead
-        title={`${profile.name} — CROS\u2122 Network`}
-        description={`${profile.name} serves their community through CROS\u2122${arch ? ` as a ${arch.name}` : ''}.`}
+        title={`${profile.name} — Transitus\u2122 Network`}
+        description={`${profile.name} serves their community through Transitus\u2122${arch ? ` as a ${arch.name}` : ''}.`}
         canonical={`/public/${profile.slug}`}
         jsonLd={[
           articleSchema({
-            headline: `${profile.name} on CROS\u2122`,
-            description: `${profile.name} serves their community through the CROS\u2122 network.`,
+            headline: `${profile.name} on Transitus\u2122`,
+            description: `${profile.name} serves their community through the Transitus\u2122 network.`,
             url: `/public/${profile.slug}`,
           }),
           breadcrumbSchema(crumbs.map(c => ({ name: c.label, url: c.to ?? '' }))),
@@ -146,7 +146,7 @@ export default function TenantPublicMirror() {
           {/* Narrative note */}
           <div className="rounded-2xl bg-[hsl(var(--marketing-surface))] p-6">
             <p className="text-sm text-[hsl(var(--marketing-navy)/0.55)] leading-relaxed italic" style={serif}>
-              This organization is part of the CROS&#8482; network — a community of missions
+              This organization is part of the Transitus&#8482; network — a community of missions
               working to remember, notice, and serve people well.
             </p>
           </div>

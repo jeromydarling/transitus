@@ -297,7 +297,7 @@ export default function PublicPresencePage() {
         {/* Footer */}
         <footer className="text-center pt-8 border-t border-border">
           <p className="text-xs text-muted-foreground">
-            Part of the <a href="/network" className="underline hover:text-foreground">CROS Network</a>
+            Part of the <a href="/network" className="underline hover:text-foreground">Transitus Network</a>
           </p>
         </footer>
       </div>

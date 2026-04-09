@@ -65,13 +65,13 @@ export default function ArchetypeDeepPage() {
     <div className="bg-white">
       <SeoHead
         title={`${arch.name} — Deep Dive`}
-        description={`How ${arch.name} organizations use CROS™ to remember relationships, notice community shifts, and serve with narrative intelligence.`}
-        keywords={[arch.name.toLowerCase(), 'CROS archetype', 'community relationship OS', 'narrative intelligence']}
+        description={`How ${arch.name} organizations use Transitus™ to remember relationships, notice community shifts, and serve with narrative intelligence.`}
+        keywords={[arch.name.toLowerCase(), 'Transitus archetype', 'community relationship OS', 'narrative intelligence']}
         canonical={`/archetypes/${slug}/deep`}
         ogType="article"
         jsonLd={[
           articleSchema({
-            headline: `${arch.name} — A Deep Dive into CROS™`,
+            headline: `${arch.name} — A Deep Dive into Transitus™`,
             description: arch.tagline,
             url: `/archetypes/${slug}/deep`,
           }),
@@ -80,7 +80,7 @@ export default function ArchetypeDeepPage() {
             '@type': 'DefinedTerm',
             name: arch.name,
             description: arch.tagline,
-            inDefinedTermSet: { '@type': 'DefinedTermSet', name: 'CROS™ Mission Archetypes' },
+            inDefinedTermSet: { '@type': 'DefinedTermSet', name: 'Transitus™ Mission Archetypes' },
           },
         ]}
       />

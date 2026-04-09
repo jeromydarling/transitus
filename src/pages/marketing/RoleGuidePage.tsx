@@ -3,7 +3,7 @@
  *
  * WHAT: 400-700 word action-oriented guide for a specific role workflow.
  * WHERE: /roles/:role/:guideSlug
- * WHY: SEO-rich practical content showing how roles use CROS features.
+ * WHY: SEO-rich practical content showing how roles use Transitus features.
  */
 import { useParams, Link, Navigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -124,7 +124,7 @@ export default function RoleGuidePage() {
       <SeoInternalLinks
         heading={t('roleGuidePage.seoLinksHeading')}
         links={[
-          { label: t(`roleGuidePage.roleLabels.${guide.role}`, { defaultValue: guide.role }), to: `/roles/${guide.role}`, description: `The ${t(`roleGuidePage.roleLabels.${guide.role}`, { defaultValue: guide.role })} experience in CROS™.` },
+          { label: t(`roleGuidePage.roleLabels.${guide.role}`, { defaultValue: guide.role }), to: `/roles/${guide.role}`, description: `The ${t(`roleGuidePage.roleLabels.${guide.role}`, { defaultValue: guide.role })} experience in Transitus™.` },
           { label: 'All Roles', to: '/roles', description: 'Shepherd, Companion, or Visitor.' },
           { label: 'Archetypes', to: '/archetypes', description: 'Find your mission type.' },
         ]}

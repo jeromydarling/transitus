@@ -81,7 +81,7 @@ export default function MetroArchetypePage() {
   return (
     <div className="bg-white">
       <SeoHead
-        title={`${archetypeLabel} in ${metroTitle} — CROS™`}
+        title={`${archetypeLabel} in ${metroTitle} — Transitus™`}
         description={`How ${archetypeLabel.toLowerCase()} organizations experience community life in ${metroTitle}.`}
         canonical={`/metros/${metroSlug}/${archetypeSlug}`}
         ogType="article"
@@ -116,7 +116,7 @@ export default function MetroArchetypePage() {
           </h1>
           <p className="text-lg text-[hsl(var(--marketing-navy)/0.6)] leading-relaxed">
             What does a {archetypeLabel.toLowerCase()} look like in {metroTitle}?
-            Here's what patterns from the CROS™ network reveal.
+            Here's what patterns from the Transitus™ network reveal.
           </p>
         </header>
 

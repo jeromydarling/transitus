@@ -19,13 +19,13 @@ export default function Compare() {
   return (
     <div className="bg-white">
       <SeoHead
-        title="Compare CROS™ to Legacy CRMs"
-        description="CROS™ vs Salesforce, HubSpot, and volunteer platforms. See why mission-driven organizations choose narrative intelligence over data pipelines."
+        title="Compare Transitus™ to Legacy CRMs"
+        description="Transitus™ vs Salesforce, HubSpot, and volunteer platforms. See why mission-driven organizations choose narrative intelligence over data pipelines."
         keywords={['CRM comparison', 'Salesforce alternative', 'HubSpot alternative', 'nonprofit CRM comparison']}
         canonical="/compare"
         jsonLd={techArticleSchema({
-          headline: 'CROS™ vs Legacy CRM Platforms',
-          description: 'A comparison of CROS narrative relationship OS against traditional CRM systems.',
+          headline: 'Transitus™ vs Legacy CRM Platforms',
+          description: 'A comparison of Transitus narrative relationship OS against traditional CRM systems.',
           url: '/compare',
         })}
       />
@@ -280,10 +280,10 @@ export default function Compare() {
       <SeoInternalLinks
         heading={t('comparePage.seoLinksHeading')}
         links={[
-          { label: 'CROS vs Bloomerang', to: '/compare/cros-vs-bloomerang', description: 'Donor CRM or Relationship OS?' },
-          { label: 'CROS vs Salesforce', to: '/compare/cros-vs-salesforce', description: 'Enterprise CRM or Relational OS?' },
-          { label: 'CROS vs HubSpot', to: '/compare/cros-vs-hubspot', description: 'Marketing CRM or Relational OS?' },
-          { label: 'The Mission Layer', to: '/compare/cros-mission-layer-crm', description: 'Add CROS above your existing CRM.' },
+          { label: 'Transitus vs Bloomerang', to: '/compare/cros-vs-bloomerang', description: 'Donor CRM or Relationship OS?' },
+          { label: 'Transitus vs Salesforce', to: '/compare/cros-vs-salesforce', description: 'Enterprise CRM or Relational OS?' },
+          { label: 'Transitus vs HubSpot', to: '/compare/cros-vs-hubspot', description: 'Marketing CRM or Relational OS?' },
+          { label: 'The Mission Layer', to: '/compare/cros-mission-layer-crm', description: 'Add Transitus above your existing CRM.' },
           { label: 'Church vs Spreadsheets', to: '/compare/church-vs-spreadsheets', description: 'How churches replace scattered tools.' },
           { label: 'Nonprofit vs Bloated CRM', to: '/compare/nonprofit-vs-bloated-crm', description: 'Why enterprise CRMs fail nonprofits.' },
         ]}

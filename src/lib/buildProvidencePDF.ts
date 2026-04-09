@@ -1,9 +1,9 @@
 /**
- * buildProvidencePDF — Generates a branded CROS narrative PDF from a Providence report.
+ * buildProvidencePDF — Generates a branded Transitus narrative PDF from a Providence report.
  *
- * WHAT: Creates a warm, branded PDF with CROS identity, season label, narrative, and footer.
+ * WHAT: Creates a warm, branded PDF with Transitus identity, season label, narrative, and footer.
  * WHERE: Called from ProvidenceSection export button.
- * WHY: Leadership gets a printable seasonal reflection with CROS branding.
+ * WHY: Leadership gets a printable seasonal reflection with Transitus branding.
  */
 
 import jsPDF from 'jspdf';
@@ -38,10 +38,10 @@ export function generateProvidencePDF(data: ProvidencePDFData): jsPDF {
   const dirColor = DIRECTION_COLORS[data.dominantDirection];
   let y = 20;
 
-  // ── CROS Header ──
+  // ── Transitus Header ──
   doc.setFontSize(9);
   doc.setTextColor(160, 160, 160);
-  doc.text('CROS — Communal Relationship Operating System', 20, y);
+  doc.text('Transitus — The Operating System for Places Under Change', 20, y);
   y += 5;
 
   // Accent line
@@ -95,7 +95,7 @@ export function generateProvidencePDF(data: ProvidencePDFData): jsPDF {
   doc.setFontSize(7);
   doc.setTextColor(160, 160, 160);
   doc.text(
-    `CROS Providence · v${data.version} · Generated ${new Date().toLocaleDateString()} · Powered by Narrative Relational Intelligence`,
+    `Transitus Providence · v${data.version} · Generated ${new Date().toLocaleDateString()} · Powered by Narrative Relational Intelligence`,
     20,
     y
   );

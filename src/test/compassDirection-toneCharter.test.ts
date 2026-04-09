@@ -1,5 +1,5 @@
 /**
- * compassDirection + toneCharter — Direction mapping and CROS vocabulary tests.
+ * compassDirection + toneCharter — Direction mapping and Transitus vocabulary tests.
  *
  * WHAT: Tests compass direction logic and tone charter enforcement.
  * WHERE: src/test/compassDirection-toneCharter.test.ts
@@ -16,7 +16,7 @@ import {
   crosText,
   containsBannedWord,
   BANNED_WORDS,
-  CROS_VOCABULARY,
+  TRANSITUS_VOCABULARY,
 } from '@/lib/toneCharter';
 
 // ── compassDirection ──

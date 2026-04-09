@@ -1,5 +1,5 @@
 /**
- * LibraryIndexPage — CROS™ Authority Engine hub.
+ * LibraryIndexPage — Transitus™ Authority Engine hub.
  *
  * WHAT: Calm discovery space connecting roles, archetypes, week stories, philosophy, and concepts.
  * WHERE: /library
@@ -56,16 +56,16 @@ export default function LibraryIndexPage() {
   return (
     <>
       <SeoHead
-        title="The Living Library — CROS\u2122"
-        description="Explore the narrative world of CROS\u2122 — roles, archetypes, weekly stories, philosophy, and the canonical language of communal care."
+        title="The Living Library — Transitus\u2122"
+        description="Explore the narrative world of Transitus\u2122 — roles, archetypes, weekly stories, philosophy, and the canonical language of communal care."
         canonical="/library"
         jsonLd={[
           itemListSchema({
-            name: 'CROS Living Library',
+            name: 'Transitus Living Library',
             description: 'A calm discovery space for roles, archetypes, stories, and philosophy.',
             url: '/library',
             items: [
-              { name: 'Roles in CROS', url: '/roles' },
+              { name: 'Roles in Transitus', url: '/roles' },
               ...weekNarratives.map(w => ({ name: w.title, url: `/week/${w.slug}` })),
               { name: 'Manifesto', url: '/manifesto' },
               { name: 'NRI', url: '/nri' },
@@ -85,7 +85,7 @@ export default function LibraryIndexPage() {
             <span className="text-xs font-medium uppercase tracking-wider text-[hsl(var(--marketing-navy)/0.4)]">Library</span>
           </div>
           <h1 className="text-3xl sm:text-4xl font-semibold text-[hsl(var(--marketing-navy))] mb-4" style={serif}>
-            Explore the Living Library of CROS™
+            Explore the Living Library of Transitus™
           </h1>
           <p className="text-base text-[hsl(var(--marketing-navy)/0.55)] leading-relaxed max-w-lg mx-auto" style={serif}>
             Stories, roles, philosophy, and the language that shapes how communities remember, notice, and serve people well.
@@ -109,7 +109,7 @@ export default function LibraryIndexPage() {
           <SectionHeader icon={Compass} label="Mission" title="Start with your mission" />
           <div className="space-y-2">
             <NarrativeCard to="/archetypes" title="All Archetypes" subtitle="Church · Nonprofit · Social Enterprise · Library · Workforce" />
-            <NarrativeCard to="/week/catholic-visitor" title="Catholic Parish Outreach" subtitle="How parish visitors use CROS™ each week" />
+            <NarrativeCard to="/week/catholic-visitor" title="Catholic Parish Outreach" subtitle="How parish visitors use Transitus™ each week" />
             <NarrativeCard to="/week/social-outreach" title="Social Outreach Teams" subtitle="Nonprofit case workers in the field" />
           </div>
         </section>
@@ -118,7 +118,7 @@ export default function LibraryIndexPage() {
         <section className="py-8">
           <SectionHeader icon={Lightbulb} label="Philosophy" title="Learn the philosophy" />
           <div className="space-y-2">
-            <NarrativeCard to="/manifesto" title="The CROS™ Manifesto" subtitle="Why we built a relationship operating system" />
+            <NarrativeCard to="/manifesto" title="The Transitus™ Manifesto" subtitle="Why we built a relationship operating system" />
             <NarrativeCard to="/nri" title="Narrative Relational Intelligence" subtitle="Intelligence that belongs to humans, not machines" />
           </div>
         </section>

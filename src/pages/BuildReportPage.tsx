@@ -80,7 +80,7 @@ const BUILD_REPORT: BuildReportData = {
         'AdminHowTo.tsx: added full "Movement Intelligence" section (4 Q&A items) to field guide; fixed "private analytics" → "private movement insights"',
         'appSections.ts: intelligence entry verified at line 32 — no changes needed',
         'technicalDocumentation.ts: Chapter 25 (Movement Intelligence Dashboard) already present — verified',
-        'ComparisonTable.tsx (marketing): only competitor-column reference to "analytics" — no CROS copy change needed',
+        'ComparisonTable.tsx (marketing): only competitor-column reference to "analytics" — no Transitus copy change needed',
       ],
       filesChanged: [
         'src/lib/manualData.ts',
@@ -98,7 +98,7 @@ export default function BuildReportPage() {
 
   const handleDownload = () => {
     const doc = generateBuildReportPdf(BUILD_REPORT);
-    doc.save(`CROS_Build_Report_${BUILD_REPORT.date}.pdf`);
+    doc.save(`Transitus_Build_Report_${BUILD_REPORT.date}.pdf`);
     setDownloaded(true);
   };
 

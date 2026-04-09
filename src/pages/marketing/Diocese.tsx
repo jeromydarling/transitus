@@ -1,9 +1,9 @@
 /**
- * Diocese — Visionary landing page for diocesan-level CROS adoption.
+ * Diocese — Visionary landing page for diocesan-level Transitus adoption.
  *
  * WHAT: Narrative page showing aggregated diocesan view concept.
  * WHERE: /diocese (public marketing route).
- * WHY: Positions CROS as infrastructure for subsidiarity-respecting church leadership.
+ * WHY: Positions Transitus as infrastructure for subsidiarity-respecting church leadership.
  */
 
 import { Button } from '@/components/ui/button';
@@ -32,7 +32,7 @@ export default function Diocese() {
         </h1>
         <p className="text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
           Across parishes, ministries, and charities, the Church is doing extraordinary work every day.
-          But most of that work is invisible. CROS reveals the relationships behind it.
+          But most of that work is invisible. Transitus reveals the relationships behind it.
         </p>
       </div>
 
@@ -84,7 +84,7 @@ export default function Diocese() {
           Parishes always own their data.
         </p>
         <p className="text-muted-foreground leading-relaxed">
-          CROS allows diocesan leadership to see aggregated insights
+          Transitus allows diocesan leadership to see aggregated insights
           without removing local ownership.
           The result is awareness without centralization.
         </p>

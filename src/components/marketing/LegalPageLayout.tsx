@@ -1,5 +1,5 @@
 /**
- * LegalPageLayout — Shared layout for CROS legal pages.
+ * LegalPageLayout — Shared layout for Transitus legal pages.
  *
  * WHAT: Renders structured legal content with serif headings, anchor nav, and calm tone.
  * WHERE: Used by all /legal/* routes.
@@ -25,7 +25,7 @@ export default function LegalPageLayout({ page }: { page: LegalPageContent }) {
           '@type': 'WebPage',
           name: page.title,
           description: page.intro,
-          publisher: { '@type': 'Organization', name: 'CROS' },
+          publisher: { '@type': 'Organization', name: 'Transitus' },
         }}
       />
 

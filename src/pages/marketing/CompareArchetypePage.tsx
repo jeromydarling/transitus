@@ -1,7 +1,7 @@
 /**
  * CompareArchetypePage — Archetype-specific comparison at /compare/:slug.
  *
- * WHAT: Narrative comparison table showing CROS vs traditional tools for a specific archetype.
+ * WHAT: Narrative comparison table showing Transitus vs traditional tools for a specific archetype.
  * WHERE: /compare/:slug
  * WHY: SEO authority through archetype-specific comparison content.
  */
@@ -102,7 +102,7 @@ export default function CompareArchetypePage() {
       <SeoInternalLinks
         heading={t('compareArchetypePage.seoLinksHeading')}
         links={[
-          { label: 'General Comparison', to: '/compare', description: 'CROS vs legacy CRM platforms.' },
+          { label: 'General Comparison', to: '/compare', description: 'Transitus vs legacy CRM platforms.' },
           { label: 'Roles', to: '/roles', description: 'Shepherd, Companion, or Visitor.' },
           { label: 'Insights', to: '/insights', description: 'Narrative essays on relationship and technology.' },
         ]}

@@ -1,7 +1,7 @@
 /**
  * Movement Intelligence — How care, relationships, and presence are unfolding.
  *
- * WHAT: CROS-native intelligence dashboard organized into 7 movement sections.
+ * WHAT: Transitus-native intelligence dashboard organized into 7 movement sections.
  * WHERE: /:tenantSlug/intelligence
  * WHY: Replaces Profunda-era analytics with territory-aware, compass-integrated movement view.
  *

@@ -1,9 +1,9 @@
 /**
- * Lexicon — The CROS Lexicon™ public index page.
+ * Lexicon — The Transitus Lexicon™ public index page.
  *
  * WHAT: Renders all lexicon terms grouped by category as navigable cards.
  * WHERE: /lexicon (public marketing route).
- * WHY: Establishes CROS as the authoritative language source for relational mission work.
+ * WHY: Establishes Transitus as the authoritative language source for relational mission work.
  */
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -12,7 +12,7 @@ import SeoHead from '@/components/seo/SeoHead';
 import SeoBreadcrumb from '@/components/seo/SeoBreadcrumb';
 import SeoInternalLinks from '@/components/seo/SeoInternalLinks';
 import NarrativeLinks from '@/components/marketing/NarrativeLinks';
-import { CROS_LEXICON, getLexiconCategories, getLexiconByCategory, type LexiconCategory } from '@/content/lexicon';
+import { TRANSITUS_LEXICON, getLexiconCategories, getLexiconByCategory, type LexiconCategory } from '@/content/lexicon';
 import { breadcrumbSchema } from '@/lib/seo/seoConfig';
 
 const serif = { fontFamily: 'Georgia, "Times New Roman", serif' };
@@ -40,20 +40,20 @@ export default function Lexicon() {
   return (
     <article>
       <SeoHead
-        title="The CROS Lexicon™ — Language of Living Mission"
-        description="A living library of concepts that define the worldview behind CROS — Narrative Relational Intelligence, Presence Signals, Mission Archetypes, and more."
-        keywords={['CROS lexicon', 'narrative relational intelligence', 'mission terminology', 'community relationship', 'nonprofit glossary']}
+        title="The Transitus Lexicon™ — Language of Living Mission"
+        description="A living library of concepts that define the worldview behind Transitus — Narrative Relational Intelligence, Presence Signals, Mission Archetypes, and more."
+        keywords={['Transitus lexicon', 'narrative relational intelligence', 'mission terminology', 'community relationship', 'nonprofit glossary']}
         canonical="/lexicon"
         jsonLd={[
           {
             '@context': 'https://schema.org',
             '@type': 'DefinedTermSet',
-            name: 'The CROS Lexicon™',
+            name: 'The Transitus Lexicon™',
             description: 'The authoritative language source for relational mission work.',
-            url: 'https://thecros.lovable.app/lexicon',
+            url: 'https://transitus.app/lexicon',
           },
           breadcrumbSchema([
-            { name: 'CROS', url: '/' },
+            { name: 'Transitus', url: '/' },
             { name: 'Lexicon', url: '/lexicon' },
           ]),
         ]}
@@ -63,20 +63,20 @@ export default function Lexicon() {
       {/* Hero */}
       <header className="max-w-[720px] mx-auto px-4 sm:px-6 pt-10 pb-12 text-center">
         <p className="text-xs font-medium uppercase tracking-wider text-[hsl(var(--marketing-blue))] mb-3">
-          The CROS Lexicon™
+          The Transitus Lexicon™
         </p>
         <h1 className="text-3xl sm:text-4xl font-bold text-[hsl(var(--marketing-navy))] mb-4" style={serif}>
           The Language of Living Mission
         </h1>
         <p className="text-base sm:text-lg text-[hsl(var(--marketing-navy)/0.6)] max-w-xl mx-auto leading-relaxed" style={serif}>
-          CROS didn't begin with features.
+          Transitus didn't begin with features.
           It began with words — words that describe how people walk together.
         </p>
       </header>
 
       {/* Terms by category */}
       <section className="max-w-[960px] mx-auto px-4 sm:px-6 pb-16 space-y-12">
-        <SeoBreadcrumb items={[{ label: 'CROS', to: '/' }, { label: 'Lexicon' }]} />
+        <SeoBreadcrumb items={[{ label: 'Transitus', to: '/' }, { label: 'Lexicon' }]} />
         {categories.map((cat) => {
           const Icon = CATEGORY_ICONS[cat];
           const entries = getLexiconByCategory(cat);
@@ -126,7 +126,7 @@ export default function Lexicon() {
           <p className="text-sm text-[hsl(var(--marketing-navy)/0.6)] leading-relaxed">
             The words we use shape the systems we build. When we say "lead" instead of "person,"
             we've already reduced a relationship to a transaction. When we say "pipeline" instead of
-            "journey," we've already decided the story ends with a sale. The CROS Lexicon exists
+            "journey," we've already decided the story ends with a sale. The Transitus Lexicon exists
             to hold a different vocabulary — one that honors the complexity and dignity of human
             relationship work.
           </p>

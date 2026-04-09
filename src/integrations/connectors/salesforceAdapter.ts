@@ -1,9 +1,9 @@
 /**
  * Salesforce Connector Adapter
  * 
- * WHAT: Normalizes Salesforce CSV export data to CROS entities.
+ * WHAT: Normalizes Salesforce CSV export data to Transitus entities.
  * WHERE: Migration harness + fixture pack tests.
- * WHY: Deterministic, testable mapping from Salesforce objects to CROS spine.
+ * WHY: Deterministic, testable mapping from Salesforce objects to Transitus spine.
  */
 
 import type {

@@ -1,20 +1,20 @@
 /**
- * CROS™ Tone & Language Charter
+ * Transitus™ Tone & Language Charter
  *
  * WHAT: The canonical source of truth for all UI copy, system messaging,
  *       Compass language, friction moments, and future feature development.
  * WHERE: Referenced by every component that renders user-facing text.
- * WHY: CROS is pastoral, steady, and human-centered. Language must reflect
+ * WHY: Transitus is pastoral, steady, and human-centered. Language must reflect
  *       dignity, continuity, and calm. This charter prevents SaaS drift.
  *
  * ────────────────────────────────────────
  * CORE IDENTITY
  * ────────────────────────────────────────
  *
- * CROS™ IS:
+ * Transitus™ IS:
  *   Pastoral · Steady · Human-centered
  *
- * CROS™ IS NOT:
+ * Transitus™ IS NOT:
  *   Corporate · Gamified · Transactional · Urgent · Manipulative
  *   Sentimental · Theologically explicit in UI
  *
@@ -87,9 +87,9 @@ export const BANNED_WORDS = [
   'Done!',
 ] as const;
 
-// ─── CROS VOCABULARY ──────────────────────────────────────────
-// SaaS term → CROS equivalent
-export const CROS_VOCABULARY: Record<string, string> = {
+// ─── Transitus VOCABULARY ──────────────────────────────────────────
+// SaaS term → Transitus equivalent
+export const TRANSITUS_VOCABULARY: Record<string, string> = {
   // Confirmations
   'Saved': 'Held',
   'Saved!': 'Held.',
@@ -159,11 +159,11 @@ export const FRICTION_COPY = {
 export const CONFIRMATIONS = ['Noted.', 'Held.', 'Updated.', 'Recorded.'] as const;
 
 /**
- * Translate a SaaS-flavored string into CROS-charter language.
+ * Translate a SaaS-flavored string into Transitus-charter language.
  * Falls through to original if no mapping exists.
  */
 export function crosText(original: string): string {
-  return CROS_VOCABULARY[original] ?? original;
+  return TRANSITUS_VOCABULARY[original] ?? original;
 }
 
 /**

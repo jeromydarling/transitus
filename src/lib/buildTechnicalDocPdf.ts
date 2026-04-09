@@ -18,7 +18,7 @@ function addFooter(doc: jsPDF, pageNum: number) {
   doc.setFontSize(7);
   doc.setTextColor(150);
   doc.text(
-    `CROS™ Technical Architecture Reference • v${TECH_DOC_META.version} • Page ${pageNum}`,
+    `Transitus™ Technical Architecture Reference • v${TECH_DOC_META.version} • Page ${pageNum}`,
     PAGE_W / 2,
     h - 8,
     { align: 'center' },
@@ -160,7 +160,7 @@ export function buildTechnicalDocPdf(): jsPDF {
   doc.setFontSize(26);
   doc.setTextColor(25);
   doc.setFont('helvetica', 'bold');
-  doc.text('CROS™', MARGIN, y);
+  doc.text('Transitus™', MARGIN, y);
   y += 10;
 
   doc.setFontSize(13);
@@ -171,7 +171,7 @@ export function buildTechnicalDocPdf(): jsPDF {
 
   doc.setFontSize(9);
   doc.setTextColor(100);
-  doc.text('Communal Relationship Operating System', MARGIN, y);
+  doc.text('The Operating System for Places Under Change', MARGIN, y);
   y += 5;
   doc.text(`Version ${TECH_DOC_META.version} • Updated ${TECH_DOC_META.lastUpdated}`, MARGIN, y);
   y += 5;
@@ -219,5 +219,5 @@ export function buildTechnicalDocPdf(): jsPDF {
 
 export function downloadTechnicalDocPdf() {
   const doc = buildTechnicalDocPdf();
-  doc.save('CROS-Technical-Architecture-Reference.pdf');
+  doc.save('Transitus-Technical-Architecture-Reference.pdf');
 }

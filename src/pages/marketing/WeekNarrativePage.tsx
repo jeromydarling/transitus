@@ -1,7 +1,7 @@
 /**
  * WeekNarrativePage — "What a Week Looks Like" story page.
  *
- * WHAT: Renders a narrative week-in-the-life for a specific CROS™ role.
+ * WHAT: Renders a narrative week-in-the-life for a specific Transitus™ role.
  * WHERE: /week/:slug
  * WHY: Human-centered storytelling that helps visitors recognize their role before signup.
  */

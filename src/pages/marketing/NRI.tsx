@@ -298,7 +298,7 @@ export default function NRI() {
           { label: 'Archetypes', to: '/archetypes', description: 'See how NRI adapts to your mission type.' },
           { label: 'Roles', to: '/roles', description: 'Find where you fit — Shepherd, Companion, or Visitor.' },
           { label: 'Signals', to: '/signum', description: 'Anonymized narrative signals.' },
-          { label: 'Compare', to: '/compare', description: 'See how CROS differs from legacy CRMs.' },
+          { label: 'Compare', to: '/compare', description: 'See how Transitus differs from legacy CRMs.' },
         ]}
       />
     </div>

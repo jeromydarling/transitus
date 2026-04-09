@@ -4,7 +4,7 @@ const sections: WeekDay[] = [
   {
     day: 'Monday',
     title: 'The First Week After',
-    narrative: `Nadira coordinates resettlement services for a refugee support agency. Fourteen families arrived in the metro area last quarter. Six more are expected by spring.\n\nMonday morning, she opens CROS™ with a cup of tea and reads the Metro Narrative.\n\nOver the weekend, a Companion named Yusuf logged a Reflection about the Hassan family: "Helped Ibrahim fill out his work permit application. He's anxious — keeps asking how long it will take. His wife Sahra is adjusting better. She found the halal grocery store on her own."\n\nNadira reads it carefully. She's learned that the small details — finding a grocery store, learning a bus route — matter more than any case milestone. She types a note in the Hassan family Journey: "Sahra is navigating independently. Ibrahim needs reassurance on timeline. Follow up Wednesday."`,
+    narrative: `Nadira coordinates resettlement services for a refugee support agency. Fourteen families arrived in the metro area last quarter. Six more are expected by spring.\n\nMonday morning, she opens Transitus™ with a cup of tea and reads the Metro Narrative.\n\nOver the weekend, a Companion named Yusuf logged a Reflection about the Hassan family: "Helped Ibrahim fill out his work permit application. He's anxious — keeps asking how long it will take. His wife Sahra is adjusting better. She found the halal grocery store on her own."\n\nNadira reads it carefully. She's learned that the small details — finding a grocery store, learning a bus route — matter more than any case milestone. She types a note in the Hassan family Journey: "Sahra is navigating independently. Ibrahim needs reassurance on timeline. Follow up Wednesday."`,
   },
   {
     day: 'Tuesday',
@@ -34,7 +34,7 @@ const sections: WeekDay[] = [
   {
     day: 'Sunday',
     title: 'What Resettlement Really Looks Like',
-    narrative: `Sunday is rest. But the week held an entire world.\n\nNadira knows things no intake form could contain:\n\n• Ibrahim was an electrician, and there's an apprenticeship three miles from his apartment.\n• Sahra found the grocery store on her own — a small victory that signals confidence.\n• Mrs. Nguyen can't read her medication labels, and she's not the only one.\n• Diego sorted coats without being asked, because helping is how he steadies himself.\n• The Trans are doing better than anyone knew — Mrs. Tran just needed someone to ask.\n• Two children start school Monday, and a Companion will be there with them.\n\nThe case file says "14 families in active resettlement." The Metro Narrative says something more human: "People are arriving, settling, and beginning to help each other."\n\nCROS™ didn't resettle anyone. The families did — with courage, patience, and the steady presence of people who showed up.\n\nCROS™ just remembered their names.`,
+    narrative: `Sunday is rest. But the week held an entire world.\n\nNadira knows things no intake form could contain:\n\n• Ibrahim was an electrician, and there's an apprenticeship three miles from his apartment.\n• Sahra found the grocery store on her own — a small victory that signals confidence.\n• Mrs. Nguyen can't read her medication labels, and she's not the only one.\n• Diego sorted coats without being asked, because helping is how he steadies himself.\n• The Trans are doing better than anyone knew — Mrs. Tran just needed someone to ask.\n• Two children start school Monday, and a Companion will be there with them.\n\nThe case file says "14 families in active resettlement." The Metro Narrative says something more human: "People are arriving, settling, and beginning to help each other."\n\nTransitus didn't resettle anyone. The families did — with courage, patience, and the steady presence of people who showed up.\n\nTransitus just remembered their names.`,
   },
 ];
 
@@ -42,9 +42,9 @@ export default function CommunityNetworkWeek() {
   return (
     <ArchetypeWeekTemplate
       archetypeTitle="Refugee Support Organization"
-      introLine="See how a refugee resettlement team uses CROS™ to hold family stories, notice shared needs, and walk alongside people rebuilding their lives."
+      introLine="See how a refugee resettlement team uses Transitus™ to hold family stories, notice shared needs, and walk alongside people rebuilding their lives."
       sections={sections}
-      closingReflection="CROS™ didn't resettle anyone. The families did — with courage, patience, and the steady presence of people who showed up. CROS™ just remembered their names."
+      closingReflection="Transitus™ didn't resettle anyone. The families did — with courage, patience, and the steady presence of people who showed up. Transitus™ just remembered their names."
       slug="community-network-week"
     />
   );

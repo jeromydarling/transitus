@@ -1,5 +1,5 @@
 /**
- * narrativeSEO — Narrative SEO Engine for CROS™.
+ * narrativeSEO — Narrative SEO Engine for Transitus™.
  *
  * WHAT: Generates structured SEO metadata (JSON-LD, OG, Twitter, keywords, alt text, email preview)
  *       from narrative page context — automatically and systemically.
@@ -63,12 +63,12 @@ export function generateNarrativeSEO(input: NarrativeSEOInput): NarrativeSEOOutp
 
   // Truncate title for SEO
   const seoTitle = input.title.length > 55
-    ? `${input.title.slice(0, 55)}… — CROS™`
-    : `${input.title} — CROS™`;
+    ? `${input.title.slice(0, 55)}… — Transitus™`
+    : `${input.title} — Transitus™`;
 
   // ─── JSON-LD schemas ───
   const authorName = input.voiceOrigin === 'nri'
-    ? 'CROS Narrative Intelligence (NRI™)'
+    ? 'Transitus Narrative Intelligence (NRI™)'
     : brand.appName;
 
   const articleSchema: Record<string, unknown> = {

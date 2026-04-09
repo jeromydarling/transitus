@@ -43,7 +43,7 @@ export default function MissionAtlasDetail() {
       <SeoHead
         title={title}
         description={entry.narrative.slice(0, 155)}
-        keywords={[entry.archetype, entry.metroType, 'mission patterns', 'CROS', 'community relationship']}
+        keywords={[entry.archetype, entry.metroType, 'mission patterns', 'Transitus', 'community relationship']}
         canonical={`/mission-atlas/${entry.id}`}
         ogType="article"
         jsonLd={[
@@ -59,7 +59,7 @@ export default function MissionAtlasDetail() {
             description: `How ${archLabel} organizations operate in ${metroLabel.toLowerCase()} communities.`,
           },
           breadcrumbSchema([
-            { name: 'CROS', url: '/' },
+            { name: 'Transitus', url: '/' },
             { name: 'Mission Atlas', url: '/mission-atlas' },
             { name: title, url: `/mission-atlas/${entry.id}` },
           ]),
@@ -67,7 +67,7 @@ export default function MissionAtlasDetail() {
       />
 
       <SeoBreadcrumb items={[
-        { label: 'CROS', to: '/' },
+        { label: 'Transitus', to: '/' },
         { label: 'Mission Atlas', to: '/mission-atlas' },
         { label: `${archLabel} · ${metroLabel}` },
       ]} />

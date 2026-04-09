@@ -101,13 +101,13 @@ export function SyncSettingsPanel() {
             <ArrowLeftRight className="h-5 w-5 text-primary" />
             Bi-Directional Sync
             <HelpTooltip
-              what="Controls which connectors write CROS data back to external CRMs"
+              what="Controls which connectors write Transitus data back to external CRMs"
               where="Relatio Sync Settings"
               why="Shepherds manage sync direction and conflict resolution for enterprise CRM integrations"
             />
           </h2>
           <p className="text-sm text-muted-foreground mt-1">
-            When enabled, changes in CROS flow back to your external system — with conflict safeguards.
+            When enabled, changes in Transitus flow back to your external system — with conflict safeguards.
           </p>
         </div>
         {conflictCount > 0 && (
@@ -138,8 +138,8 @@ export function SyncSettingsPanel() {
                 </div>
                 <CardDescription className="text-xs">
                   {direction === 'bidirectional'
-                    ? 'CROS writes changes back to this system'
-                    : 'Read-only — CROS listens but never writes'}
+                    ? 'Transitus writes changes back to this system'
+                    : 'Read-only — Transitus listens but never writes'}
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-3">
@@ -172,7 +172,7 @@ export function SyncSettingsPanel() {
                           Flag for review (safest)
                         </SelectItem>
                         <SelectItem value="cros_wins">
-                          CROS always wins
+                          Transitus always wins
                         </SelectItem>
                         <SelectItem value="remote_wins">
                           External system always wins

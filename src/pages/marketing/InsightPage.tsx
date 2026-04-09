@@ -127,7 +127,7 @@ export default function InsightPage() {
       <SeoInternalLinks
         heading={t('featurePage.seoLinksHeading')}
         links={[
-          { label: 'Manifesto', to: '/manifesto', description: 'The philosophy behind CROS.' },
+          { label: 'Manifesto', to: '/manifesto', description: 'The philosophy behind Transitus.' },
           { label: 'NRI', to: '/nri', description: 'Narrative Relational Intelligence explained.' },
           { label: 'Roles', to: '/roles', description: 'Shepherd, Companion, or Visitor - find your fit.' },
         ]}

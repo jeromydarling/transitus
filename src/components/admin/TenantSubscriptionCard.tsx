@@ -18,9 +18,9 @@ import { toast } from '@/components/ui/sonner';
 
 /** All available tiers with descriptions */
 const allTiers = [
-  { key: 'core', name: 'CROS Core', description: 'Relationship OS, Civitas, Signum baseline' },
-  { key: 'insight', name: 'CROS Insight', description: 'Testimonium, Drift Detection, Story Signals' },
-  { key: 'story', name: 'CROS Story', description: 'Impulsus journal, Executive exports, Narrative reporting' },
+  { key: 'core', name: 'Transitus Core', description: 'Relationship OS, Civitas, Signum baseline' },
+  { key: 'insight', name: 'Transitus Insight', description: 'Testimonium, Drift Detection, Story Signals' },
+  { key: 'story', name: 'Transitus Story', description: 'Impulsus journal, Executive exports, Narrative reporting' },
 ];
 
 export function TenantSubscriptionCard() {
@@ -59,10 +59,10 @@ export function TenantSubscriptionCard() {
 
   const tierLabel = (tier: string) => {
     const labels: Record<string, string> = {
-      core: 'CROS Core',
-      insight: 'CROS Insight',
-      story: 'CROS Story',
-      bridge: 'CROS Bridge (Add-on)',
+      core: 'Transitus Core',
+      insight: 'Transitus Insight',
+      story: 'Transitus Story',
+      bridge: 'Transitus Bridge (Add-on)',
     };
     return labels[tier] ?? tier;
   };
@@ -76,10 +76,10 @@ export function TenantSubscriptionCard() {
         <CardTitle className="flex items-center gap-2">
           <CreditCard className="h-5 w-5" />
           Subscription
-          <HelpTooltip content="Manage your CROS subscription plan, billing, and payment method through the Stripe customer portal." />
+          <HelpTooltip content="Manage your Transitus subscription plan, billing, and payment method through the Stripe customer portal." />
         </CardTitle>
         <CardDescription>
-          Manage your organization's CROS subscription and billing
+          Manage your organization's Transitus subscription and billing
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -211,7 +211,7 @@ export function TenantSubscriptionCard() {
               ) : (
                 <ArrowUpRight className="mr-2 h-4 w-4" />
               )}
-              Subscribe to CROS
+              Subscribe to Transitus
             </Button>
           )}
         </div>
