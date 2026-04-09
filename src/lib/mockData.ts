@@ -266,6 +266,7 @@ export const MOCK_COMMUNITY_STORIES: CommunityStory[] = [
   {
     id: 'cs-3',
     person_name: 'Destiny Okafor',
+    stakeholder_id: 's-4',
     location_detail: 'Orient Heights, East Boston',
     place_id: 'place-2',
     story: 'Destiny is 19 and has lived in East Boston her entire life. She grew up directly under Logan Airport\u2019s flight path. As a child she had chronic nosebleeds and headaches that doctors attributed to ultrafine particle exposure. She testified at the Massport Community Advisory Committee at age 17 \u2014 the youngest person to ever address the body. "I learned to sleep with earplugs when I was six," she says. "That\u2019s not normal for a kid. None of this is normal."',

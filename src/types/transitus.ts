@@ -59,6 +59,7 @@ export interface Place {
 export interface CommunityStory {
   id: string;
   person_name: string;
+  stakeholder_id?: string; // Link to a real People record (if this person is tracked as a stakeholder)
   location_detail?: string; // e.g. "106th and Burley" or "Block 4200, S. Pulaski"
   place_id: string;
   story: string;

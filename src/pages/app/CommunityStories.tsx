@@ -48,7 +48,13 @@ function StoryCard({
       {/* Person name and location */}
       <div className="space-y-1.5">
         <h3 className="font-serif text-xl font-semibold text-[hsl(20_28%_15%)]">
-          {story.person_name}
+          {story.stakeholder_id ? (
+            <Link to={`/app/people/${slugify(story.person_name)}`} className="hover:text-[hsl(16_65%_48%)] transition-colors underline decoration-[hsl(16_65%_48%/0.3)] underline-offset-2">
+              {story.person_name}
+            </Link>
+          ) : (
+            story.person_name
+          )}
         </h3>
         <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-[hsl(20_10%_42%)]">
           {story.location_detail && (

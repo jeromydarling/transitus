@@ -195,169 +195,104 @@ export default function Compass() {
           </p>
         </div>
 
-        {/* ── Four Quadrants ── */}
-        <div className="grid gap-4 sm:grid-cols-2 mb-8">
+        {/* ── Compass Cross Layout with SVG Rose ── */}
+        <div className="relative mb-8">
+          {/* SVG Compass Rose — faded background */}
+          <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 600 600" preserveAspectRatio="xMidYMid meet" style={{ opacity: 0.06 }}>
+            {/* Outer ring */}
+            <circle cx="300" cy="300" r="260" fill="none" stroke="hsl(20 25% 30%)" strokeWidth="1" />
+            <circle cx="300" cy="300" r="200" fill="none" stroke="hsl(20 25% 30%)" strokeWidth="0.5" strokeDasharray="4 4" />
+            <circle cx="300" cy="300" r="140" fill="none" stroke="hsl(20 25% 30%)" strokeWidth="0.5" strokeDasharray="2 4" />
+            {/* Cross lines */}
+            <line x1="300" y1="30" x2="300" y2="570" stroke="hsl(20 25% 30%)" strokeWidth="0.8" />
+            <line x1="30" y1="300" x2="570" y2="300" stroke="hsl(20 25% 30%)" strokeWidth="0.8" />
+            {/* Diagonal tick marks */}
+            <line x1="115" y1="115" x2="150" y2="150" stroke="hsl(20 25% 30%)" strokeWidth="0.5" />
+            <line x1="485" y1="115" x2="450" y2="150" stroke="hsl(20 25% 30%)" strokeWidth="0.5" />
+            <line x1="115" y1="485" x2="150" y2="450" stroke="hsl(20 25% 30%)" strokeWidth="0.5" />
+            <line x1="485" y1="485" x2="450" y2="450" stroke="hsl(20 25% 30%)" strokeWidth="0.5" />
+            {/* Cardinal points */}
+            <polygon points="300,50 290,80 310,80" fill="hsl(20 25% 30%)" />
+            <polygon points="550,300 520,290 520,310" fill="hsl(20 25% 30%)" />
+            <polygon points="300,550 290,520 310,520" fill="hsl(20 25% 30%)" />
+            <polygon points="50,300 80,290 80,310" fill="hsl(20 25% 30%)" />
+            {/* N E S W labels */}
+            <text x="300" y="38" textAnchor="middle" fontSize="14" fontWeight="600" fill="hsl(20 25% 30%)" fontFamily="Inter">N</text>
+            <text x="565" y="305" textAnchor="middle" fontSize="14" fontWeight="600" fill="hsl(20 25% 30%)" fontFamily="Inter">E</text>
+            <text x="300" y="575" textAnchor="middle" fontSize="14" fontWeight="600" fill="hsl(20 25% 30%)" fontFamily="Inter">S</text>
+            <text x="35" y="305" textAnchor="middle" fontSize="14" fontWeight="600" fill="hsl(20 25% 30%)" fontFamily="Inter">W</text>
+          </svg>
 
-          {/* NORTH — Place Intelligence */}
-          <div className="rounded-lg bg-white border border-[hsl(30_18%_82%)] p-5" style={{ borderLeftWidth: 4, borderLeftColor: DIR_COLORS.north }}>
-            <div className="flex items-center gap-2 mb-3">
-              <ArrowUp className="h-4 w-4" style={{ color: DIR_COLORS.north }} />
-              <span className="font-sans text-xs font-semibold uppercase tracking-widest" style={{ color: DIR_COLORS.north }}>
-                North — Place Intelligence
-              </span>
-            </div>
-            <p className="text-xs italic text-[hsl(20_25%_12%/0.5)] mb-3">
-              What's shifting in your places?
-            </p>
-
-            <div className="space-y-2 mb-4">
-              <div className="flex items-center gap-2 text-sm text-[hsl(20_25%_12%)]">
-                <Radio className="h-3.5 w-3.5 text-[hsl(20_8%_48%)]" />
-                <span><span className="font-semibold">{weekSignals.length}</span> new signals this week</span>
-              </div>
-              {topSignals.map(s => (
-                <div key={s.id} className="ml-5 text-xs text-[hsl(20_8%_48%)] leading-relaxed">
-                  {s.title}
+          {/* Cross grid: North top-center, West left / East right, South bottom-center */}
+          <div className="relative grid grid-cols-2 gap-4 max-w-3xl mx-auto">
+            {/* NORTH — spans both columns, centered */}
+            <div className="col-span-2 max-w-md mx-auto w-full">
+              <div className="rounded-xl bg-white/90 backdrop-blur-sm border border-[hsl(30_18%_82%)] p-5" style={{ borderTopWidth: 4, borderTopColor: DIR_COLORS.north }}>
+                <div className="flex items-center gap-2 mb-3">
+                  <ArrowUp className="h-4 w-4" style={{ color: DIR_COLORS.north }} />
+                  <span className="font-sans text-xs font-semibold uppercase tracking-widest" style={{ color: DIR_COLORS.north }}>North — Place Intelligence</span>
                 </div>
-              ))}
-              {topSignals.length === 0 && (
-                <p className="ml-5 text-xs text-[hsl(20_8%_52%)] italic">No unread signals.</p>
-              )}
-            </div>
-
-            <Link
-              to="/app/signals"
-              className="flex items-center gap-1 text-xs font-medium hover:underline"
-              style={{ color: DIR_COLORS.north }}
-            >
-              View signals <ChevronRight className="h-3 w-3" />
-            </Link>
-          </div>
-
-          {/* EAST — Transition Progress */}
-          <div className="rounded-lg bg-white border border-[hsl(30_18%_82%)] p-5" style={{ borderLeftWidth: 4, borderLeftColor: DIR_COLORS.east }}>
-            <div className="flex items-center gap-2 mb-3">
-              <ArrowRight className="h-4 w-4" style={{ color: DIR_COLORS.east }} />
-              <span className="font-sans text-xs font-semibold uppercase tracking-widest" style={{ color: DIR_COLORS.east }}>
-                East — Transition Progress
-              </span>
-            </div>
-            <p className="text-xs italic text-[hsl(20_25%_12%/0.5)] mb-3">
-              Are commitments advancing?
-            </p>
-
-            <div className="space-y-2 mb-4">
-              <div className="flex items-center gap-2 text-sm text-[hsl(20_25%_12%)]">
-                <Handshake className="h-3.5 w-3.5 text-[hsl(20_8%_48%)]" />
-                <span><span className="font-semibold">{inMotion.length}</span> being honored</span>
-              </div>
-              {delayed.length > 0 && (
-                <div className="flex items-center gap-2 text-sm text-[hsl(16_50%_48%)]">
-                  <AlertTriangle className="h-3.5 w-3.5" />
-                  <span><span className="font-semibold">{delayed.length}</span> conversation needed</span>
+                <p className="text-xs italic text-[hsl(20_25%_12%/0.5)] mb-3">What's shifting in your places?</p>
+                <div className="space-y-2 mb-4">
+                  <div className="flex items-center gap-2 text-sm text-[hsl(20_25%_12%)]">
+                    <Radio className="h-3.5 w-3.5 text-[hsl(20_8%_48%)]" />
+                    <span><strong>{weekSignals.length}</strong> new signals this week</span>
+                  </div>
+                  {topSignals.map(s => (<div key={s.id} className="ml-5 text-xs text-[hsl(20_8%_48%)]">{s.title}</div>))}
+                  {topSignals.length === 0 && <p className="ml-5 text-xs text-[hsl(20_8%_52%)] italic">No unread signals.</p>}
                 </div>
-              )}
-              {approachingRenewal.length > 0 && (
-                <div className="flex items-center gap-2 text-sm text-[hsl(20_25%_12%)]">
-                  <Clock className="h-3.5 w-3.5 text-[hsl(20_8%_48%)]" />
-                  <span><span className="font-semibold">{approachingRenewal.length}</span> approaching renewal</span>
-                </div>
-              )}
-            </div>
-
-            <Link
-              to="/app/commitments"
-              className="flex items-center gap-1 text-xs font-medium hover:underline"
-              style={{ color: DIR_COLORS.east }}
-            >
-              View commitments <ChevronRight className="h-3 w-3" />
-            </Link>
-          </div>
-
-          {/* SOUTH — Community Presence */}
-          <div className="rounded-lg bg-white border border-[hsl(30_18%_82%)] p-5" style={{ borderLeftWidth: 4, borderLeftColor: DIR_COLORS.south }}>
-            <div className="flex items-center gap-2 mb-3">
-              <ArrowDown className="h-4 w-4" style={{ color: DIR_COLORS.south }} />
-              <span className="font-sans text-xs font-semibold uppercase tracking-widest" style={{ color: DIR_COLORS.south }}>
-                South — Community Presence
-              </span>
-            </div>
-            <p className="text-xs italic text-[hsl(20_25%_12%/0.5)] mb-3">
-              Who needs attention?
-            </p>
-
-            <div className="space-y-2 mb-4">
-              <div className="flex items-center gap-2 text-sm text-[hsl(20_25%_12%)]">
-                <Users className="h-3.5 w-3.5 text-[hsl(20_8%_48%)]" />
-                <span><span className="font-semibold">{quietStakeholders.length}</span> waiting for reconnection</span>
-              </div>
-              {recentStories.length > 0 && (
-                <div className="flex items-center gap-2 text-sm text-[hsl(20_25%_12%)]">
-                  <Sparkles className="h-3.5 w-3.5 text-[hsl(20_8%_48%)]" />
-                  <span><span className="font-semibold">{recentStories.length}</span> new community stories</span>
-                </div>
-              )}
-              <div className="flex items-center gap-2 text-sm text-[hsl(20_25%_12%)]">
-                <NotebookPen className="h-3.5 w-3.5 text-[hsl(20_8%_48%)]" />
-                <span><span className="font-semibold">{recentFieldNotes.length}</span> field notes this week</span>
+                <Link to="/app/signals" className="flex items-center gap-1 text-xs font-medium hover:underline" style={{ color: DIR_COLORS.north }}>View signals <ChevronRight className="h-3 w-3" /></Link>
               </div>
             </div>
 
-            <Link
-              to="/app/people"
-              className="flex items-center gap-1 text-xs font-medium hover:underline"
-              style={{ color: DIR_COLORS.south }}
-            >
-              View people <ChevronRight className="h-3 w-3" />
-            </Link>
-          </div>
-
-          {/* WEST — Stewardship & Repair */}
-          <div className="rounded-lg bg-white border border-[hsl(30_18%_82%)] p-5" style={{ borderLeftWidth: 4, borderLeftColor: DIR_COLORS.west }}>
-            <div className="flex items-center gap-2 mb-3">
-              <ArrowLeft className="h-4 w-4" style={{ color: DIR_COLORS.west }} />
-              <span className="font-sans text-xs font-semibold uppercase tracking-widest" style={{ color: DIR_COLORS.west }}>
-                West — Stewardship & Repair
-              </span>
-            </div>
-            <p className="text-xs italic text-[hsl(20_25%_12%/0.5)] mb-3">
-              What needs mending or rest?
-            </p>
-
-            <div className="space-y-2 mb-4">
-              {breached.length > 0 && (
-                <div className="flex items-center gap-2 text-sm text-[hsl(0_50%_45%)]">
-                  <AlertTriangle className="h-3.5 w-3.5" />
-                  <span><span className="font-semibold">{breached.length}</span> repair ready</span>
-                </div>
-              )}
-              {delayed.length > 0 && (
-                <div className="flex items-center gap-2 text-sm text-[hsl(16_50%_48%)]">
-                  <Clock className="h-3.5 w-3.5" />
-                  <span><span className="font-semibold">{delayed.length}</span> conversation needed</span>
-                </div>
-              )}
-              {heavyEntries.length > 0 && (
-                <div className="flex items-center gap-2 text-sm text-[hsl(20_25%_12%)]">
-                  <NotebookPen className="h-3.5 w-3.5 text-[hsl(20_8%_48%)]" />
-                  <span><span className="font-semibold">{heavyEntries.length}</span> journal entries carrying weight</span>
-                </div>
-              )}
-              {breached.length === 0 && delayed.length === 0 && heavyEntries.length === 0 && (
-                <p className="text-sm text-[hsl(20_8%_52%)] italic">Nothing urgent needs mending right now.</p>
-              )}
-              <p className="text-xs text-[hsl(20_25%_12%/0.5)] italic mt-2">
-                How is your team's capacity this week?
-              </p>
+            {/* WEST — left column */}
+            <div className="rounded-xl bg-white/90 backdrop-blur-sm border border-[hsl(30_18%_82%)] p-5" style={{ borderLeftWidth: 4, borderLeftColor: DIR_COLORS.west }}>
+              <div className="flex items-center gap-2 mb-3">
+                <ArrowLeft className="h-4 w-4" style={{ color: DIR_COLORS.west }} />
+                <span className="font-sans text-xs font-semibold uppercase tracking-widest" style={{ color: DIR_COLORS.west }}>West — Stewardship</span>
+              </div>
+              <p className="text-xs italic text-[hsl(20_25%_12%/0.5)] mb-3">What needs mending or rest?</p>
+              <div className="space-y-2 mb-4">
+                {breached.length > 0 && <div className="flex items-center gap-2 text-sm text-[hsl(0_50%_45%)]"><AlertTriangle className="h-3.5 w-3.5" /><span><strong>{breached.length}</strong> repair ready</span></div>}
+                {delayed.length > 0 && <div className="flex items-center gap-2 text-sm text-[hsl(16_50%_48%)]"><Clock className="h-3.5 w-3.5" /><span><strong>{delayed.length}</strong> conversation needed</span></div>}
+                {heavyEntries.length > 0 && <div className="flex items-center gap-2 text-sm text-[hsl(20_25%_12%)]"><NotebookPen className="h-3.5 w-3.5 text-[hsl(20_8%_48%)]" /><span><strong>{heavyEntries.length}</strong> carrying weight</span></div>}
+                {breached.length === 0 && delayed.length === 0 && heavyEntries.length === 0 && <p className="text-sm text-[hsl(20_8%_52%)] italic">Rest well. Nothing urgent.</p>}
+                <p className="text-xs text-[hsl(20_25%_12%/0.5)] italic mt-2">How is your team's capacity?</p>
+              </div>
+              <Link to="/app/journal" className="flex items-center gap-1 text-xs font-medium hover:underline" style={{ color: DIR_COLORS.west }}>Open journal <ChevronRight className="h-3 w-3" /></Link>
             </div>
 
-            <Link
-              to="/app/journal"
-              className="flex items-center gap-1 text-xs font-medium hover:underline"
-              style={{ color: DIR_COLORS.west }}
-            >
-              Open journal <ChevronRight className="h-3 w-3" />
-            </Link>
+            {/* EAST — right column */}
+            <div className="rounded-xl bg-white/90 backdrop-blur-sm border border-[hsl(30_18%_82%)] p-5" style={{ borderRightWidth: 4, borderRightColor: DIR_COLORS.east }}>
+              <div className="flex items-center gap-2 mb-3">
+                <ArrowRight className="h-4 w-4" style={{ color: DIR_COLORS.east }} />
+                <span className="font-sans text-xs font-semibold uppercase tracking-widest" style={{ color: DIR_COLORS.east }}>East — Transition</span>
+              </div>
+              <p className="text-xs italic text-[hsl(20_25%_12%/0.5)] mb-3">Are commitments advancing?</p>
+              <div className="space-y-2 mb-4">
+                <div className="flex items-center gap-2 text-sm text-[hsl(20_25%_12%)]"><Handshake className="h-3.5 w-3.5 text-[hsl(20_8%_48%)]" /><span><strong>{inMotion.length}</strong> being honored</span></div>
+                {delayed.length > 0 && <div className="flex items-center gap-2 text-sm text-[hsl(16_50%_48%)]"><AlertTriangle className="h-3.5 w-3.5" /><span><strong>{delayed.length}</strong> conversation needed</span></div>}
+                {approachingRenewal.length > 0 && <div className="flex items-center gap-2 text-sm text-[hsl(20_25%_12%)]"><Clock className="h-3.5 w-3.5 text-[hsl(20_8%_48%)]" /><span><strong>{approachingRenewal.length}</strong> approaching renewal</span></div>}
+              </div>
+              <Link to="/app/commitments" className="flex items-center gap-1 text-xs font-medium hover:underline" style={{ color: DIR_COLORS.east }}>View commitments <ChevronRight className="h-3 w-3" /></Link>
+            </div>
+
+            {/* SOUTH — spans both columns, centered */}
+            <div className="col-span-2 max-w-md mx-auto w-full">
+              <div className="rounded-xl bg-white/90 backdrop-blur-sm border border-[hsl(30_18%_82%)] p-5" style={{ borderBottomWidth: 4, borderBottomColor: DIR_COLORS.south }}>
+                <div className="flex items-center gap-2 mb-3">
+                  <ArrowDown className="h-4 w-4" style={{ color: DIR_COLORS.south }} />
+                  <span className="font-sans text-xs font-semibold uppercase tracking-widest" style={{ color: DIR_COLORS.south }}>South — Community Presence</span>
+                </div>
+                <p className="text-xs italic text-[hsl(20_25%_12%/0.5)] mb-3">Who needs attention?</p>
+                <div className="space-y-2 mb-4">
+                  <div className="flex items-center gap-2 text-sm text-[hsl(20_25%_12%)]"><Users className="h-3.5 w-3.5 text-[hsl(20_8%_48%)]" /><span><strong>{quietStakeholders.length}</strong> waiting for reconnection</span></div>
+                  {recentStories.length > 0 && <div className="flex items-center gap-2 text-sm text-[hsl(20_25%_12%)]"><Sparkles className="h-3.5 w-3.5 text-[hsl(20_8%_48%)]" /><span><strong>{recentStories.length}</strong> new community stories</span></div>}
+                  <div className="flex items-center gap-2 text-sm text-[hsl(20_25%_12%)]"><NotebookPen className="h-3.5 w-3.5 text-[hsl(20_8%_48%)]" /><span><strong>{recentFieldNotes.length}</strong> field notes this week</span></div>
+                </div>
+                <Link to="/app/people" className="flex items-center gap-1 text-xs font-medium hover:underline" style={{ color: DIR_COLORS.south }}>View people <ChevronRight className="h-3 w-3" /></Link>
+              </div>
+            </div>
           </div>
         </div>
 
