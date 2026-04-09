@@ -24,10 +24,8 @@ import {
   Factory,
   Thermometer,
   BarChart3,
-  Shield,
   Heart,
   Plus,
-  Pencil,
 } from 'lucide-react';
 
 import { useTransitusData } from '@/contexts/TransitusDataContext';
@@ -416,29 +414,6 @@ function SidebarSignals({ signals, addButton }: { signals: Signal[]; addButton?:
           ))}
         </div>
       )}
-    </div>
-  );
-}
-
-function SidebarJourney({ journey }: { journey: Journey }) {
-  return (
-    <div>
-      <SectionHeader icon={BookOpen} label="Journey" />
-      <Link
-        to={`/app/journeys/${journey.id}`}
-        className="block rounded-lg bg-white p-4 border border-[hsl(30_18%_82%)] hover:shadow-md transition-shadow"
-      >
-        <p className="text-sm font-medium text-[hsl(20_10%_20%)]">
-          {journey.title}
-        </p>
-        <p className="mt-1 text-xs text-[hsl(20_8%_48%)] line-clamp-2">
-          {journey.description}
-        </p>
-        <p className="mt-2 text-[10px] font-medium text-[hsl(16_65%_48%)]">
-          {journey.chapters.length} chapter
-          {journey.chapters.length !== 1 ? 's' : ''}
-        </p>
-      </Link>
     </div>
   );
 }
@@ -1246,6 +1221,42 @@ export default function PlaceDetail() {
                 </div>
               );
             })()}
+
+            {/* Journey */}
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <SectionHeader icon={BookOpen} label="Journey" />
+                {!linkedJourney && (
+                  <CreateJourneyForm
+                    defaultPlaceId={place.id}
+                    trigger={
+                      <button className="p-1 rounded hover:bg-[hsl(30_18%_82%/0.5)] text-[hsl(16_65%_48%)]">
+                        <Plus className="h-4 w-4" />
+                      </button>
+                    }
+                  />
+                )}
+              </div>
+              {linkedJourney ? (
+                <Link
+                  to={`/app/journeys/${linkedJourney.id}`}
+                  className="block rounded-lg bg-white p-4 border border-[hsl(30_18%_82%)] hover:shadow-md transition-shadow"
+                >
+                  <p className="text-sm font-medium text-[hsl(20_10%_20%)]">
+                    {linkedJourney.title}
+                  </p>
+                  <p className="mt-1 text-xs text-[hsl(20_8%_48%)] line-clamp-2">
+                    {linkedJourney.description}
+                  </p>
+                  <p className="mt-2 text-[10px] font-medium text-[hsl(16_65%_48%)]">
+                    {linkedJourney.chapters.length} chapter
+                    {linkedJourney.chapters.length !== 1 ? 's' : ''}
+                  </p>
+                </Link>
+              ) : (
+                <p className="text-xs text-[hsl(20_8%_52%)] italic">No journey started yet.</p>
+              )}
+            </div>
           </aside>
         </div>
       </div>
