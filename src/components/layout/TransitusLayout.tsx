@@ -8,6 +8,7 @@
 
 import { useState, useCallback, useEffect } from 'react';
 import { Link, useLocation, Outlet } from 'react-router-dom';
+import { NRILauncher } from '@/components/nri/NRILauncher';
 import {
   Home, MapPin, Users, Handshake, NotebookPen,
   Radio, BookOpen, Library, FileText, Globe,
@@ -172,6 +173,9 @@ export function TransitusLayout({ title, children }: TransitusLayoutProps) {
           {children}
           <Outlet />
         </main>
+
+        {/* NRI Companion */}
+        <NRILauncher />
       </div>
 
       {/* ══════════════════════════════════════════════════════════════════
