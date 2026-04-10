@@ -82,6 +82,8 @@ interface PlaceMapProps {
   stakeholderLocations?: { id: string; name: string; role: string; initials: string }[];
   activeWork?: ActiveWork[];
   population?: number;
+  povertyRate?: number;
+  medianIncome?: number;
   className?: string;
 }
 
@@ -135,6 +137,8 @@ export default function PlaceMap({
   stakeholderLocations = [],
   activeWork = [],
   population,
+  povertyRate,
+  medianIncome,
   className = '',
 }: PlaceMapProps) {
   // Use real Mapbox when token is available
@@ -148,6 +152,8 @@ export default function PlaceMap({
           stakeholderLocations={stakeholderLocations}
           activeWork={activeWork}
           population={population}
+          povertyRate={povertyRate}
+          medianIncome={medianIncome}
           className={className}
         />
       </Suspense>

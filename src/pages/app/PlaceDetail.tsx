@@ -679,6 +679,8 @@ export default function PlaceDetail() {
           }))}
           activeWork={place.active_work}
           population={place.population_estimate}
+          povertyRate={census?.pct_below_poverty}
+          medianIncome={census?.median_household_income}
           className={`h-[300px] ${mapView === 'atlas' ? '' : 'hidden'}`}
         />
 

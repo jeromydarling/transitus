@@ -7,7 +7,7 @@ import { useState, useMemo, useCallback, useRef } from 'react';
 import Map, { Marker, NavigationControl, Source, Layer, Popup } from 'react-map-gl';
 import type { MapRef } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import { MapPin, Building2, AlertTriangle, Users, Briefcase } from 'lucide-react';
+import { MapPin, Building2, AlertTriangle, Users, Briefcase, DollarSign } from 'lucide-react';
 import type { EnvironmentalBurden, ActiveWork } from '@/types/transitus';
 import type { ECHOFacility } from '@/lib/api/echo';
 
@@ -43,6 +43,8 @@ interface MapboxPlaceMapProps {
   stakeholderLocations?: StakeholderLocation[];
   activeWork?: ActiveWork[];
   population?: number;
+  povertyRate?: number;      // pct_below_poverty from Census
+  medianIncome?: number;     // median_household_income from Census
   className?: string;
 }
 
@@ -50,13 +52,43 @@ interface PopupInfo {
   lat: number; lng: number; title: string; detail: string; color: string;
 }
 
+/** Build a GeoJSON circle polygon (approximation) for a given center + radius in km. */
+function geoCircle(centerLng: number, centerLat: number, radiusKm: number, points = 64) {
+  const coords: [number, number][] = [];
+  for (let i = 0; i <= points; i++) {
+    const angle = (i / points) * 2 * Math.PI;
+    const dx = radiusKm * Math.cos(angle);
+    const dy = radiusKm * Math.sin(angle);
+    const lat2 = centerLat + (dy / 111.32);
+    const lng2 = centerLng + (dx / (111.32 * Math.cos(centerLat * Math.PI / 180)));
+    coords.push([lng2, lat2]);
+  }
+  return coords;
+}
+
+/** Poverty rate → severity color. National avg ~11.6%. */
+function povertyColor(rate: number): string {
+  if (rate >= 30) return 'rgba(153, 27, 27, 0.28)';   // deep red — extreme
+  if (rate >= 20) return 'rgba(220, 38, 38, 0.22)';   // red — very high
+  if (rate >= 15) return 'rgba(234, 88, 12, 0.18)';   // orange — high
+  return 'rgba(217, 119, 6, 0.12)';                    // amber — elevated
+}
+
+function povertyBorderColor(rate: number): string {
+  if (rate >= 30) return 'rgba(153, 27, 27, 0.6)';
+  if (rate >= 20) return 'rgba(220, 38, 38, 0.5)';
+  if (rate >= 15) return 'rgba(234, 88, 12, 0.4)';
+  return 'rgba(217, 119, 6, 0.3)';
+}
+
 export default function MapboxPlaceMap({
   lat, lng, name, environmental_burdens, facilities = [],
-  stakeholderLocations = [], activeWork = [], population, className = '',
+  stakeholderLocations = [], activeWork = [], population,
+  povertyRate, medianIncome, className = '',
 }: MapboxPlaceMapProps) {
   const [popup, setPopup] = useState<PopupInfo | null>(null);
   const [mapStyle, setMapStyle] = useState<'mineral' | 'atlas' | 'classic' | 'bw' | 'satellite' | 'dark'>('classic');
-  const [showLayers, setShowLayers] = useState({ facilities: true, burdens: true, people: true, work: true });
+  const [showLayers, setShowLayers] = useState({ facilities: true, burdens: true, people: true, work: true, poverty: true });
 
   const styleConfig: Record<string, { url: string; pitch: number; label: string }> = {
     mineral: { url: 'mapbox://styles/mapbox/cjtep62gq54l21frr1whf27ak', pitch: 0, label: 'Mineral' },
@@ -128,6 +160,21 @@ export default function MapboxPlaceMap({
     return { type: 'FeatureCollection', features };
   }, [environmental_burdens, lat, lng]);
 
+  // Poverty zone — census-tract–sized circle showing poverty rate
+  const povertyGeoJson = useMemo(() => {
+    if (povertyRate == null) return null;
+    // ~1.5km radius approximates a census tract in a dense urban area
+    const coords = geoCircle(lng, lat, 1.5);
+    return {
+      type: 'FeatureCollection' as const,
+      features: [{
+        type: 'Feature' as const,
+        geometry: { type: 'Polygon' as const, coordinates: [coords] },
+        properties: { rate: povertyRate },
+      }],
+    };
+  }, [lat, lng, povertyRate]);
+
   const mapRef = useRef<MapRef>(null);
 
   const onMapLoad = useCallback(() => {}, []);
@@ -191,6 +238,47 @@ export default function MapboxPlaceMap({
               }}
             />
           </Source>
+        )}
+
+        {/* Poverty zone overlay */}
+        {showLayers.poverty && povertyGeoJson && povertyRate != null && (
+          <>
+            <Source id="poverty-zone" type="geojson" data={povertyGeoJson}>
+              <Layer
+                id="poverty-fill"
+                type="fill"
+                paint={{
+                  'fill-color': povertyColor(povertyRate),
+                  'fill-opacity': 1,
+                }}
+              />
+              <Layer
+                id="poverty-outline"
+                type="line"
+                paint={{
+                  'line-color': povertyBorderColor(povertyRate),
+                  'line-width': 2,
+                  'line-dasharray': [4, 3],
+                }}
+              />
+            </Source>
+            {/* Poverty data callout — positioned NE of center */}
+            <Marker longitude={lng + 0.008} latitude={lat + 0.006} anchor="bottom-left">
+              <div className="bg-black/70 backdrop-blur-sm rounded-lg px-3 py-2 border border-white/15 shadow-lg max-w-[160px]">
+                <p className="text-[9px] uppercase tracking-widest text-white/50 font-semibold mb-1">Poverty Rate</p>
+                <p className="text-lg font-bold text-white leading-none">{povertyRate}%</p>
+                <p className="text-[10px] text-white/50 mt-0.5">below poverty line</p>
+                {medianIncome != null && (
+                  <p className="text-[10px] text-white/60 mt-1 border-t border-white/10 pt-1">
+                    Median income: <span className="text-white/80 font-medium">${medianIncome.toLocaleString()}</span>
+                  </p>
+                )}
+                <p className="text-[9px] text-white/40 mt-1">
+                  National avg: 11.6%
+                </p>
+              </div>
+            </Marker>
+          </>
         )}
 
         {/* Burden radius rings as circle markers */}
@@ -314,6 +402,7 @@ export default function MapboxPlaceMap({
       {/* Layer toggles */}
       <div className="absolute bottom-3 right-3 flex flex-col gap-1">
         {([
+          { key: 'poverty' as const, label: 'Poverty', icon: DollarSign, count: povertyRate != null ? 1 : 0 },
           { key: 'burdens' as const, label: 'Burdens', icon: AlertTriangle, count: environmental_burdens.length },
           { key: 'facilities' as const, label: 'Facilities', icon: Building2, count: facilities.length },
           { key: 'people' as const, label: 'People', icon: Users, count: stakeholderLocations.length },
@@ -323,7 +412,7 @@ export default function MapboxPlaceMap({
             className={`flex items-center gap-1.5 px-2 py-1 rounded text-[10px] font-medium transition-all ${showLayers[l.key] ? 'bg-white/90 text-[hsl(20_25%_12%)] shadow-sm' : 'bg-black/30 text-white/50'}`}
           >
             <l.icon className="h-3 w-3" />
-            {l.label} ({l.count})
+            {l.label}{l.key === 'poverty' && povertyRate != null ? ` ${povertyRate}%` : ` (${l.count})`}
           </button>
         ))}
       </div>
