@@ -705,8 +705,25 @@ export default function PlaceDetail() {
           )
         )}
 
-        {/* Spacer after map tabs */}
-        <div className="mb-6" />
+        {/* Section nav — sticky below top bar */}
+        <nav className="sticky top-12 z-20 -mx-4 sm:-mx-6 px-4 sm:px-6 py-2 my-4 bg-[hsl(38_30%_95%/0.95)] backdrop-blur-sm border-b border-[hsl(30_18%_82%/0.5)] overflow-x-auto">
+          <div className="flex items-center gap-1 min-w-max">
+            {[
+              { id: 'who-lives', label: 'Who Lives Here' },
+              { id: 'burdens', label: 'Burdens' },
+              { id: 'work', label: 'Active Work' },
+              { id: 'ejscreen', label: 'EJScreen' },
+              { id: 'census', label: 'Census' },
+              { id: 'hazards', label: 'Hazards' },
+              { id: 'facilities', label: 'Facilities' },
+              { id: 'discussion', label: 'Discussion' },
+            ].map(s => (
+              <a key={s.id} href={`#${s.id}`} className="px-2.5 py-1 rounded-md text-[10px] font-medium text-[hsl(20_25%_12%/0.5)] hover:text-[hsl(16_65%_48%)] hover:bg-[hsl(16_65%_48%/0.06)] transition-colors whitespace-nowrap">
+                {s.label}
+              </a>
+            ))}
+          </div>
+        </nav>
 
         {/* Two-column layout starts immediately after map */}
         <div className="flex flex-col lg:flex-row gap-8">
@@ -755,7 +772,7 @@ export default function PlaceDetail() {
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
               <Heart className="h-4 w-4 text-[hsl(16_65%_48%)]" />
-              <span className="font-sans text-xs font-semibold uppercase tracking-widest text-[hsl(16_65%_48%)]">Who Lives Here</span>
+              <span className="font-sans text-xs font-semibold uppercase tracking-widest text-[hsl(16_65%_48%)]"id="who-lives" >Who Lives Here</span>
             </div>
             <EditHumanImpactForm place={place} census={census} />
           </div>
@@ -782,7 +799,7 @@ export default function PlaceDetail() {
               <div className="flex items-center justify-between mb-2">
                 <SectionHeader
                   icon={AlertTriangle}
-                  label="Environmental Burdens"
+                  id="burdens" label="Environmental Burdens"
                 />
                 <AddBurdenForm place={place} />
               </div>
@@ -823,7 +840,7 @@ export default function PlaceDetail() {
             {/* Active Work */}
             <section>
               <div className="flex items-center justify-between mb-2">
-                <SectionHeader icon={Briefcase} label="Active Work" />
+                <SectionHeader icon={Briefcase} id="work" label="Active Work" />
                 <AddActiveWorkForm place={place} />
               </div>
               {place.active_work.length === 0 ? (
@@ -867,7 +884,7 @@ export default function PlaceDetail() {
             {ejData && (
               <section>
                 <div className="flex items-center justify-between mb-3">
-                  <SectionHeader icon={BarChart3} label="EJScreen Data" />
+                  <SectionHeader icon={BarChart3} id="ejscreen" label="EJScreen Data" />
                   <div className="flex items-center gap-2">
                     <Label htmlFor="layman-toggle" className="text-[11px] text-[hsl(20_10%_45%)] cursor-pointer">
                       {laymanMode ? 'Plain language' : 'Technical data'}
@@ -928,7 +945,7 @@ export default function PlaceDetail() {
             {/* Census Data */}
             {census && (
               <section>
-                <SectionHeader icon={Users} label="Census Data" />
+                <SectionHeader icon={Users} id="census" label="Census Data" />
                 <div className="rounded-lg bg-white border border-[hsl(30_18%_82%)] overflow-hidden">
                   <div className="px-4 py-3 bg-[hsl(30_20%_96%)] border-b border-[hsl(30_18%_90%)]">
                     <p className="text-xs text-[hsl(20_8%_48%)]">
@@ -1017,7 +1034,7 @@ export default function PlaceDetail() {
             {/* Hazard Risks */}
             {hazards.length > 0 && (
               <section>
-                <SectionHeader icon={Thermometer} label="Hazard Risks" />
+                <SectionHeader icon={Thermometer} id="hazards" label="Hazard Risks" />
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {hazards.map((hazard, i) => (
                     <div
@@ -1056,7 +1073,7 @@ export default function PlaceDetail() {
               <section>
                 <SectionHeader
                   icon={Factory}
-                  label="Nearby Facilities"
+                  id="facilities" label="Nearby Facilities"
                 />
                 <div className="flex flex-col gap-3">
                   {facilities.map((f) => (
@@ -1199,6 +1216,7 @@ export default function PlaceDetail() {
             )}
 
             {/* ── Discussion ── */}
+            <div id="discussion" />
             <section>
               <CommentThread entityType="place" entityId={place.id} />
             </section>
