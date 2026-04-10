@@ -698,6 +698,9 @@ export default function PlaceDetail() {
           )
         )}
 
+        {/* Spacer after map tabs */}
+        <div className="mb-6" />
+
         {/* Two-column layout starts immediately after map */}
         <div className="flex flex-col lg:flex-row gap-8">
           {/* ── Main column ── */}
