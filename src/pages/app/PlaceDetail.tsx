@@ -681,13 +681,13 @@ export default function PlaceDetail() {
           population={place.population_estimate}
           povertyRate={census?.pct_below_poverty}
           medianIncome={census?.median_household_income}
-          className={`h-[300px] ${mapView === 'atlas' ? '' : 'hidden'}`}
+          className={`h-[375px] ${mapView === 'atlas' ? '' : 'hidden'}`}
         />
 
         {/* NASA Satellite tab */}
         {mapView === 'satellite' && (
           satelliteUrl ? (
-            <div className="h-[300px] rounded-lg overflow-hidden border border-[hsl(30_18%_82%)] bg-[hsl(20_20%_15%)] relative">
+            <div className="h-[375px] rounded-lg overflow-hidden border border-[hsl(30_18%_82%)] bg-[hsl(20_20%_15%)] relative">
               <img
                 src={satelliteUrl}
                 alt={`Satellite view of ${place.name}`}
@@ -703,7 +703,7 @@ export default function PlaceDetail() {
               </div>
             </div>
           ) : (
-            <div className="h-[300px] rounded-lg border border-[hsl(30_18%_82%)] bg-[hsl(20_20%_15%)] flex items-center justify-center">
+            <div className="h-[375px] rounded-lg border border-[hsl(30_18%_82%)] bg-[hsl(20_20%_15%)] flex items-center justify-center">
               <p className="text-sm text-[hsl(38_35%_90%/0.4)]">Loading satellite imagery...</p>
             </div>
           )
