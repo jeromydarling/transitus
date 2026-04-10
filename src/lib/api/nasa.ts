@@ -28,39 +28,17 @@ export interface GIBSLayer {
   format: 'image/jpeg' | 'image/png' | 'application/vnd.mapbox-vector-tile';
 }
 
-/** Fetch satellite imagery for a location — tries multiple dates for coverage */
+/** Fetch satellite imagery URL for a location.
+ * The returned URL works directly as an <img> src — no CORS issues.
+ * NASA's Earth Imagery API returns a JPEG redirect for Landsat imagery.
+ */
 export async function fetchEarthImagery(lat: number, lng: number, date?: string): Promise<NASAEarthImagery> {
   const apiKey = import.meta.env.VITE_NASA_API_KEY || 'DEMO_KEY';
-  // Try multiple dates for better coverage (some dates have cloud cover or no imagery)
-  const dates = date ? [date] : ['2024-06-15', '2024-03-15', '2023-09-15', '2023-06-15'];
-
-  for (const d of dates) {
-    try {
-      // First check if imagery exists via the assets endpoint
-      const assetsUrl = `https://api.nasa.gov/planetary/earth/assets?lon=${lng}&lat=${lat}&date=${d}&dim=0.1&api_key=${apiKey}`;
-      const res = await fetch(assetsUrl, { signal: AbortSignal.timeout(5000) });
-      if (res.ok) {
-        const data = await res.json();
-        if (data.url) {
-          // Assets endpoint found imagery — use the direct imagery URL
-          const imgUrl = `https://api.nasa.gov/planetary/earth/imagery?lon=${lng}&lat=${lat}&date=${d}&dim=0.15&api_key=${apiKey}`;
-          return { id: `earth-${lat}-${lng}`, date: data.date || d, url: imgUrl, lat, lng, caption: 'Landsat satellite imagery' };
-        }
-      }
-    } catch {
-      // Try next date
-    }
-  }
-
-  // Fallback: return the URL anyway (might work, might not)
-  const d = dates[0];
-  return {
-    id: `earth-${lat}-${lng}`,
-    date: d,
-    url: `https://api.nasa.gov/planetary/earth/imagery?lon=${lng}&lat=${lat}&date=${d}&dim=0.15&api_key=${apiKey}`,
-    lat, lng,
-    caption: 'Landsat satellite imagery',
-  };
+  const d = date || '2024-06-15';
+  // Use the imagery URL directly — works as an <img> src (browser follows redirect)
+  // dim=0.15 gives ~15km field of view which is good for neighborhoods
+  const url = `https://api.nasa.gov/planetary/earth/imagery?lon=${lng}&lat=${lat}&date=${d}&dim=0.15&api_key=${apiKey}`;
+  return { id: `earth-${lat}-${lng}`, date: d, url, lat, lng, caption: 'Landsat satellite imagery' };
 }
 
 /** Available GIBS layers for map overlays */

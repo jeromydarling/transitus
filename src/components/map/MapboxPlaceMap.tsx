@@ -54,13 +54,14 @@ export default function MapboxPlaceMap({
   stakeholderLocations = [], activeWork = [], population, className = '',
 }: MapboxPlaceMapProps) {
   const [popup, setPopup] = useState<PopupInfo | null>(null);
-  const [mapStyle, setMapStyle] = useState<'light' | 'satellite' | 'dark'>('light');
+  const [mapStyle, setMapStyle] = useState<'light' | 'satellite' | 'dark' | 'terrain'>('light');
   const [showLayers, setShowLayers] = useState({ facilities: true, burdens: true, people: true, work: true });
 
   const styles: Record<string, string> = {
     light: 'mapbox://styles/mapbox/light-v11',
     satellite: 'mapbox://styles/mapbox/satellite-streets-v12',
-    dark: 'mapbox://styles/mapbox/dark-v11',
+    dark: 'mapbox://styles/mapbox/navigation-night-v1',
+    terrain: 'mapbox://styles/mapbox/outdoors-v12',
   };
 
   // Facility GeoJSON for circle layer
@@ -98,6 +99,32 @@ export default function MapboxPlaceMap({
     }),
   [activeWork, lat, lng]);
 
+  // Burden heatmap — concentric circles representing pollution intensity
+  const burdenHeatmapGeoJson = useMemo(() => {
+    if (!environmental_burdens.length) return null;
+    const severityWeight: Record<string, number> = { critical: 1.0, high: 0.7, moderate: 0.4, low: 0.2 };
+    // Create concentric points spreading outward to simulate a heatmap
+    const features: any[] = [];
+    environmental_burdens.forEach((b, i) => {
+      const weight = severityWeight[b.severity] || 0.3;
+      const angle = (2 * Math.PI * i) / environmental_burdens.length;
+      // Multiple rings per burden for heatmap density
+      for (let ring = 0; ring < 5; ring++) {
+        const dist = 0.002 + ring * 0.001;
+        const jitter = (Math.random() - 0.5) * 0.001;
+        features.push({
+          type: 'Feature',
+          geometry: {
+            type: 'Point',
+            coordinates: [lng + dist * Math.cos(angle) + jitter, lat + dist * Math.sin(angle) + jitter],
+          },
+          properties: { weight, severity: b.severity },
+        });
+      }
+    });
+    return { type: 'FeatureCollection', features };
+  }, [environmental_burdens, lat, lng]);
+
   const toggleLayer = (key: keyof typeof showLayers) => {
     setShowLayers(prev => ({ ...prev, [key]: !prev[key] }));
   };
@@ -105,7 +132,7 @@ export default function MapboxPlaceMap({
   return (
     <div className={`relative rounded-lg overflow-hidden border border-[hsl(30_18%_82%)] ${className}`} style={{ minHeight: '300px' }}>
       <Map
-        initialViewState={{ longitude: lng, latitude: lat, zoom: 13.5, pitch: 0 }}
+        initialViewState={{ longitude: lng, latitude: lat, zoom: 13.5, pitch: mapStyle === 'terrain' ? 45 : 0 }}
         style={{ width: '100%', height: '100%' }}
         mapStyle={styles[mapStyle]}
         mapboxAccessToken={MAPBOX_TOKEN}
@@ -127,6 +154,31 @@ export default function MapboxPlaceMap({
                 'circle-stroke-width': 2,
                 'circle-stroke-color': '#fff',
                 'circle-stroke-opacity': 0.8,
+              }}
+            />
+          </Source>
+        )}
+
+        {/* Pollution heatmap overlay from burden data */}
+        {showLayers.burdens && burdenHeatmapGeoJson && (
+          <Source id="burden-heatmap" type="geojson" data={burdenHeatmapGeoJson}>
+            <Layer
+              id="burden-heatmap-layer"
+              type="heatmap"
+              paint={{
+                'heatmap-weight': ['get', 'weight'],
+                'heatmap-intensity': 1.5,
+                'heatmap-radius': 60,
+                'heatmap-opacity': 0.4,
+                'heatmap-color': [
+                  'interpolate', ['linear'], ['heatmap-density'],
+                  0, 'rgba(0,0,0,0)',
+                  0.2, 'rgba(214,158,46,0.3)',
+                  0.4, 'rgba(234,88,12,0.4)',
+                  0.6, 'rgba(220,38,38,0.5)',
+                  0.8, 'rgba(185,28,28,0.6)',
+                  1.0, 'rgba(127,29,29,0.7)',
+                ],
               }}
             />
           </Source>
@@ -210,10 +262,16 @@ export default function MapboxPlaceMap({
           </Marker>
         ))}
 
-        {/* Center pin */}
-        <Marker longitude={lng} latitude={lat} anchor="bottom">
-          <div className="bg-[hsl(16_65%_48%)] rounded-full p-2.5 shadow-lg border-2 border-white">
-            <MapPin className="h-5 w-5 text-white" />
+        {/* Center pin — pulsing */}
+        <Marker longitude={lng} latitude={lat} anchor="center">
+          <div className="relative flex items-center justify-center">
+            {/* Pulse rings */}
+            <div className="absolute w-16 h-16 rounded-full border-2 border-[hsl(16_65%_48%/0.3)] animate-ping" style={{ animationDuration: '3s' }} />
+            <div className="absolute w-10 h-10 rounded-full border border-[hsl(16_65%_48%/0.2)] animate-ping" style={{ animationDuration: '2s', animationDelay: '0.5s' }} />
+            {/* Pin */}
+            <div className="relative bg-[hsl(16_65%_48%)] rounded-full p-2.5 shadow-lg border-2 border-white z-10">
+              <MapPin className="h-5 w-5 text-white" />
+            </div>
           </div>
         </Marker>
 
@@ -237,10 +295,10 @@ export default function MapboxPlaceMap({
 
       {/* Map style toggle */}
       <div className="absolute top-3 left-3 flex gap-1">
-        {(['light', 'satellite', 'dark'] as const).map(s => (
+        {(['light', 'terrain', 'satellite', 'dark'] as const).map(s => (
           <button key={s} onClick={() => setMapStyle(s)}
             className={`px-2 py-1 rounded text-[10px] font-medium transition-all ${mapStyle === s ? 'bg-white text-[hsl(20_25%_12%)] shadow-sm' : 'bg-black/30 text-white/70 hover:bg-black/50'}`}
-          >{s === 'light' ? 'Atlas' : s === 'satellite' ? 'Satellite' : 'Dark'}</button>
+          >{{ light: 'Atlas', terrain: 'Terrain', satellite: 'Satellite', dark: 'Night' }[s]}</button>
         ))}
       </div>
 
