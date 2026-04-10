@@ -55,14 +55,15 @@ export default function MapboxPlaceMap({
   stakeholderLocations = [], activeWork = [], population, className = '',
 }: MapboxPlaceMapProps) {
   const [popup, setPopup] = useState<PopupInfo | null>(null);
-  const [mapStyle, setMapStyle] = useState<'atlas' | 'satellite' | 'dark' | 'terrain'>('atlas');
+  const [mapStyle, setMapStyle] = useState<'atlas' | 'classic' | 'bw' | 'satellite' | 'dark'>('atlas');
   const [showLayers, setShowLayers] = useState({ facilities: true, burdens: true, people: true, work: true });
 
-  const styles: Record<string, string> = {
-    atlas: 'mapbox://styles/transitu/cmns6pcce006u01s788y95ct8',
-    terrain: 'mapbox://styles/mapbox/outdoors-v12',
-    satellite: 'mapbox://styles/mapbox/satellite-streets-v12',
-    dark: 'mapbox://styles/mapbox/navigation-night-v1',
+  const styleConfig: Record<string, { url: string; pitch: number; label: string }> = {
+    atlas: { url: 'mapbox://styles/transitu/cmns6pcce006u01s788y95ct8', pitch: 45, label: 'Atlas 3D' },
+    classic: { url: 'mapbox://styles/transitu/cmns7i5r4000001si3upk9hai', pitch: 0, label: 'Classic' },
+    bw: { url: 'mapbox://styles/transitu/cmns7lexz003h01s73cazcfqq', pitch: 0, label: 'B&W' },
+    satellite: { url: 'mapbox://styles/mapbox/satellite-streets-v12', pitch: 45, label: 'Satellite' },
+    dark: { url: 'mapbox://styles/mapbox/navigation-night-v1', pitch: 45, label: 'Night' },
   };
 
   // Facility GeoJSON for circle layer
@@ -138,9 +139,9 @@ export default function MapboxPlaceMap({
     <div className={`relative rounded-lg overflow-hidden border border-[hsl(30_18%_82%)] ${className}`} style={{ minHeight: '300px' }}>
       <Map
         ref={mapRef}
-        initialViewState={{ longitude: lng, latitude: lat, zoom: 15, pitch: 45, bearing: -15 }}
+        initialViewState={{ longitude: lng, latitude: lat, zoom: 15, pitch: styleConfig[mapStyle].pitch, bearing: styleConfig[mapStyle].pitch > 0 ? -15 : 0 }}
         style={{ width: '100%', height: '100%' }}
-        mapStyle={styles[mapStyle]}
+        mapStyle={styleConfig[mapStyle].url}
         mapboxAccessToken={MAPBOX_TOKEN}
         attributionControl={false}
         onClick={() => setPopup(null)}
@@ -302,10 +303,10 @@ export default function MapboxPlaceMap({
 
       {/* Map style toggle */}
       <div className="absolute top-3 left-3 flex gap-1">
-        {(['atlas', 'terrain', 'satellite', 'dark'] as const).map(s => (
+        {(Object.keys(styleConfig) as (keyof typeof styleConfig)[]).map(s => (
           <button key={s} onClick={() => setMapStyle(s)}
             className={`px-2 py-1 rounded text-[10px] font-medium transition-all ${mapStyle === s ? 'bg-white text-[hsl(20_25%_12%)] shadow-sm' : 'bg-black/30 text-white/70 hover:bg-black/50'}`}
-          >{{ atlas: 'Atlas', terrain: 'Terrain', satellite: 'Satellite', dark: 'Night' }[s]}</button>
+          >{styleConfig[s].label}</button>
         ))}
       </div>
 
