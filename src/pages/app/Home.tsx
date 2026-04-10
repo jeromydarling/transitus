@@ -211,22 +211,36 @@ function CommitmentRow({ commitment, placeNameById }: { commitment: Commitment; 
 }
 
 function FieldNoteCard({ note, authorName, placeNameById }: { note: FieldNote; authorName: string; placeNameById: (id: string) => string }) {
+  const typeColors: Record<string, string> = {
+    site_visit: 'hsl(16 65% 48%)',
+    listening_session: 'hsl(198 55% 42%)',
+    community_meeting: 'hsl(152 40% 28%)',
+    prayer_vigil: 'hsl(270 40% 50%)',
+    utility_meeting: 'hsl(38 80% 55%)',
+    household_interview: 'hsl(20 30% 40%)',
+    corridor_observation: 'hsl(152 35% 35%)',
+    quick_note: 'hsl(20 12% 46%)',
+  };
+  const color = typeColors[note.note_type] || 'hsl(20 12% 46%)';
+
   return (
     <Link
       to="/app/field-notes"
-      className="rounded-lg bg-white p-4 border border-[hsl(30_18%_82%)] hover:shadow-md transition-shadow block"
+      className="rounded-lg bg-white border border-[hsl(30_18%_82%)] hover:shadow-md transition-shadow block overflow-hidden"
     >
-      <div className="flex items-center gap-2 mb-2">
-        <span className="inline-flex items-center rounded-full bg-[hsl(30_20%_92%)] px-2 py-0.5 text-[10px] font-medium text-[hsl(20_10%_40%)]">
+      {/* Colored type header */}
+      <div className="px-4 py-2 flex items-center justify-between" style={{ backgroundColor: color }}>
+        <span className="text-[10px] font-semibold uppercase tracking-wider text-white">
           {FIELD_NOTE_TYPE_LABELS[note.note_type]}
         </span>
-        <span className="flex items-center gap-1 text-[10px] text-[hsl(20_8%_52%)]">
+        <span className="flex items-center gap-1 text-[10px] text-white/70">
           <MapPin className="h-2.5 w-2.5" />
-          {placeNameById(note.place_id).length > 30
-            ? placeNameById(note.place_id).slice(0, 30) + '\u2026'
+          {placeNameById(note.place_id).length > 25
+            ? placeNameById(note.place_id).slice(0, 25) + '\u2026'
             : placeNameById(note.place_id)}
         </span>
       </div>
+      <div className="p-4">
       <p className="text-sm text-[hsl(20_10%_25%)] line-clamp-3 leading-relaxed">
         {note.content}
       </p>
@@ -237,6 +251,7 @@ function FieldNoteCard({ note, authorName, placeNameById }: { note: FieldNote; a
         <span className="text-[10px] text-[hsl(20_8%_52%)]">
           {formatDate(note.created_at)}
         </span>
+      </div>
       </div>
     </Link>
   );
