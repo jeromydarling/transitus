@@ -55,7 +55,7 @@ export default function MapboxPlaceMap({
   stakeholderLocations = [], activeWork = [], population, className = '',
 }: MapboxPlaceMapProps) {
   const [popup, setPopup] = useState<PopupInfo | null>(null);
-  const [mapStyle, setMapStyle] = useState<'mineral' | 'atlas' | 'classic' | 'bw' | 'satellite' | 'dark'>('mineral');
+  const [mapStyle, setMapStyle] = useState<'mineral' | 'atlas' | 'classic' | 'bw' | 'satellite' | 'dark'>('classic');
   const [showLayers, setShowLayers] = useState({ facilities: true, burdens: true, people: true, work: true });
 
   const styleConfig: Record<string, { url: string; pitch: number; label: string }> = {
@@ -178,7 +178,7 @@ export default function MapboxPlaceMap({
                 'heatmap-weight': ['get', 'weight'],
                 'heatmap-intensity': 1.5,
                 'heatmap-radius': 60,
-                'heatmap-opacity': 0.4,
+                'heatmap-opacity': 0.65,
                 'heatmap-color': [
                   'interpolate', ['linear'], ['heatmap-density'],
                   0, 'rgba(0,0,0,0)',
