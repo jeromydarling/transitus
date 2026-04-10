@@ -145,6 +145,8 @@ export default function PlaceMap({
           lat={lat} lng={lng} name={name}
           environmental_burdens={environmental_burdens}
           facilities={facilities}
+          stakeholderLocations={stakeholderLocations}
+          activeWork={activeWork}
           population={population}
           className={className}
         />

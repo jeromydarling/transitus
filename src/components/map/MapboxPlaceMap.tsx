@@ -1,29 +1,37 @@
 /**
- * MapboxPlaceMap — Real Mapbox GL JS map for Place pages.
- * Falls back to the CSS atlas placeholder when no Mapbox token is configured.
+ * MapboxPlaceMap — Real Mapbox GL JS map with data overlays.
+ * Shows facilities, burdens, stakeholders, and active work on an interactive map.
  */
 
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import Map, { Marker, NavigationControl, Source, Layer, Popup } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import { MapPin, Building2, AlertTriangle } from 'lucide-react';
+import { MapPin, Building2, AlertTriangle, Users, Briefcase } from 'lucide-react';
 import type { EnvironmentalBurden, ActiveWork } from '@/types/transitus';
 import type { ECHOFacility } from '@/lib/api/echo';
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN || '';
 
 const SEVERITY_COLORS: Record<string, string> = {
-  critical: '#dc2626',
-  high: '#ea580c',
-  moderate: '#d97706',
-  low: '#16a34a',
+  critical: '#dc2626', high: '#ea580c', moderate: '#d97706', low: '#16a34a',
 };
 
 const COMPLIANCE_COLORS: Record<string, string> = {
-  significant_violation: '#dc2626',
-  violation: '#ea580c',
-  in_compliance: '#16a34a',
+  significant_violation: '#dc2626', violation: '#ea580c', in_compliance: '#16a34a',
 };
+
+const ROLE_COLORS: Record<string, string> = {
+  steward: '#2d6a4f', field_companion: '#c2553a', listener: '#3a86a8',
+  convener: '#d4973b', analyst: '#7c3aed', sponsor: '#6b4a3a', resident_witness: '#c2553a',
+};
+
+const WORK_COLORS: Record<string, string> = {
+  upcoming: '#d97706', in_progress: '#c2553a', completed: '#2d6a4f',
+};
+
+interface StakeholderLocation {
+  id: string; name: string; role: string; initials: string;
+}
 
 interface MapboxPlaceMapProps {
   lat: number;
@@ -31,23 +39,23 @@ interface MapboxPlaceMapProps {
   name: string;
   environmental_burdens: EnvironmentalBurden[];
   facilities?: ECHOFacility[];
+  stakeholderLocations?: StakeholderLocation[];
+  activeWork?: ActiveWork[];
   population?: number;
   className?: string;
 }
 
 interface PopupInfo {
-  lat: number;
-  lng: number;
-  title: string;
-  detail: string;
-  color: string;
+  lat: number; lng: number; title: string; detail: string; color: string;
 }
 
 export default function MapboxPlaceMap({
-  lat, lng, name, environmental_burdens, facilities = [], population, className = '',
+  lat, lng, name, environmental_burdens, facilities = [],
+  stakeholderLocations = [], activeWork = [], population, className = '',
 }: MapboxPlaceMapProps) {
   const [popup, setPopup] = useState<PopupInfo | null>(null);
   const [mapStyle, setMapStyle] = useState<'light' | 'satellite' | 'dark'>('light');
+  const [showLayers, setShowLayers] = useState({ facilities: true, burdens: true, people: true, work: true });
 
   const styles: Record<string, string> = {
     light: 'mapbox://styles/mapbox/light-v11',
@@ -55,7 +63,7 @@ export default function MapboxPlaceMap({
     dark: 'mapbox://styles/mapbox/dark-v11',
   };
 
-  // Build facility GeoJSON
+  // Facility GeoJSON for circle layer
   const facilityGeoJson = useMemo(() => ({
     type: 'FeatureCollection' as const,
     features: facilities.map(f => ({
@@ -64,32 +72,50 @@ export default function MapboxPlaceMap({
       properties: {
         name: f.facility_name,
         compliance: f.compliance_status,
-        releases: f.total_releases_lbs || 0,
-        chemicals: (f.top_chemicals || []).join(', '),
         color: COMPLIANCE_COLORS[f.compliance_status] || '#888',
-        radius: Math.max(6, Math.min(20, Math.sqrt((f.total_releases_lbs || 0) / 1000))),
+        radius: Math.max(8, Math.min(22, Math.sqrt((f.total_releases_lbs || 0) / 500))),
       },
     })),
   }), [facilities]);
 
+  // Spread stakeholders in a circle around the center
+  const stakeholderPositions = useMemo(() =>
+    stakeholderLocations.map((s, i) => {
+      const angle = (2 * Math.PI * i) / stakeholderLocations.length - Math.PI / 2;
+      const offsetLat = 0.005 * Math.sin(angle);
+      const offsetLng = 0.005 * Math.cos(angle);
+      return { ...s, lat: lat + offsetLat, lng: lng + offsetLng };
+    }),
+  [stakeholderLocations, lat, lng]);
+
+  // Spread active work in a smaller circle
+  const workPositions = useMemo(() =>
+    activeWork.map((w, i) => {
+      const angle = (2 * Math.PI * i) / activeWork.length;
+      const offsetLat = 0.003 * Math.sin(angle);
+      const offsetLng = 0.003 * Math.cos(angle);
+      return { ...w, lat: lat + offsetLat, lng: lng + offsetLng };
+    }),
+  [activeWork, lat, lng]);
+
+  const toggleLayer = (key: keyof typeof showLayers) => {
+    setShowLayers(prev => ({ ...prev, [key]: !prev[key] }));
+  };
+
   return (
     <div className={`relative rounded-lg overflow-hidden border border-[hsl(30_18%_82%)] ${className}`} style={{ minHeight: '300px' }}>
       <Map
-        initialViewState={{
-          longitude: lng,
-          latitude: lat,
-          zoom: 13,
-          pitch: 0,
-        }}
+        initialViewState={{ longitude: lng, latitude: lat, zoom: 13.5, pitch: 0 }}
         style={{ width: '100%', height: '100%' }}
         mapStyle={styles[mapStyle]}
         mapboxAccessToken={MAPBOX_TOKEN}
         attributionControl={false}
+        onClick={() => setPopup(null)}
       >
-        <NavigationControl position="top-right" />
+        <NavigationControl position="top-right" showCompass={false} />
 
-        {/* Facility circles */}
-        {facilityGeoJson.features.length > 0 && (
+        {/* Facility circles layer */}
+        {showLayers.facilities && facilityGeoJson.features.length > 0 && (
           <Source id="facilities" type="geojson" data={facilityGeoJson}>
             <Layer
               id="facility-circles"
@@ -97,115 +123,147 @@ export default function MapboxPlaceMap({
               paint={{
                 'circle-radius': ['get', 'radius'],
                 'circle-color': ['get', 'color'],
-                'circle-opacity': 0.6,
-                'circle-stroke-width': 1.5,
+                'circle-opacity': 0.5,
+                'circle-stroke-width': 2,
                 'circle-stroke-color': '#fff',
+                'circle-stroke-opacity': 0.8,
               }}
             />
           </Source>
         )}
 
-        {/* Center marker */}
-        <Marker longitude={lng} latitude={lat} anchor="bottom">
-          <div className="flex flex-col items-center">
-            <div className="bg-[hsl(16_65%_48%)] rounded-full p-2 shadow-lg border-2 border-white">
-              <MapPin className="h-5 w-5 text-white" />
-            </div>
-          </div>
-        </Marker>
+        {/* Burden radius rings as circle markers */}
+        {showLayers.burdens && environmental_burdens.map((b, i) => {
+          const severity = b.severity;
+          const radius = severity === 'critical' ? 0.008 : severity === 'high' ? 0.006 : severity === 'moderate' ? 0.004 : 0.002;
+          const angle = (2 * Math.PI * i) / environmental_burdens.length;
+          return (
+            <Marker key={`burden-${i}`} longitude={lng + radius * Math.cos(angle) * 0.3} latitude={lat + radius * Math.sin(angle) * 0.3} anchor="center">
+              <div
+                className="rounded-full border-2 cursor-pointer"
+                style={{
+                  width: severity === 'critical' ? 28 : severity === 'high' ? 22 : severity === 'moderate' ? 18 : 14,
+                  height: severity === 'critical' ? 28 : severity === 'high' ? 22 : severity === 'moderate' ? 18 : 14,
+                  backgroundColor: SEVERITY_COLORS[severity] + '30',
+                  borderColor: SEVERITY_COLORS[severity],
+                }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setPopup({
+                    lat: lat + radius * Math.sin(angle) * 0.3,
+                    lng: lng + radius * Math.cos(angle) * 0.3,
+                    title: b.name, detail: `${b.severity} · ${b.description}`,
+                    color: SEVERITY_COLORS[severity],
+                  });
+                }}
+              />
+            </Marker>
+          );
+        })}
 
         {/* Facility markers with click */}
-        {facilities.map(f => (
-          <Marker
-            key={f.registry_id}
-            longitude={f.lng}
-            latitude={f.lat}
-            anchor="center"
-            onClick={e => {
-              e.originalEvent.stopPropagation();
-              setPopup({
-                lat: f.lat, lng: f.lng,
-                title: f.facility_name,
-                detail: `${f.compliance_status.replace(/_/g, ' ')} · ${(f.total_releases_lbs || 0).toLocaleString()} lbs released${f.top_chemicals?.length ? ' · ' + f.top_chemicals.slice(0, 3).join(', ') : ''}`,
-                color: COMPLIANCE_COLORS[f.compliance_status] || '#888',
-              });
-            }}
-          >
-            <div className="cursor-pointer">
+        {showLayers.facilities && facilities.map(f => (
+          <Marker key={f.registry_id} longitude={f.lng} latitude={f.lat} anchor="center">
+            <div
+              className="cursor-pointer p-1 rounded-full bg-white/80 shadow-sm"
+              onClick={(e) => {
+                e.stopPropagation();
+                setPopup({
+                  lat: f.lat, lng: f.lng, title: f.facility_name,
+                  detail: `${f.compliance_status.replace(/_/g, ' ')} · ${(f.total_releases_lbs || 0).toLocaleString()} lbs${f.top_chemicals?.length ? ' · ' + f.top_chemicals.slice(0, 2).join(', ') : ''}`,
+                  color: COMPLIANCE_COLORS[f.compliance_status] || '#888',
+                });
+              }}
+            >
               <Building2 className="h-4 w-4" style={{ color: COMPLIANCE_COLORS[f.compliance_status] || '#888' }} />
             </div>
           </Marker>
         ))}
 
+        {/* Stakeholder pins */}
+        {showLayers.people && stakeholderPositions.map(s => (
+          <Marker key={s.id} longitude={s.lng} latitude={s.lat} anchor="center">
+            <div
+              className="w-7 h-7 rounded-full flex items-center justify-center text-[9px] font-bold text-white border-2 border-white shadow-md cursor-pointer"
+              style={{ backgroundColor: ROLE_COLORS[s.role] || '#6b4a3a' }}
+              onClick={(e) => {
+                e.stopPropagation();
+                setPopup({ lat: s.lat, lng: s.lng, title: s.name, detail: s.role.replace(/_/g, ' '), color: ROLE_COLORS[s.role] || '#6b4a3a' });
+              }}
+            >
+              {s.initials}
+            </div>
+          </Marker>
+        ))}
+
+        {/* Active work markers */}
+        {showLayers.work && workPositions.map(w => (
+          <Marker key={w.id} longitude={w.lng} latitude={w.lat} anchor="center">
+            <div
+              className="w-5 h-5 rotate-45 rounded-sm border-2 border-white shadow-sm cursor-pointer"
+              style={{ backgroundColor: WORK_COLORS[w.status] || '#888' }}
+              onClick={(e) => {
+                e.stopPropagation();
+                setPopup({ lat: w.lat, lng: w.lng, title: w.title, detail: `${w.type.replace(/_/g, ' ')} · ${w.status}`, color: WORK_COLORS[w.status] || '#888' });
+              }}
+            />
+          </Marker>
+        ))}
+
+        {/* Center pin */}
+        <Marker longitude={lng} latitude={lat} anchor="bottom">
+          <div className="bg-[hsl(16_65%_48%)] rounded-full p-2.5 shadow-lg border-2 border-white">
+            <MapPin className="h-5 w-5 text-white" />
+          </div>
+        </Marker>
+
         {/* Popup */}
         {popup && (
-          <Popup
-            longitude={popup.lng}
-            latitude={popup.lat}
-            anchor="bottom"
-            onClose={() => setPopup(null)}
-            closeButton={true}
-            closeOnClick={false}
-            className="[&_.mapboxgl-popup-content]:rounded-lg [&_.mapboxgl-popup-content]:p-3 [&_.mapboxgl-popup-content]:shadow-lg"
+          <Popup longitude={popup.lng} latitude={popup.lat} anchor="bottom" onClose={() => setPopup(null)}
+            closeButton closeOnClick={false}
+            className="[&_.mapboxgl-popup-content]:rounded-lg [&_.mapboxgl-popup-content]:p-3 [&_.mapboxgl-popup-content]:shadow-lg [&_.mapboxgl-popup-content]:max-w-[240px]"
           >
-            <div>
-              <p className="text-xs font-semibold text-[hsl(20_25%_12%)]" style={{ borderLeft: `3px solid ${popup.color}`, paddingLeft: '8px' }}>
-                {popup.title}
-              </p>
-              <p className="text-[10px] text-[hsl(20_25%_12%/0.6)] mt-1 ml-[11px]">{popup.detail}</p>
-            </div>
+            <p className="text-xs font-semibold text-[hsl(20_25%_12%)]" style={{ borderLeft: `3px solid ${popup.color}`, paddingLeft: 8 }}>{popup.title}</p>
+            <p className="text-[10px] text-[hsl(20_25%_12%/0.6)] mt-1 ml-[11px]">{popup.detail}</p>
           </Popup>
         )}
       </Map>
 
-      {/* Place name overlay */}
-      <div className="absolute bottom-3 left-3 bg-black/40 backdrop-blur-sm rounded-lg px-3 py-2 border border-white/10">
-        <p className="text-sm font-serif text-white/90">{name}</p>
+      {/* Place name + population overlay */}
+      <div className="absolute bottom-3 left-3 bg-black/50 backdrop-blur-sm rounded-lg px-3 py-2 border border-white/10">
+        <p className="text-sm font-serif text-white/95">{name}</p>
         {population && <p className="text-[10px] text-white/60">{population.toLocaleString()} residents</p>}
-      </div>
-
-      {/* Coordinate badge */}
-      <div className="absolute bottom-3 right-3 bg-black/30 backdrop-blur-sm rounded px-2 py-1 border border-white/10">
-        <span className="text-[10px] font-mono text-white/70">
-          {lat.toFixed(4)}°N, {Math.abs(lng).toFixed(4)}°{lng >= 0 ? 'E' : 'W'}
-        </span>
       </div>
 
       {/* Map style toggle */}
       <div className="absolute top-3 left-3 flex gap-1">
         {(['light', 'satellite', 'dark'] as const).map(s => (
-          <button
-            key={s}
-            onClick={() => setMapStyle(s)}
-            className={`px-2 py-1 rounded text-[10px] font-medium transition-all ${
-              mapStyle === s
-                ? 'bg-white text-[hsl(20_25%_12%)] shadow-sm'
-                : 'bg-black/30 text-white/70 hover:bg-black/50'
-            }`}
-          >
-            {s === 'light' ? 'Atlas' : s === 'satellite' ? 'Satellite' : 'Dark'}
-          </button>
+          <button key={s} onClick={() => setMapStyle(s)}
+            className={`px-2 py-1 rounded text-[10px] font-medium transition-all ${mapStyle === s ? 'bg-white text-[hsl(20_25%_12%)] shadow-sm' : 'bg-black/30 text-white/70 hover:bg-black/50'}`}
+          >{s === 'light' ? 'Atlas' : s === 'satellite' ? 'Satellite' : 'Dark'}</button>
         ))}
       </div>
 
-      {/* Burden legend */}
-      {environmental_burdens.length > 0 && (
-        <div className="absolute top-3 left-1/2 -translate-x-1/2 bg-black/30 backdrop-blur-sm rounded px-3 py-1.5 border border-white/10 flex gap-3">
-          {environmental_burdens.slice(0, 3).map((b, i) => (
-            <div key={i} className="flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full" style={{ backgroundColor: SEVERITY_COLORS[b.severity] }} />
-              <span className="text-[9px] text-white/70">{b.name}</span>
-            </div>
-          ))}
-        </div>
-      )}
+      {/* Layer toggles */}
+      <div className="absolute bottom-3 right-3 flex flex-col gap-1">
+        {([
+          { key: 'burdens' as const, label: 'Burdens', icon: AlertTriangle, count: environmental_burdens.length },
+          { key: 'facilities' as const, label: 'Facilities', icon: Building2, count: facilities.length },
+          { key: 'people' as const, label: 'People', icon: Users, count: stakeholderLocations.length },
+          { key: 'work' as const, label: 'Work', icon: Briefcase, count: activeWork.length },
+        ]).filter(l => l.count > 0).map(l => (
+          <button key={l.key} onClick={() => toggleLayer(l.key)}
+            className={`flex items-center gap-1.5 px-2 py-1 rounded text-[10px] font-medium transition-all ${showLayers[l.key] ? 'bg-white/90 text-[hsl(20_25%_12%)] shadow-sm' : 'bg-black/30 text-white/50'}`}
+          >
+            <l.icon className="h-3 w-3" />
+            {l.label} ({l.count})
+          </button>
+        ))}
+      </div>
     </div>
   );
 }
 
-/**
- * Check if Mapbox token is available.
- */
 export function hasMapboxToken(): boolean {
   return !!MAPBOX_TOKEN;
 }
