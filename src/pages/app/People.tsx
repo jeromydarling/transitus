@@ -15,6 +15,7 @@ import { CreateOrganizationForm } from '@/components/forms/CreateOrganizationFor
 import { ROLE_LABELS } from '@/types/transitus';
 import type { Stakeholder, TransitusRole } from '@/types/transitus';
 import RoleDistribution from '@/components/charts/RoleDistribution';
+import PersonAvatar from '@/components/ui/PersonAvatar';
 
 // ── Helpers ──
 
@@ -72,33 +73,38 @@ function StakeholderCard({ stakeholder, orgName }: { stakeholder: Stakeholder; o
       to={`/app/people/${slugify(stakeholder.name)}`}
       className="block rounded-lg bg-white p-4 border border-[hsl(30_18%_82%)] hover:border-[hsl(30_18%_70%)] hover:shadow-md transition-all group"
     >
-      <div className="flex items-start justify-between gap-3 mb-2">
+      <div className="flex items-start gap-3 mb-2">
+        <PersonAvatar name={stakeholder.name} size={44} />
         <div className="min-w-0 flex-1">
-          <h3 className="font-serif text-lg leading-snug tracking-tight group-hover:text-[hsl(152_45%_30%)] transition-colors">
-            {stakeholder.name}
-          </h3>
-          {stakeholder.title && (
-            <p className="text-xs text-[hsl(30_10%_45%)] mt-0.5 truncate">{stakeholder.title}</p>
-          )}
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0 flex-1">
+              <h3 className="font-serif text-lg leading-snug tracking-tight group-hover:text-[hsl(152_45%_30%)] transition-colors">
+                {stakeholder.name}
+              </h3>
+              {stakeholder.title && (
+                <p className="text-xs text-[hsl(30_10%_45%)] mt-0.5 truncate">{stakeholder.title}</p>
+              )}
+            </div>
+            <TrustBadge level={stakeholder.trust_level} />
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2 mt-2 mb-3">
+            <RoleBadge role={stakeholder.role} />
+            {orgName && (
+              <span className="text-xs text-[hsl(30_10%_45%)] truncate max-w-[200px]">
+                {orgName}
+              </span>
+            )}
+          </div>
+
+          <div className="flex items-center justify-between text-[11px] text-[hsl(30_10%_50%)]">
+            <span className="flex items-center gap-1">
+              <MapPin className="h-3 w-3" />
+              {stakeholder.place_ids.length} place{stakeholder.place_ids.length !== 1 ? 's' : ''}
+            </span>
+            <span>Last contact: {formatDate(stakeholder.last_contact)}</span>
+          </div>
         </div>
-        <TrustBadge level={stakeholder.trust_level} />
-      </div>
-
-      <div className="flex flex-wrap items-center gap-2 mb-3">
-        <RoleBadge role={stakeholder.role} />
-        {orgName && (
-          <span className="text-xs text-[hsl(30_10%_45%)] truncate max-w-[200px]">
-            {orgName}
-          </span>
-        )}
-      </div>
-
-      <div className="flex items-center justify-between text-[11px] text-[hsl(30_10%_50%)]">
-        <span className="flex items-center gap-1">
-          <MapPin className="h-3 w-3" />
-          {stakeholder.place_ids.length} place{stakeholder.place_ids.length !== 1 ? 's' : ''}
-        </span>
-        <span>Last contact: {formatDate(stakeholder.last_contact)}</span>
       </div>
     </Link>
   );

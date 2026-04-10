@@ -21,6 +21,7 @@ import {
 
 import { MOCK_DASHBOARD } from '@/lib/mockData';
 import { useTransitusData } from '@/contexts/TransitusDataContext';
+import PersonAvatar from '@/components/ui/PersonAvatar';
 import ActivitySparkline from '@/components/charts/ActivitySparkline';
 import { getCurrentSeason, getDayMoment, getWeekRhythm, getNearbyMilestones } from '@/lib/transitionCalendar';
 
@@ -246,12 +247,15 @@ function QuietStakeholderRow({ stakeholder }: { stakeholder: Stakeholder }) {
       to="/app/people"
       className="flex items-center justify-between gap-3 rounded-lg bg-white px-4 py-3 border border-[hsl(30_18%_82%)] hover:shadow-md transition-shadow"
     >
-      <div className="min-w-0">
-        <p className="text-sm font-medium text-[hsl(20_10%_20%)]">{stakeholder.name}</p>
-        <p className="text-xs text-[hsl(20_8%_48%)]">
-          {ROLE_LABELS[stakeholder.role]}
-          {stakeholder.title ? ` \u00b7 ${stakeholder.title}` : ''}
-        </p>
+      <div className="flex items-center gap-3 min-w-0">
+        <PersonAvatar name={stakeholder.name} size={28} />
+        <div className="min-w-0">
+          <p className="text-sm font-medium text-[hsl(20_10%_20%)]">{stakeholder.name}</p>
+          <p className="text-xs text-[hsl(20_8%_48%)]">
+            {ROLE_LABELS[stakeholder.role]}
+            {stakeholder.title ? ` \u00b7 ${stakeholder.title}` : ''}
+          </p>
+        </div>
       </div>
       <div className="shrink-0 text-right">
         {days !== null && (
@@ -405,10 +409,13 @@ export default function Home() {
               <blockquote className="font-serif-body text-base italic text-[hsl(20_25%_12%/0.8)] leading-relaxed border-l-[3px] border-[hsl(16_65%_48%/0.4)] pl-4 mb-3">
                 "{story.quote}"
               </blockquote>
-              <p className="text-xs text-[hsl(20_25%_12%/0.55)]">
-                <span className="font-medium text-[hsl(20_25%_12%)]">{story.person_name}</span> — {story.location_detail}
-                {story.years_in_community && ` · ${story.years_in_community} years in community`}
-              </p>
+              <div className="flex items-center gap-2 text-xs text-[hsl(20_25%_12%/0.55)]">
+                <PersonAvatar name={story.person_name} size={32} />
+                <p>
+                  <span className="font-medium text-[hsl(20_25%_12%)]">{story.person_name}</span> — {story.location_detail}
+                  {story.years_in_community && ` · ${story.years_in_community} years in community`}
+                </p>
+              </div>
             </div>
           ))}
           <Link to="/app/community-stories" className="text-xs text-[hsl(16_65%_48%)] hover:underline flex items-center gap-1">

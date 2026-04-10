@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom';
 import { slugify, placeSlug } from '@/lib/slugify';
 import { Heart, MapPin, Clock, Shield, User, Plus, Quote } from 'lucide-react';
 import { useTransitusData } from '@/contexts/TransitusDataContext';
+import PersonAvatar from '@/components/ui/PersonAvatar';
 import { CreateCommunityStoryForm } from '@/components/forms/CreateCommunityStoryForm';
 import type { CommunityStory } from '@/types/transitus';
 
@@ -47,28 +48,33 @@ function StoryCard({
     <article className="break-inside-avoid mb-5 rounded-lg bg-white border border-[hsl(30_18%_82%)] overflow-hidden">
       {/* Person header — prominent, editorial */}
       <div className="bg-[hsl(20_18%_14%)] px-6 pt-5 pb-4">
-        <h3 className="font-serif text-2xl font-bold text-white leading-tight">
-          {story.stakeholder_id ? (
-            <Link to={`/app/people/${slugify(story.person_name)}`} className="hover:text-[hsl(16_55%_70%)] transition-colors">
-              {story.person_name}
-            </Link>
-          ) : (
-            story.person_name
-          )}
-        </h3>
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2 text-xs text-white/50">
-          {story.location_detail && (
-            <span className="flex items-center gap-1">
-              <MapPin className="h-3 w-3" />
-              {story.location_detail}
-            </span>
-          )}
-          {story.years_in_community && (
-            <span className="flex items-center gap-1">
-              <Clock className="h-3 w-3" />
-              {story.years_in_community} years in community
-            </span>
-          )}
+        <div className="flex items-center gap-4">
+          <PersonAvatar name={story.person_name} size={56} className="ring-2 ring-white/20" />
+          <div>
+            <h3 className="font-serif text-2xl font-bold text-white leading-tight">
+              {story.stakeholder_id ? (
+                <Link to={`/app/people/${slugify(story.person_name)}`} className="hover:text-[hsl(16_55%_70%)] transition-colors">
+                  {story.person_name}
+                </Link>
+              ) : (
+                story.person_name
+              )}
+            </h3>
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2 text-xs text-white/50">
+              {story.location_detail && (
+                <span className="flex items-center gap-1">
+                  <MapPin className="h-3 w-3" />
+                  {story.location_detail}
+                </span>
+              )}
+              {story.years_in_community && (
+                <span className="flex items-center gap-1">
+                  <Clock className="h-3 w-3" />
+                  {story.years_in_community} years in community
+                </span>
+              )}
+            </div>
+          </div>
         </div>
       </div>
 

@@ -11,6 +11,7 @@ import { useTransitusData } from '@/contexts/TransitusDataContext';
 import { findByIdOrSlug } from '@/lib/slugify';
 import { ROLE_LABELS, COMMITMENT_STATUS_LABELS } from '@/types/transitus';
 import type { TransitusRole, CommitmentStatus, FieldNoteType } from '@/types/transitus';
+import PersonAvatar from '@/components/ui/PersonAvatar';
 
 // ── Helpers ──
 
@@ -155,19 +156,22 @@ export default function PersonDetail() {
         {/* Header card */}
         <div className="rounded-lg bg-white p-6 border border-[hsl(30_18%_82%)] mb-6">
           <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-4">
-            <div>
-              <h1 className="font-serif text-3xl tracking-tight text-[hsl(20_28%_15%)]">
-                {stakeholder.name}
-              </h1>
-              <div className="mt-2 flex flex-wrap items-center gap-2">
-                <RoleBadge role={stakeholder.role} />
-                {orgName && (
-                  <span className="text-sm text-[hsl(30_10%_45%)]">{orgName}</span>
+            <div className="flex items-start gap-4">
+              <PersonAvatar name={stakeholder.name} size={80} />
+              <div>
+                <h1 className="font-serif text-3xl tracking-tight text-[hsl(20_28%_15%)]">
+                  {stakeholder.name}
+                </h1>
+                <div className="mt-2 flex flex-wrap items-center gap-2">
+                  <RoleBadge role={stakeholder.role} />
+                  {orgName && (
+                    <span className="text-sm text-[hsl(30_10%_45%)]">{orgName}</span>
+                  )}
+                </div>
+                {stakeholder.title && (
+                  <p className="mt-1 text-sm text-[hsl(30_10%_40%)]">{stakeholder.title}</p>
                 )}
               </div>
-              {stakeholder.title && (
-                <p className="mt-1 text-sm text-[hsl(30_10%_40%)]">{stakeholder.title}</p>
-              )}
             </div>
             {/* Edit placeholder button */}
             <button

@@ -8,6 +8,7 @@
 
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
+import PersonAvatar from '@/components/ui/PersonAvatar';
 import {
   MapPin,
   Globe,
@@ -243,24 +244,29 @@ function SidebarStakeholders({
               key={s.id}
               className="rounded-lg bg-white p-3 border border-[hsl(30_18%_82%)]"
             >
-              <p className="text-sm font-medium text-[hsl(20_10%_20%)]">
-                {s.name}
-              </p>
-              <div className="mt-1 flex flex-wrap items-center gap-1.5">
-                <span className="inline-flex items-center rounded-full bg-[hsl(30_20%_92%)] px-2 py-0.5 text-[10px] font-medium text-[hsl(20_10%_40%)]">
-                  {ROLE_LABELS[s.role]}
-                </span>
-                {s.trust_level && (
-                  <span className="inline-flex items-center rounded-full bg-[hsl(152_30%_92%)] px-2 py-0.5 text-[10px] font-medium text-[hsl(152_45%_30%)]">
-                    {s.trust_level}
-                  </span>
-                )}
+              <div className="flex items-center gap-2.5">
+                <PersonAvatar name={s.name} size={32} />
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-medium text-[hsl(20_10%_20%)]">
+                    {s.name}
+                  </p>
+                  <div className="mt-1 flex flex-wrap items-center gap-1.5">
+                    <span className="inline-flex items-center rounded-full bg-[hsl(30_20%_92%)] px-2 py-0.5 text-[10px] font-medium text-[hsl(20_10%_40%)]">
+                      {ROLE_LABELS[s.role]}
+                    </span>
+                    {s.trust_level && (
+                      <span className="inline-flex items-center rounded-full bg-[hsl(152_30%_92%)] px-2 py-0.5 text-[10px] font-medium text-[hsl(152_45%_30%)]">
+                        {s.trust_level}
+                      </span>
+                    )}
+                  </div>
+                  {s.title && (
+                    <p className="mt-1 text-[11px] text-[hsl(20_8%_48%)]">
+                      {s.title}
+                    </p>
+                  )}
+                </div>
               </div>
-              {s.title && (
-                <p className="mt-1 text-[11px] text-[hsl(20_8%_48%)]">
-                  {s.title}
-                </p>
-              )}
             </div>
           ))}
         </div>
