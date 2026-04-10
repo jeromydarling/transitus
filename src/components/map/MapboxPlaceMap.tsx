@@ -55,14 +55,14 @@ export default function MapboxPlaceMap({
   stakeholderLocations = [], activeWork = [], population, className = '',
 }: MapboxPlaceMapProps) {
   const [popup, setPopup] = useState<PopupInfo | null>(null);
-  const [mapStyle, setMapStyle] = useState<'light' | 'satellite' | 'dark' | 'terrain'>('light');
+  const [mapStyle, setMapStyle] = useState<'atlas' | 'satellite' | 'dark' | 'terrain'>('atlas');
   const [showLayers, setShowLayers] = useState({ facilities: true, burdens: true, people: true, work: true });
 
   const styles: Record<string, string> = {
-    light: 'mapbox://styles/mapbox/light-v11',
+    atlas: 'mapbox://styles/transitu/cmns6pcce006u01s788y95ct8',
+    terrain: 'mapbox://styles/mapbox/outdoors-v12',
     satellite: 'mapbox://styles/mapbox/satellite-streets-v12',
     dark: 'mapbox://styles/mapbox/navigation-night-v1',
-    terrain: 'mapbox://styles/mapbox/outdoors-v12',
   };
 
   // Facility GeoJSON for circle layer
@@ -128,54 +128,7 @@ export default function MapboxPlaceMap({
 
   const mapRef = useRef<MapRef>(null);
 
-  // Apply Transitus earth-tone palette on the Atlas style
-  const onMapLoad = useCallback(() => {
-    const map = mapRef.current?.getMap();
-    if (!map || mapStyle !== 'light') return;
-    try {
-      // Warm parchment background
-      if (map.getLayer('background')) {
-        map.setPaintProperty('background', 'background-color', 'hsl(38, 28%, 93%)');
-      }
-      // Muted water
-      if (map.getLayer('water')) {
-        map.setPaintProperty('water', 'fill-color', 'hsl(198, 30%, 78%)');
-      }
-      // Warm parks
-      if (map.getLayer('landuse')) {
-        map.setPaintProperty('landuse', 'fill-color', [
-          'match', ['get', 'class'],
-          'park', 'hsl(152, 22%, 82%)',
-          'cemetery', 'hsl(152, 12%, 86%)',
-          'pitch', 'hsl(152, 18%, 84%)',
-          'hsl(38, 18%, 90%)'
-        ]);
-      }
-      // Terracotta-tinted roads
-      const roadLayers = ['road-street', 'road-minor', 'road-secondary-tertiary', 'road-primary'];
-      roadLayers.forEach(l => {
-        if (map.getLayer(l)) {
-          map.setPaintProperty(l, 'line-color', 'hsl(30, 15%, 84%)');
-        }
-      });
-      if (map.getLayer('road-motorway-trunk')) {
-        map.setPaintProperty('road-motorway-trunk', 'line-color', 'hsl(16, 25%, 78%)');
-      }
-      // Earth-toned buildings
-      if (map.getLayer('building')) {
-        map.setPaintProperty('building', 'fill-color', 'hsl(30, 12%, 86%)');
-      }
-      // Warm labels
-      const labelLayers = ['place-city-label', 'place-town-village-label', 'poi-label'];
-      labelLayers.forEach(l => {
-        if (map.getLayer(l)) {
-          map.setPaintProperty(l, 'text-color', 'hsl(20, 22%, 32%)');
-        }
-      });
-    } catch {
-      // Style layers may have different names across Mapbox versions — fail silently
-    }
-  }, [mapStyle]);
+  const onMapLoad = useCallback(() => {}, []);
 
   const toggleLayer = (key: keyof typeof showLayers) => {
     setShowLayers(prev => ({ ...prev, [key]: !prev[key] }));
@@ -349,10 +302,10 @@ export default function MapboxPlaceMap({
 
       {/* Map style toggle */}
       <div className="absolute top-3 left-3 flex gap-1">
-        {(['light', 'terrain', 'satellite', 'dark'] as const).map(s => (
+        {(['atlas', 'terrain', 'satellite', 'dark'] as const).map(s => (
           <button key={s} onClick={() => setMapStyle(s)}
             className={`px-2 py-1 rounded text-[10px] font-medium transition-all ${mapStyle === s ? 'bg-white text-[hsl(20_25%_12%)] shadow-sm' : 'bg-black/30 text-white/70 hover:bg-black/50'}`}
-          >{{ light: 'Atlas', terrain: 'Terrain', satellite: 'Satellite', dark: 'Night' }[s]}</button>
+          >{{ atlas: 'Atlas', terrain: 'Terrain', satellite: 'Satellite', dark: 'Night' }[s]}</button>
         ))}
       </div>
 
