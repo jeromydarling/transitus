@@ -69,7 +69,7 @@ const ROLE_COLORS: Record<string, string> = {
   resident_witness: 'hsl(340 45% 50%)',
 };
 
-type LayerName = 'Burdens' | 'Facilities' | 'People' | 'Active Work';
+type LayerName = 'Burdens' | 'Facilities' | 'People' | 'Active Work' | 'Poverty';
 
 // ── Props ──
 
@@ -163,7 +163,7 @@ export default function PlaceMap({
   // CSS atlas fallback
   const [show3D, setShow3D] = useState(false);
   const [activeLayers, setActiveLayers] = useState<Set<LayerName>>(
-    new Set(['Burdens', 'Facilities', 'People', 'Active Work']),
+    new Set(['Burdens', 'Facilities', 'People', 'Active Work', 'Poverty']),
   );
   const [tooltip, setTooltip] = useState<{ text: string; x: number; y: number } | null>(null);
 
@@ -325,6 +325,35 @@ export default function PlaceMap({
             );
           }
           return lines;
+        })()}
+
+        {/* Poverty Zone */}
+        {activeLayers.has('Poverty') && povertyRate != null && (() => {
+          const fillColor = povertyRate >= 30 ? '#991b1b' : povertyRate >= 20 ? '#dc2626' : povertyRate >= 15 ? '#ea580c' : '#d97706';
+          const fillOpacity = povertyRate >= 30 ? 0.18 : povertyRate >= 20 ? 0.14 : povertyRate >= 15 ? 0.10 : 0.08;
+          return (
+            <>
+              <ellipse
+                cx={CX}
+                cy={CY}
+                rx={42}
+                ry={38}
+                fill={fillColor}
+                opacity={fillOpacity}
+              />
+              <ellipse
+                cx={CX}
+                cy={CY}
+                rx={42}
+                ry={38}
+                fill="none"
+                stroke={fillColor}
+                strokeWidth="0.5"
+                strokeDasharray="3 2"
+                opacity={0.5}
+              />
+            </>
+          );
         })()}
 
         {/* Burden Rings */}
@@ -497,6 +526,21 @@ export default function PlaceMap({
         </span>
       </div>
 
+      {/* Poverty data callout — top-left */}
+      {activeLayers.has('Poverty') && povertyRate != null && (
+        <div className="absolute top-3 left-3 bg-black/60 backdrop-blur-sm rounded-lg px-3 py-2 border border-white/15 shadow-lg">
+          <p className="text-[9px] uppercase tracking-widest text-white/50 font-semibold mb-0.5">Poverty Rate</p>
+          <p className="text-lg font-bold text-white leading-none">{povertyRate}%</p>
+          <p className="text-[10px] text-white/50 mt-0.5">below poverty line</p>
+          {medianIncome != null && (
+            <p className="text-[10px] text-white/60 mt-1 border-t border-white/10 pt-1">
+              Median: <span className="text-white/80 font-medium">${medianIncome.toLocaleString()}</span>
+            </p>
+          )}
+          <p className="text-[9px] text-white/40 mt-0.5">US avg: 11.6%</p>
+        </div>
+      )}
+
       {/* Controls — top-right */}
       <div className="absolute top-3 right-3 flex flex-col gap-1.5">
         {/* 3D terrain toggle */}
@@ -513,7 +557,9 @@ export default function PlaceMap({
         </button>
 
         {/* Layer toggles */}
-        {(['Burdens', 'Facilities', 'People', 'Active Work'] as LayerName[]).map((layer) => {
+        {(['Poverty', 'Burdens', 'Facilities', 'People', 'Active Work'] as LayerName[]).filter(l =>
+          l !== 'Poverty' || povertyRate != null
+        ).map((layer) => {
           const isActive = activeLayers.has(layer);
           return (
             <button
@@ -525,7 +571,7 @@ export default function PlaceMap({
                   : 'bg-black/20 text-white/50 border-white/5 hover:bg-black/30 hover:text-white/70'
               } backdrop-blur-sm`}
             >
-              {layer}
+              {layer === 'Poverty' && povertyRate != null ? `Poverty ${povertyRate}%` : layer}
             </button>
           );
         })}

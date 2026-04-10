@@ -66,19 +66,26 @@ function geoCircle(centerLng: number, centerLat: number, radiusKm: number, point
   return coords;
 }
 
-/** Poverty rate → severity color. National avg ~11.6%. */
-function povertyColor(rate: number): string {
-  if (rate >= 30) return 'rgba(153, 27, 27, 0.28)';   // deep red — extreme
-  if (rate >= 20) return 'rgba(220, 38, 38, 0.22)';   // red — very high
-  if (rate >= 15) return 'rgba(234, 88, 12, 0.18)';   // orange — high
-  return 'rgba(217, 119, 6, 0.12)';                    // amber — elevated
+/** Poverty rate → fill color (solid). National avg ~11.6%. */
+function povertyFillColor(rate: number): string {
+  if (rate >= 30) return '#991b1b';   // deep red — extreme
+  if (rate >= 20) return '#dc2626';   // red — very high
+  if (rate >= 15) return '#ea580c';   // orange — high
+  return '#d97706';                    // amber — elevated
+}
+
+function povertyFillOpacity(rate: number): number {
+  if (rate >= 30) return 0.22;
+  if (rate >= 20) return 0.18;
+  if (rate >= 15) return 0.14;
+  return 0.10;
 }
 
 function povertyBorderColor(rate: number): string {
-  if (rate >= 30) return 'rgba(153, 27, 27, 0.6)';
-  if (rate >= 20) return 'rgba(220, 38, 38, 0.5)';
-  if (rate >= 15) return 'rgba(234, 88, 12, 0.4)';
-  return 'rgba(217, 119, 6, 0.3)';
+  if (rate >= 30) return '#991b1b';
+  if (rate >= 20) return '#dc2626';
+  if (rate >= 15) return '#ea580c';
+  return '#d97706';
 }
 
 export default function MapboxPlaceMap({
@@ -248,8 +255,8 @@ export default function MapboxPlaceMap({
                 id="poverty-fill"
                 type="fill"
                 paint={{
-                  'fill-color': povertyColor(povertyRate),
-                  'fill-opacity': 1,
+                  'fill-color': povertyFillColor(povertyRate),
+                  'fill-opacity': povertyFillOpacity(povertyRate),
                 }}
               />
               <Layer
@@ -257,13 +264,14 @@ export default function MapboxPlaceMap({
                 type="line"
                 paint={{
                   'line-color': povertyBorderColor(povertyRate),
-                  'line-width': 2,
+                  'line-width': 2.5,
+                  'line-opacity': 0.7,
                   'line-dasharray': [4, 3],
                 }}
               />
             </Source>
             {/* Poverty data callout — positioned NE of center */}
-            <Marker longitude={lng + 0.008} latitude={lat + 0.006} anchor="bottom-left">
+            <Marker longitude={lng + 0.004} latitude={lat + 0.004} anchor="bottom-left">
               <div className="bg-black/70 backdrop-blur-sm rounded-lg px-3 py-2 border border-white/15 shadow-lg max-w-[160px]">
                 <p className="text-[9px] uppercase tracking-widest text-white/50 font-semibold mb-1">Poverty Rate</p>
                 <p className="text-lg font-bold text-white leading-none">{povertyRate}%</p>
