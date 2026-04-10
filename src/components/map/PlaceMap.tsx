@@ -526,6 +526,22 @@ export default function PlaceMap({
         </span>
       </div>
 
+      {/* Environmental burden gradient bar */}
+      {activeLayers.has('Burdens') && environmental_burdens.length > 0 && (
+        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-black/60 backdrop-blur-sm rounded-lg px-3 py-2 border border-white/10">
+          <p className="text-[9px] font-semibold uppercase tracking-widest text-white/50 mb-1.5 text-center">Environmental Burden Index</p>
+          <div className="w-56 h-2.5 rounded-full overflow-hidden" style={{
+            background: 'linear-gradient(to right, #16a34a, #65a30d, #d97706, #ea580c, #dc2626, #991b1b)',
+          }} />
+          <div className="flex justify-between mt-1">
+            <span className="text-[8px] text-white/50">Low</span>
+            <span className="text-[8px] text-white/50">Moderate</span>
+            <span className="text-[8px] text-white/50">High</span>
+            <span className="text-[8px] text-white/50">Critical</span>
+          </div>
+        </div>
+      )}
+
       {/* Poverty legend — top-left */}
       {activeLayers.has('Poverty') && povertyRate != null && population != null && (
         <div className="absolute top-3 left-3 bg-black/60 backdrop-blur-sm rounded-lg px-2.5 py-1.5 border border-white/15 shadow-lg">
