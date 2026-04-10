@@ -241,10 +241,10 @@ export default function Compass() {
             <circle cx="300" cy="300" r="1.5" fill="hsl(20 25% 30%)" />
           </svg>
 
-          {/* Cross grid: North top-center, West left / East right, South bottom-center */}
-          <div className="relative grid grid-cols-2 gap-4 max-w-3xl mx-auto">
+          {/* Compass directions: stacked on mobile, cross on desktop */}
+          <div className="relative grid grid-cols-1 md:grid-cols-2 gap-4 max-w-3xl mx-auto">
             {/* NORTH — spans both columns, centered */}
-            <div className="col-span-2 max-w-md mx-auto w-full">
+            <div className="md:col-span-2 md:max-w-md md:mx-auto w-full">
               <div className="relative rounded-xl bg-white/90 backdrop-blur-sm border border-[hsl(30_18%_82%)] p-5 overflow-hidden" style={{ borderTopWidth: 4, borderTopColor: DIR_COLORS.north }}>
                 {/* Background arrow */}
                 <svg className="absolute right-3 top-1/2 -translate-y-1/2 h-20 w-12 pointer-events-none" viewBox="0 0 40 80" fill="none"><path d="M20 75 L20 5 M20 5 L8 20 M20 5 L32 20" stroke={DIR_COLORS.north} strokeWidth="2.5" strokeLinecap="round" opacity="0.08" /></svg>
@@ -308,7 +308,7 @@ export default function Compass() {
             </div>
 
             {/* SOUTH — spans both columns, centered */}
-            <div className="col-span-2 max-w-md mx-auto w-full">
+            <div className="md:col-span-2 md:max-w-md md:mx-auto w-full">
               <div className="relative rounded-xl bg-white/90 backdrop-blur-sm border border-[hsl(30_18%_82%)] p-5 overflow-hidden" style={{ borderBottomWidth: 4, borderBottomColor: DIR_COLORS.south }}>
                 {/* Background arrow pointing down */}
                 <svg className="absolute right-3 top-1/2 -translate-y-1/2 h-20 w-12 pointer-events-none" viewBox="0 0 40 80" fill="none"><path d="M20 5 L20 75 M20 75 L8 60 M20 75 L32 60" stroke={DIR_COLORS.south} strokeWidth="2.5" strokeLinecap="round" opacity="0.08" /></svg>
@@ -329,51 +329,6 @@ export default function Compass() {
             </div>
           </div>
         </div>
-
-        {/* ── Weekly Rhythm Bar ── */}
-        <section className="mb-8">
-          <div className="flex items-center gap-2 mb-3">
-            <CalendarDays className="h-4 w-4 text-[hsl(16_65%_48%)]" />
-            <span className="font-sans text-xs font-semibold uppercase tracking-widest text-[hsl(16_65%_48%)]">
-              Weekly Rhythm
-            </span>
-          </div>
-          <div className="rounded-lg bg-white border border-[hsl(30_18%_82%)] p-4">
-            <div className="grid grid-cols-7 gap-1">
-              {WEEK_DAYS.map(({ key, short }) => {
-                const isToday = key === rhythm.day;
-                return (
-                  <div
-                    key={key}
-                    className={`flex flex-col items-center rounded-lg py-2.5 px-1 transition-colors ${
-                      isToday
-                        ? 'bg-[hsl(16_65%_48%/0.08)] ring-1 ring-[hsl(16_65%_48%/0.2)]'
-                        : 'hover:bg-[hsl(38_30%_95%)]'
-                    }`}
-                  >
-                    <span
-                      className={`text-[10px] font-semibold uppercase tracking-wider ${
-                        isToday ? 'text-[hsl(16_65%_48%)]' : 'text-[hsl(20_25%_12%/0.4)]'
-                      }`}
-                    >
-                      {short}
-                    </span>
-                    <span
-                      className={`mt-1 text-[9px] leading-tight text-center ${
-                        isToday ? 'text-[hsl(16_65%_48%)] font-medium' : 'text-[hsl(20_25%_12%/0.45)]'
-                      }`}
-                    >
-                      {DAY_FOCUS[key]}
-                    </span>
-                    {isToday && (
-                      <span className="mt-1.5 h-1 w-1 rounded-full bg-[hsl(16_65%_48%)]" />
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </section>
 
         {/* ── Nearby Milestones ── */}
         {milestones.length > 0 && (
