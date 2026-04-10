@@ -528,6 +528,9 @@ export default function PlaceDetail() {
   const { places, stakeholders, organizations, commitments, fieldNotes, signals, journeys } = useTransitusData();
   const place = findByIdOrSlug(places, id || "");
 
+  // Map view tab
+  const [mapView, setMapView] = React.useState<'atlas' | 'satellite'>('atlas');
+
   // EJScreen layman mode toggle
   const [laymanMode, setLaymanMode] = React.useState(true);
 
@@ -630,7 +633,29 @@ export default function PlaceDetail() {
           All Places
         </Link>
 
-        {/* ── Full-width Map — spans both columns ── */}
+        {/* ── Map View Tabs ── */}
+        <div className="flex items-center gap-1 mb-2">
+          <button
+            onClick={() => setMapView('atlas')}
+            className={`px-3 py-1.5 rounded-t-lg text-xs font-medium transition-colors ${
+              mapView === 'atlas'
+                ? 'bg-white border border-b-0 border-[hsl(30_18%_82%)] text-[hsl(20_25%_12%)]'
+                : 'text-[hsl(20_25%_12%/0.4)] hover:text-[hsl(20_25%_12%/0.7)]'
+            }`}
+          >
+            Atlas Map
+          </button>
+          <button
+            onClick={() => setMapView('satellite')}
+            className={`px-3 py-1.5 rounded-t-lg text-xs font-medium transition-colors ${
+              mapView === 'satellite'
+                ? 'bg-[hsl(20_20%_15%)] border border-b-0 border-[hsl(30_18%_82%)] text-[hsl(38_80%_55%)]'
+                : 'text-[hsl(20_25%_12%/0.4)] hover:text-[hsl(20_25%_12%/0.7)]'
+            }`}
+          >
+            NASA Satellite
+          </button>
+        </div>
         <PlaceMap
           lat={place.lat}
           lng={place.lng}
@@ -645,23 +670,32 @@ export default function PlaceDetail() {
           }))}
           activeWork={place.active_work}
           population={place.population_estimate}
-          className="h-[300px] mb-6"
+          className={`h-[300px] ${mapView === 'atlas' ? '' : 'hidden'}`}
         />
 
-        {/* NASA Satellite Image */}
-        {satelliteUrl && (
-          <div className="mb-6 rounded-lg overflow-hidden border border-[hsl(30_18%_82%)]">
-            <div className="flex items-center justify-between px-4 py-2 bg-[hsl(20_28%_10%)] text-[hsl(38_35%_90%)]">
-              <span className="text-[10px] font-semibold uppercase tracking-widest text-[hsl(38_80%_55%)]">NASA Landsat Satellite View</span>
-              <span className="text-[10px] text-[hsl(38_35%_90%/0.4)] font-mono">{place.lat.toFixed(4)}°N, {Math.abs(place.lng).toFixed(4)}°W</span>
+        {/* NASA Satellite tab */}
+        {mapView === 'satellite' && (
+          satelliteUrl ? (
+            <div className="h-[300px] rounded-lg overflow-hidden border border-[hsl(30_18%_82%)] bg-[hsl(20_20%_15%)] relative">
+              <img
+                src={satelliteUrl}
+                alt={`Satellite view of ${place.name}`}
+                className="w-full h-full object-cover"
+                onError={(e) => { (e.target as HTMLImageElement).parentElement!.innerHTML = '<div class="flex items-center justify-center h-full text-[hsl(38_35%_90%/0.4)] text-sm">Satellite imagery unavailable for this location</div>'; }}
+              />
+              <div className="absolute bottom-3 left-3 bg-black/40 backdrop-blur-sm rounded-lg px-3 py-2 border border-white/10">
+                <p className="text-xs font-serif text-white/90">{place.name}</p>
+                <p className="text-[10px] text-white/50 font-mono">{place.lat.toFixed(4)}°N, {Math.abs(place.lng).toFixed(4)}°W</p>
+              </div>
+              <div className="absolute top-3 left-3 bg-black/40 backdrop-blur-sm rounded px-2 py-1 border border-white/10">
+                <span className="text-[10px] font-semibold uppercase tracking-widest text-[hsl(38_80%_55%)]">NASA Landsat</span>
+              </div>
             </div>
-            <img
-              src={satelliteUrl}
-              alt={`Satellite view of ${place.name}`}
-              className="w-full h-48 sm:h-56 object-cover bg-[hsl(20_20%_15%)]"
-              onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-            />
-          </div>
+          ) : (
+            <div className="h-[300px] rounded-lg border border-[hsl(30_18%_82%)] bg-[hsl(20_20%_15%)] flex items-center justify-center">
+              <p className="text-sm text-[hsl(38_35%_90%/0.4)]">Loading satellite imagery...</p>
+            </div>
+          )
         )}
 
         {/* Two-column layout starts immediately after map */}
