@@ -21,6 +21,7 @@ import {
 
 import { MOCK_DASHBOARD } from '@/lib/mockData';
 import { useTransitusData } from '@/contexts/TransitusDataContext';
+import ActivitySparkline from '@/components/charts/ActivitySparkline';
 import { getCurrentSeason, getDayMoment, getWeekRhythm, getNearbyMilestones } from '@/lib/transitionCalendar';
 
 import {
@@ -291,6 +292,13 @@ export default function Home() {
   const quiet_stakeholders = stakeholders.filter(s => s.last_contact && s.last_contact < '2026-02-01');
   const active_commitments = commitments.filter(c => c.status !== 'completed').length;
 
+  // Generate deterministic-ish sparkline data per place (seeded by place index)
+  const makeSparkData = (seed: number) =>
+    Array.from({ length: 7 }, (_, i) => ({
+      day: `Day ${i + 1}`,
+      count: ((seed * 7 + i * 3 + 1) % 5) + 1,
+    }));
+
   return (
     <div className="min-h-screen bg-[hsl(38_30%_95%)]">
       <div className="mx-auto max-w-4xl px-4 py-10 sm:px-6 lg:px-8">
@@ -356,6 +364,34 @@ export default function Home() {
             </span>
           </div>
         </div>
+
+        {/* ── Place Activity (sparklines) ── */}
+        <section className="mb-10">
+          <SectionHeader icon={MapPin} label="Place Activity This Week" linkTo="/app/places" />
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {places.slice(0, 6).map((place, idx) => (
+              <Link
+                key={place.id}
+                to={`/app/places/${place.name.toLowerCase().replace(/\s+/g, '-')}`}
+                className="rounded-lg bg-white p-4 border border-[hsl(30_18%_82%)] hover:shadow-md transition-shadow block"
+              >
+                <p className="text-sm font-medium text-[hsl(20_10%_20%)] truncate mb-1">
+                  {place.name}
+                </p>
+                <p className="text-[10px] text-[hsl(20_8%_52%)] mb-2">
+                  {place.geography}
+                </p>
+                <ActivitySparkline
+                  data={makeSparkData(idx)}
+                  color="hsl(16, 65%, 48%)"
+                />
+                <p className="text-[10px] text-[hsl(20_8%_52%)] mt-1">
+                  Field notes · past 7 days
+                </p>
+              </Link>
+            ))}
+          </div>
+        </section>
 
         {/* ── Community Voices ── */}
         <section className="mb-10">

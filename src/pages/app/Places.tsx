@@ -10,6 +10,7 @@ import { slugify } from '@/lib/slugify';
 import { MapPin, Globe, Briefcase, Plus } from 'lucide-react';
 import { useTransitusData } from '@/contexts/TransitusDataContext';
 import { CreatePlaceForm } from '@/components/forms/CreatePlaceForm';
+import StaticMap from '@/components/ui/StaticMap';
 import type { EnvironmentalBurden, Place } from '@/types/transitus';
 
 // ── Severity badge styles ──
@@ -51,9 +52,21 @@ function PlaceCard({ place }: { place: Place }) {
   return (
     <Link
       to={`/app/places/${slugify(place.name)}`}
-      className="block rounded-lg bg-white p-4 border border-[hsl(30_18%_82%)] hover:border-[hsl(30_18%_70%)] hover:shadow-md transition-all group"
+      className="block rounded-lg bg-white border border-[hsl(30_18%_82%)] hover:border-[hsl(30_18%_70%)] hover:shadow-md transition-all group overflow-hidden"
     >
+      {/* Map thumbnail */}
+      <StaticMap
+        lat={place.lat}
+        lng={place.lng}
+        zoom={13}
+        width={400}
+        height={200}
+        style="mapbox/satellite-v9"
+        className="w-full"
+      />
+
       {/* Header */}
+      <div className="p-4">
       <div className="flex items-start gap-3 mb-3">
         <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[hsl(152_30%_92%)] text-[hsl(152_45%_30%)]">
           <MapPin className="h-5 w-5" />
@@ -118,6 +131,7 @@ function PlaceCard({ place }: { place: Place }) {
           </span>
         </div>
       )}
+      </div>
     </Link>
   );
 }
