@@ -3,8 +3,9 @@
  * Shows facilities, burdens, stakeholders, and active work on an interactive map.
  */
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback, useRef } from 'react';
 import Map, { Marker, NavigationControl, Source, Layer, Popup } from 'react-map-gl';
+import type { MapRef } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { MapPin, Building2, AlertTriangle, Users, Briefcase } from 'lucide-react';
 import type { EnvironmentalBurden, ActiveWork } from '@/types/transitus';
@@ -125,6 +126,57 @@ export default function MapboxPlaceMap({
     return { type: 'FeatureCollection', features };
   }, [environmental_burdens, lat, lng]);
 
+  const mapRef = useRef<MapRef>(null);
+
+  // Apply Transitus earth-tone palette on the Atlas style
+  const onMapLoad = useCallback(() => {
+    const map = mapRef.current?.getMap();
+    if (!map || mapStyle !== 'light') return;
+    try {
+      // Warm parchment background
+      if (map.getLayer('background')) {
+        map.setPaintProperty('background', 'background-color', 'hsl(38, 28%, 93%)');
+      }
+      // Muted water
+      if (map.getLayer('water')) {
+        map.setPaintProperty('water', 'fill-color', 'hsl(198, 30%, 78%)');
+      }
+      // Warm parks
+      if (map.getLayer('landuse')) {
+        map.setPaintProperty('landuse', 'fill-color', [
+          'match', ['get', 'class'],
+          'park', 'hsl(152, 22%, 82%)',
+          'cemetery', 'hsl(152, 12%, 86%)',
+          'pitch', 'hsl(152, 18%, 84%)',
+          'hsl(38, 18%, 90%)'
+        ]);
+      }
+      // Terracotta-tinted roads
+      const roadLayers = ['road-street', 'road-minor', 'road-secondary-tertiary', 'road-primary'];
+      roadLayers.forEach(l => {
+        if (map.getLayer(l)) {
+          map.setPaintProperty(l, 'line-color', 'hsl(30, 15%, 84%)');
+        }
+      });
+      if (map.getLayer('road-motorway-trunk')) {
+        map.setPaintProperty('road-motorway-trunk', 'line-color', 'hsl(16, 25%, 78%)');
+      }
+      // Earth-toned buildings
+      if (map.getLayer('building')) {
+        map.setPaintProperty('building', 'fill-color', 'hsl(30, 12%, 86%)');
+      }
+      // Warm labels
+      const labelLayers = ['place-city-label', 'place-town-village-label', 'poi-label'];
+      labelLayers.forEach(l => {
+        if (map.getLayer(l)) {
+          map.setPaintProperty(l, 'text-color', 'hsl(20, 22%, 32%)');
+        }
+      });
+    } catch {
+      // Style layers may have different names across Mapbox versions — fail silently
+    }
+  }, [mapStyle]);
+
   const toggleLayer = (key: keyof typeof showLayers) => {
     setShowLayers(prev => ({ ...prev, [key]: !prev[key] }));
   };
@@ -132,12 +184,14 @@ export default function MapboxPlaceMap({
   return (
     <div className={`relative rounded-lg overflow-hidden border border-[hsl(30_18%_82%)] ${className}`} style={{ minHeight: '300px' }}>
       <Map
+        ref={mapRef}
         initialViewState={{ longitude: lng, latitude: lat, zoom: 13.5, pitch: mapStyle === 'terrain' ? 45 : 0 }}
         style={{ width: '100%', height: '100%' }}
         mapStyle={styles[mapStyle]}
         mapboxAccessToken={MAPBOX_TOKEN}
         attributionControl={false}
         onClick={() => setPopup(null)}
+        onLoad={onMapLoad}
       >
         <NavigationControl position="top-right" showCompass={false} />
 

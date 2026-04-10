@@ -1,0 +1,213 @@
+{
+  "version": 8,
+  "name": "Transitus Atlas",
+  "metadata": {
+    "mapbox:autocomposite": true,
+    "mapbox:type": "template",
+    "mapbox:origin": "light-v11"
+  },
+  "sources": {},
+  "glyphs": "mapbox://fonts/mapbox/{fontstack}/{range}.pbf",
+  "layers": [
+    {
+      "id": "background",
+      "type": "background",
+      "paint": {
+        "background-color": "hsl(38, 28%, 93%)"
+      }
+    },
+    {
+      "id": "landuse",
+      "type": "fill",
+      "source": "composite",
+      "source-layer": "landuse",
+      "paint": {
+        "fill-color": [
+          "match",
+          ["get", "class"],
+          "park", "hsl(152, 25%, 85%)",
+          "cemetery", "hsl(152, 15%, 88%)",
+          "glacier", "hsl(200, 20%, 92%)",
+          "hospital", "hsl(16, 20%, 92%)",
+          "school", "hsl(38, 20%, 90%)",
+          "pitch", "hsl(152, 20%, 87%)",
+          "hsl(38, 20%, 91%)"
+        ],
+        "fill-opacity": 0.5
+      }
+    },
+    {
+      "id": "water",
+      "type": "fill",
+      "source": "composite",
+      "source-layer": "water",
+      "paint": {
+        "fill-color": "hsl(198, 35%, 75%)"
+      }
+    },
+    {
+      "id": "waterway",
+      "type": "line",
+      "source": "composite",
+      "source-layer": "waterway",
+      "paint": {
+        "line-color": "hsl(198, 35%, 75%)",
+        "line-width": 1
+      }
+    },
+    {
+      "id": "building",
+      "type": "fill",
+      "source": "composite",
+      "source-layer": "building",
+      "paint": {
+        "fill-color": "hsl(30, 15%, 87%)",
+        "fill-opacity": 0.6
+      }
+    },
+    {
+      "id": "road-minor",
+      "type": "line",
+      "source": "composite",
+      "source-layer": "road",
+      "filter": ["in", "class", "street", "street_limited", "service"],
+      "paint": {
+        "line-color": "hsl(38, 20%, 90%)",
+        "line-width": 1
+      }
+    },
+    {
+      "id": "road-major",
+      "type": "line",
+      "source": "composite",
+      "source-layer": "road",
+      "filter": ["in", "class", "primary", "secondary", "tertiary", "trunk"],
+      "paint": {
+        "line-color": "hsl(30, 18%, 85%)",
+        "line-width": 2
+      }
+    },
+    {
+      "id": "road-motorway",
+      "type": "line",
+      "source": "composite",
+      "source-layer": "road",
+      "filter": ["==", "class", "motorway"],
+      "paint": {
+        "line-color": "hsl(16, 30%, 78%)",
+        "line-width": 3
+      }
+    },
+    {
+      "id": "rail",
+      "type": "line",
+      "source": "composite",
+      "source-layer": "road",
+      "filter": ["in", "class", "major_rail", "minor_rail"],
+      "paint": {
+        "line-color": "hsl(20, 12%, 70%)",
+        "line-width": 1,
+        "line-dasharray": [2, 2]
+      }
+    },
+    {
+      "id": "admin-state",
+      "type": "line",
+      "source": "composite",
+      "source-layer": "admin",
+      "filter": ["==", "admin_level", 4],
+      "paint": {
+        "line-color": "hsl(20, 15%, 75%)",
+        "line-width": 1,
+        "line-dasharray": [3, 2]
+      }
+    },
+    {
+      "id": "admin-country",
+      "type": "line",
+      "source": "composite",
+      "source-layer": "admin",
+      "filter": ["==", "admin_level", 2],
+      "paint": {
+        "line-color": "hsl(20, 20%, 65%)",
+        "line-width": 1.5
+      }
+    },
+    {
+      "id": "place-label-city",
+      "type": "symbol",
+      "source": "composite",
+      "source-layer": "place_label",
+      "filter": ["==", "type", "city"],
+      "layout": {
+        "text-field": "{name_en}",
+        "text-font": ["DIN Pro Medium", "Arial Unicode MS Regular"],
+        "text-size": 14,
+        "text-letter-spacing": 0.05
+      },
+      "paint": {
+        "text-color": "hsl(20, 25%, 30%)",
+        "text-halo-color": "hsl(38, 28%, 93%)",
+        "text-halo-width": 1.5
+      }
+    },
+    {
+      "id": "place-label-town",
+      "type": "symbol",
+      "source": "composite",
+      "source-layer": "place_label",
+      "filter": ["==", "type", "town"],
+      "layout": {
+        "text-field": "{name_en}",
+        "text-font": ["DIN Pro Regular", "Arial Unicode MS Regular"],
+        "text-size": 12,
+        "text-letter-spacing": 0.03
+      },
+      "paint": {
+        "text-color": "hsl(20, 18%, 42%)",
+        "text-halo-color": "hsl(38, 28%, 93%)",
+        "text-halo-width": 1
+      }
+    },
+    {
+      "id": "place-label-neighborhood",
+      "type": "symbol",
+      "source": "composite",
+      "source-layer": "place_label",
+      "filter": ["==", "type", "neighbourhood"],
+      "layout": {
+        "text-field": "{name_en}",
+        "text-font": ["DIN Pro Regular", "Arial Unicode MS Regular"],
+        "text-size": 10,
+        "text-letter-spacing": 0.08,
+        "text-transform": "uppercase"
+      },
+      "paint": {
+        "text-color": "hsl(16, 30%, 55%)",
+        "text-halo-color": "hsl(38, 28%, 93%)",
+        "text-halo-width": 1
+      }
+    },
+    {
+      "id": "poi-label",
+      "type": "symbol",
+      "source": "composite",
+      "source-layer": "poi_label",
+      "filter": ["<=", "rank", 3],
+      "layout": {
+        "text-field": "{name_en}",
+        "text-font": ["DIN Pro Regular", "Arial Unicode MS Regular"],
+        "text-size": 9,
+        "text-offset": [0, 0.8],
+        "icon-image": "{maki}-11",
+        "icon-size": 0.8
+      },
+      "paint": {
+        "text-color": "hsl(20, 12%, 50%)",
+        "text-halo-color": "hsl(38, 28%, 93%)",
+        "text-halo-width": 0.8,
+        "icon-opacity": 0.6
+      }
+    }
+  ]
+}
