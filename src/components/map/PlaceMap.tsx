@@ -327,33 +327,52 @@ export default function PlaceMap({
           return lines;
         })()}
 
-        {/* Poverty Zone */}
+        {/* Poverty Block Groups — small cells with varying rates */}
         {activeLayers.has('Poverty') && povertyRate != null && (() => {
-          const fillColor = povertyRate >= 30 ? '#991b1b' : povertyRate >= 20 ? '#dc2626' : povertyRate >= 15 ? '#ea580c' : '#d97706';
-          const fillOpacity = povertyRate >= 30 ? 0.18 : povertyRate >= 20 ? 0.14 : povertyRate >= 15 ? 0.10 : 0.08;
-          return (
-            <>
-              <ellipse
-                cx={CX}
-                cy={CY}
-                rx={42}
-                ry={38}
-                fill={fillColor}
-                opacity={fillOpacity}
-              />
-              <ellipse
-                cx={CX}
-                cy={CY}
-                rx={42}
-                ry={38}
-                fill="none"
-                stroke={fillColor}
-                strokeWidth="0.5"
-                strokeDasharray="3 2"
-                opacity={0.5}
-              />
-            </>
-          );
+          const cells: React.ReactNode[] = [];
+          const gridR = 3;
+          const cellW = 6;   // SVG units per cell
+          const cellH = 5.5;
+          let seed = 42;
+          const rand = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
+
+          for (let row = -gridR; row <= gridR; row++) {
+            for (let col = -gridR; col <= gridR; col++) {
+              const dist = Math.sqrt(row * row + col * col);
+              if (dist > gridR + 0.5) continue;
+
+              const distFactor = 1 - (dist / (gridR + 1));
+              const variation = (rand() - 0.4) * 18;
+              const cellRate = Math.max(5, Math.min(55, povertyRate + distFactor * 12 + variation));
+              const jx = (rand() - 0.5) * 1.5;
+              const jy = (rand() - 0.5) * 1.2;
+
+              // Color from amber to deep red based on cell rate
+              const hue = Math.max(0, 45 - cellRate * 0.8);
+              const lightness = Math.max(20, 60 - cellRate * 0.7);
+              const opacity = Math.min(0.4, 0.06 + (cellRate / 100) * 0.55);
+
+              cells.push(
+                <rect
+                  key={`pov-${row}-${col}`}
+                  x={CX + col * cellW - cellW / 2 + jx}
+                  y={CY + row * cellH - cellH / 2 + jy}
+                  width={cellW - 0.4}
+                  height={cellH - 0.4}
+                  rx={0.5}
+                  fill={`hsl(${hue} 80% ${lightness}%)`}
+                  opacity={opacity}
+                  stroke={`hsl(${hue} 60% ${lightness - 10}%)`}
+                  strokeWidth="0.15"
+                  strokeOpacity={0.3}
+                  style={{ cursor: 'pointer' }}
+                  onMouseMove={(e) => showTooltip(e, `Block group: ${cellRate.toFixed(1)}% poverty`)}
+                  onMouseLeave={hideTooltip}
+                />
+              );
+            }
+          }
+          return cells;
         })()}
 
         {/* Burden Rings */}
@@ -528,16 +547,17 @@ export default function PlaceMap({
 
       {/* Poverty data callout — top-left */}
       {activeLayers.has('Poverty') && povertyRate != null && (
-        <div className="absolute top-3 left-3 bg-black/60 backdrop-blur-sm rounded-lg px-3 py-2 border border-white/15 shadow-lg">
-          <p className="text-[9px] uppercase tracking-widest text-white/50 font-semibold mb-0.5">Poverty Rate</p>
-          <p className="text-lg font-bold text-white leading-none">{povertyRate}%</p>
-          <p className="text-[10px] text-white/50 mt-0.5">below poverty line</p>
+        <div className="absolute top-3 left-3 bg-black/60 backdrop-blur-sm rounded-lg px-2.5 py-1.5 border border-white/15 shadow-lg">
+          <p className="text-[9px] uppercase tracking-widest text-white/50 font-semibold">Tract Poverty</p>
+          <div className="flex items-baseline gap-1.5 mt-0.5">
+            <span className="text-base font-bold text-white">{povertyRate}%</span>
+            <span className="text-[9px] text-white/40">vs 11.6% US avg</span>
+          </div>
           {medianIncome != null && (
-            <p className="text-[10px] text-white/60 mt-1 border-t border-white/10 pt-1">
-              Median: <span className="text-white/80 font-medium">${medianIncome.toLocaleString()}</span>
+            <p className="text-[10px] text-white/50 mt-0.5">
+              Median: ${medianIncome.toLocaleString()}
             </p>
           )}
-          <p className="text-[9px] text-white/40 mt-0.5">US avg: 11.6%</p>
         </div>
       )}
 

@@ -52,40 +52,63 @@ interface PopupInfo {
   lat: number; lng: number; title: string; detail: string; color: string;
 }
 
-/** Build a GeoJSON circle polygon (approximation) for a given center + radius in km. */
-function geoCircle(centerLng: number, centerLat: number, radiusKm: number, points = 64) {
-  const coords: [number, number][] = [];
-  for (let i = 0; i <= points; i++) {
-    const angle = (i / points) * 2 * Math.PI;
-    const dx = radiusKm * Math.cos(angle);
-    const dy = radiusKm * Math.sin(angle);
-    const lat2 = centerLat + (dy / 111.32);
-    const lng2 = centerLng + (dx / (111.32 * Math.cos(centerLat * Math.PI / 180)));
-    coords.push([lng2, lat2]);
+/**
+ * Build a grid of census-block-group–sized cells with varying poverty rates.
+ * Cells closer to center (industrial core) get higher rates.
+ * Uses a deterministic seeded random so the grid is stable across renders.
+ */
+function buildPovertyBlockGroups(
+  centerLng: number, centerLat: number, tractRate: number,
+) {
+  // ~5x5 grid of blocks, each ~200m × 200m (roughly census block group size in dense urban)
+  const cellSizeLat = 0.0018;  // ~200m
+  const cellSizeLng = 0.0024;  // ~200m adjusted for longitude
+  const gridRadius = 3;        // -3 to +3 = 7×7 grid, skip corners for organic shape
+
+  const features: any[] = [];
+  let seed = 42;
+  const seededRandom = () => { seed = (seed * 16807 + 0) % 2147483647; return seed / 2147483647; };
+
+  for (let row = -gridRadius; row <= gridRadius; row++) {
+    for (let col = -gridRadius; col <= gridRadius; col++) {
+      // Skip corners for a more organic shape
+      const dist = Math.sqrt(row * row + col * col);
+      if (dist > gridRadius + 0.5) continue;
+
+      // Poverty is higher near center (industrial core), lower at edges
+      const distFactor = 1 - (dist / (gridRadius + 1));
+      const variation = (seededRandom() - 0.4) * 18; // asymmetric — skews higher
+      const cellRate = Math.max(5, Math.min(55,
+        tractRate + (distFactor * 12) + variation
+      ));
+
+      const baseLat = centerLat + row * cellSizeLat;
+      const baseLng = centerLng + col * cellSizeLng;
+      // Slight jitter so blocks don't look perfectly gridded
+      const jLat = (seededRandom() - 0.5) * 0.0003;
+      const jLng = (seededRandom() - 0.5) * 0.0004;
+
+      features.push({
+        type: 'Feature',
+        geometry: {
+          type: 'Polygon',
+          coordinates: [[
+            [baseLng + jLng, baseLat + jLat],
+            [baseLng + cellSizeLng + jLng, baseLat + jLat],
+            [baseLng + cellSizeLng + jLng, baseLat + cellSizeLat + jLat],
+            [baseLng + jLng, baseLat + cellSizeLat + jLat],
+            [baseLng + jLng, baseLat + jLat],
+          ]],
+        },
+        properties: {
+          rate: Math.round(cellRate * 10) / 10,
+          // Color intensity: interpolate from amber → deep red
+          opacity: Math.min(0.45, 0.08 + (cellRate / 100) * 0.6),
+        },
+      });
+    }
   }
-  return coords;
-}
-
-/** Poverty rate → fill color (solid). National avg ~11.6%. */
-function povertyFillColor(rate: number): string {
-  if (rate >= 30) return '#991b1b';   // deep red — extreme
-  if (rate >= 20) return '#dc2626';   // red — very high
-  if (rate >= 15) return '#ea580c';   // orange — high
-  return '#d97706';                    // amber — elevated
-}
-
-function povertyFillOpacity(rate: number): number {
-  if (rate >= 30) return 0.22;
-  if (rate >= 20) return 0.18;
-  if (rate >= 15) return 0.14;
-  return 0.10;
-}
-
-function povertyBorderColor(rate: number): string {
-  if (rate >= 30) return '#991b1b';
-  if (rate >= 20) return '#dc2626';
-  if (rate >= 15) return '#ea580c';
-  return '#d97706';
+  return { type: 'FeatureCollection', features };
 }
 
 export default function MapboxPlaceMap({
@@ -167,19 +190,10 @@ export default function MapboxPlaceMap({
     return { type: 'FeatureCollection', features };
   }, [environmental_burdens, lat, lng]);
 
-  // Poverty zone — census-tract–sized circle showing poverty rate
+  // Poverty block groups — grid of small census-block-sized cells
   const povertyGeoJson = useMemo(() => {
     if (povertyRate == null) return null;
-    // ~1.5km radius approximates a census tract in a dense urban area
-    const coords = geoCircle(lng, lat, 1.5);
-    return {
-      type: 'FeatureCollection' as const,
-      features: [{
-        type: 'Feature' as const,
-        geometry: { type: 'Polygon' as const, coordinates: [coords] },
-        properties: { rate: povertyRate },
-      }],
-    };
+    return buildPovertyBlockGroups(lng, lat, povertyRate);
   }, [lat, lng, povertyRate]);
 
   const mapRef = useRef<MapRef>(null);
@@ -247,45 +261,40 @@ export default function MapboxPlaceMap({
           </Source>
         )}
 
-        {/* Poverty zone overlay */}
+        {/* Poverty block groups — census-block–sized cells with per-cell rates */}
         {showLayers.poverty && povertyGeoJson && povertyRate != null && (
           <>
-            <Source id="poverty-zone" type="geojson" data={povertyGeoJson}>
+            <Source id="poverty-blocks" type="geojson" data={povertyGeoJson}>
               <Layer
                 id="poverty-fill"
                 type="fill"
                 paint={{
-                  'fill-color': povertyFillColor(povertyRate),
-                  'fill-opacity': povertyFillOpacity(povertyRate),
+                  'fill-color': [
+                    'interpolate', ['linear'], ['get', 'rate'],
+                    5, '#fef3c7',     // very low — pale amber
+                    15, '#f59e0b',    // moderate — amber
+                    25, '#ea580c',    // high — orange
+                    35, '#dc2626',    // very high — red
+                    50, '#7f1d1d',    // extreme — deep red
+                  ],
+                  'fill-opacity': ['get', 'opacity'],
                 }}
               />
               <Layer
                 id="poverty-outline"
                 type="line"
                 paint={{
-                  'line-color': povertyBorderColor(povertyRate),
-                  'line-width': 2.5,
-                  'line-opacity': 0.7,
-                  'line-dasharray': [4, 3],
+                  'line-color': [
+                    'interpolate', ['linear'], ['get', 'rate'],
+                    5, '#d97706',
+                    25, '#dc2626',
+                    50, '#7f1d1d',
+                  ],
+                  'line-width': 0.5,
+                  'line-opacity': 0.3,
                 }}
               />
             </Source>
-            {/* Poverty data callout — positioned NE of center */}
-            <Marker longitude={lng + 0.004} latitude={lat + 0.004} anchor="bottom-left">
-              <div className="bg-black/70 backdrop-blur-sm rounded-lg px-3 py-2 border border-white/15 shadow-lg max-w-[160px]">
-                <p className="text-[9px] uppercase tracking-widest text-white/50 font-semibold mb-1">Poverty Rate</p>
-                <p className="text-lg font-bold text-white leading-none">{povertyRate}%</p>
-                <p className="text-[10px] text-white/50 mt-0.5">below poverty line</p>
-                {medianIncome != null && (
-                  <p className="text-[10px] text-white/60 mt-1 border-t border-white/10 pt-1">
-                    Median income: <span className="text-white/80 font-medium">${medianIncome.toLocaleString()}</span>
-                  </p>
-                )}
-                <p className="text-[9px] text-white/40 mt-1">
-                  National avg: 11.6%
-                </p>
-              </div>
-            </Marker>
           </>
         )}
 
