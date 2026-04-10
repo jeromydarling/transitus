@@ -111,7 +111,7 @@ const TransitusDataContext = createContext<TransitusDataContextType | null>(null
 // ── Persistence helpers ──
 
 const STORAGE_KEY = 'transitus_data';
-const STORAGE_VERSION = 6; // Bump to force stale localStorage refresh
+const STORAGE_VERSION = 7; // Bump to force stale localStorage refresh
 
 function loadFromStorage(): Partial<TransitusDataState> | null {
   try {
@@ -123,11 +123,16 @@ function loadFromStorage(): Partial<TransitusDataState> | null {
       localStorage.removeItem(STORAGE_KEY);
       return null;
     }
+    // Validate critical data exists — if stakeholders or places are empty, reset
+    if (!parsed.stakeholders?.length || !parsed.places?.length) {
+      localStorage.removeItem(STORAGE_KEY);
+      return null;
+    }
     if (parsed.readSignalIds) {
       parsed.readSignalIds = new Set(parsed.readSignalIds);
     }
     return parsed;
-  } catch { return null; }
+  } catch { localStorage.removeItem(STORAGE_KEY); return null; }
 }
 
 function saveToStorage(state: TransitusDataState) {
