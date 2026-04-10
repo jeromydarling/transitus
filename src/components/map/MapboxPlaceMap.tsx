@@ -55,10 +55,11 @@ export default function MapboxPlaceMap({
   stakeholderLocations = [], activeWork = [], population, className = '',
 }: MapboxPlaceMapProps) {
   const [popup, setPopup] = useState<PopupInfo | null>(null);
-  const [mapStyle, setMapStyle] = useState<'atlas' | 'classic' | 'bw' | 'satellite' | 'dark'>('atlas');
+  const [mapStyle, setMapStyle] = useState<'mineral' | 'atlas' | 'classic' | 'bw' | 'satellite' | 'dark'>('mineral');
   const [showLayers, setShowLayers] = useState({ facilities: true, burdens: true, people: true, work: true });
 
   const styleConfig: Record<string, { url: string; pitch: number; label: string }> = {
+    mineral: { url: 'mapbox://styles/mapbox/cjtep62gq54l21frr1whf27ak', pitch: 0, label: 'Mineral' },
     atlas: { url: 'mapbox://styles/transitu/cmns6pcce006u01s788y95ct8', pitch: 45, label: 'Atlas 3D' },
     classic: { url: 'mapbox://styles/transitu/cmns7i5r4000001si3upk9hai', pitch: 0, label: 'Classic' },
     bw: { url: 'mapbox://styles/transitu/cmns7lexz003h01s73cazcfqq', pitch: 0, label: 'B&W' },
