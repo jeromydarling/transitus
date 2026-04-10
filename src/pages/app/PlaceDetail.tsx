@@ -52,6 +52,7 @@ import {
   fetchNearbyFacilities,
   fetchCensusProfile,
   fetchHazardRisks,
+  fetchEarthImagery,
 } from '@/lib/api';
 
 import { generatePlaceBriefPdf } from '@/lib/reports/generatePdf';
@@ -535,6 +536,7 @@ export default function PlaceDetail() {
   const [facilities, setFacilities] = React.useState<ECHOFacility[]>([]);
   const [census, setCensus] = React.useState<CensusProfile | null>(null);
   const [hazards, setHazards] = React.useState<HazardRisk[]>([]);
+  const [satelliteUrl, setSatelliteUrl] = React.useState<string | null>(null);
 
   // Fetch API data when place loads
   React.useEffect(() => {
@@ -548,6 +550,7 @@ export default function PlaceDetail() {
     }).then(setFacilities);
     fetchCensusProfile(place.lat, place.lng).then(setCensus);
     fetchHazardRisks(place.lat, place.lng).then(setHazards);
+    fetchEarthImagery(place.lat, place.lng).then(img => setSatelliteUrl(img.url));
   }, [place]);
 
   // 404 handling
@@ -644,6 +647,22 @@ export default function PlaceDetail() {
           population={place.population_estimate}
           className="h-[300px] mb-6"
         />
+
+        {/* NASA Satellite Image */}
+        {satelliteUrl && (
+          <div className="mb-6 rounded-lg overflow-hidden border border-[hsl(30_18%_82%)]">
+            <div className="flex items-center justify-between px-4 py-2 bg-[hsl(20_28%_10%)] text-[hsl(38_35%_90%)]">
+              <span className="text-[10px] font-semibold uppercase tracking-widest text-[hsl(38_80%_55%)]">NASA Landsat Satellite View</span>
+              <span className="text-[10px] text-[hsl(38_35%_90%/0.4)] font-mono">{place.lat.toFixed(4)}°N, {Math.abs(place.lng).toFixed(4)}°W</span>
+            </div>
+            <img
+              src={satelliteUrl}
+              alt={`Satellite view of ${place.name}`}
+              className="w-full h-48 sm:h-56 object-cover bg-[hsl(20_20%_15%)]"
+              onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+            />
+          </div>
+        )}
 
         {/* Two-column layout starts immediately after map */}
         <div className="flex flex-col lg:flex-row gap-8">

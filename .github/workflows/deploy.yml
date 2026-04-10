@@ -33,6 +33,7 @@ jobs:
         env:
           VITE_SUPABASE_URL: "https://placeholder.supabase.co"
           VITE_SUPABASE_PUBLISHABLE_KEY: "placeholder"
+          VITE_MAPBOX_TOKEN: ${{ secrets.VITE_MAPBOX_TOKEN }}
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
