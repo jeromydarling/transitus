@@ -44,19 +44,19 @@ function StoryCard({
   collectorName: string;
 }) {
   return (
-    <article className="rounded-lg bg-white border border-[hsl(30_18%_82%)] p-6 space-y-4">
-      {/* Person name and location */}
-      <div className="space-y-1.5">
-        <h3 className="font-serif text-xl font-semibold text-[hsl(20_28%_15%)]">
+    <article className="break-inside-avoid mb-5 rounded-lg bg-white border border-[hsl(30_18%_82%)] overflow-hidden">
+      {/* Person header — prominent, editorial */}
+      <div className="bg-[hsl(20_18%_14%)] px-6 pt-5 pb-4">
+        <h3 className="font-serif text-2xl font-bold text-white leading-tight">
           {story.stakeholder_id ? (
-            <Link to={`/app/people/${slugify(story.person_name)}`} className="hover:text-[hsl(16_65%_48%)] transition-colors underline decoration-[hsl(16_65%_48%/0.3)] underline-offset-2">
+            <Link to={`/app/people/${slugify(story.person_name)}`} className="hover:text-[hsl(16_55%_70%)] transition-colors">
               {story.person_name}
             </Link>
           ) : (
             story.person_name
           )}
         </h3>
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-[hsl(20_10%_42%)]">
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2 text-xs text-white/50">
           {story.location_detail && (
             <span className="flex items-center gap-1">
               <MapPin className="h-3 w-3" />
@@ -72,77 +72,85 @@ function StoryCard({
         </div>
       </div>
 
-      {/* Story text */}
-      <p className="font-serif text-[15px] leading-[1.85] text-[hsl(20_15%_22%)]">
-        {story.story}
-      </p>
+      <div className="px-6 py-5 space-y-4">
+        {/* Direct quote — dramatic magazine pull-quote */}
+        {story.quote && (
+          <div className="relative py-4">
+            <span
+              className="absolute left-0 -top-2 font-serif text-[80px] leading-none text-[hsl(16_50%_82%)] select-none"
+              aria-hidden="true"
+            >
+              {'\u201C'}
+            </span>
+            <blockquote className="relative pl-2 font-serif text-[22px] italic leading-[1.5] text-[hsl(20_25%_15%)] font-medium">
+              {story.quote}
+            </blockquote>
+            <div className="mt-3 flex items-center gap-2">
+              <span className="h-px w-8 bg-[hsl(16_55%_65%)]" />
+              <span className="font-sans text-xs font-semibold uppercase tracking-wider text-[hsl(16_55%_48%)]">
+                {story.person_name.split(' ')[0]}
+              </span>
+            </div>
+          </div>
+        )}
 
-      {/* Direct quote */}
-      {story.quote && (
-        <div className="relative pl-8 py-3 border-l-3 border-l-[hsl(16_55%_65%)]" style={{ borderLeftWidth: '3px' }}>
-          <span
-            className="absolute left-1 -top-1 font-serif text-5xl leading-none text-[hsl(16_50%_75%)] select-none"
-            aria-hidden="true"
-          >
-            {'\u201C'}
-          </span>
-          <blockquote className="font-serif text-lg italic leading-relaxed text-[hsl(20_25%_18%)]">
-            {story.quote}
-          </blockquote>
-        </div>
-      )}
+        {/* Story text */}
+        <p className="font-serif text-[15px] leading-[1.85] text-[hsl(20_15%_22%)]">
+          {story.story}
+        </p>
 
-      {/* Health impacts */}
-      {story.health_impacts && story.health_impacts.length > 0 && (
-        <div className="space-y-1.5">
-          <p className="text-[10px] font-semibold uppercase tracking-widest text-[hsl(20_10%_50%)]">
-            Health impacts
+        {/* Health impacts */}
+        {story.health_impacts && story.health_impacts.length > 0 && (
+          <div className="space-y-1.5">
+            <p className="text-[10px] font-semibold uppercase tracking-widest text-[hsl(20_10%_50%)]">
+              Health impacts
+            </p>
+            <div className="flex flex-wrap gap-1.5">
+              {story.health_impacts.map((impact) => (
+                <span
+                  key={impact}
+                  className="inline-flex items-center rounded-full bg-[hsl(0_18%_94%)] px-2.5 py-0.5 text-[11px] font-medium text-[hsl(0_30%_42%)]"
+                >
+                  {impact.replace(/_/g, ' ')}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Family context */}
+        {story.family_context && (
+          <p className="text-sm text-[hsl(20_10%_38%)] italic">
+            {story.family_context}
           </p>
-          <div className="flex flex-wrap gap-1.5">
-            {story.health_impacts.map((impact) => (
+        )}
+
+        {/* Footer */}
+        <div className="flex flex-wrap items-center justify-between gap-2 pt-3 border-t border-[hsl(30_18%_88%)]">
+          <div className="flex items-center gap-3">
+            {/* Consent badge */}
+            <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[10px] font-medium ${CONSENT_COLORS[story.consent_level]}`}>
+              <Shield className="h-2.5 w-2.5" />
+              {CONSENT_LABELS[story.consent_level]}
+            </span>
+
+            {/* Tags */}
+            {story.tags.slice(0, 3).map((tag) => (
               <span
-                key={impact}
-                className="inline-flex items-center rounded-full bg-[hsl(0_18%_94%)] px-2.5 py-0.5 text-[11px] font-medium text-[hsl(0_30%_42%)]"
+                key={tag}
+                className="inline-flex items-center rounded-full bg-[hsl(38_30%_92%)] px-2 py-0.5 text-[10px] font-medium text-[hsl(20_15%_40%)]"
               >
-                {impact.replace(/_/g, ' ')}
+                {tag.replace(/_/g, ' ')}
               </span>
             ))}
           </div>
-        </div>
-      )}
 
-      {/* Family context */}
-      {story.family_context && (
-        <p className="text-sm text-[hsl(20_10%_38%)] italic">
-          {story.family_context}
-        </p>
-      )}
-
-      {/* Footer */}
-      <div className="flex flex-wrap items-center justify-between gap-2 pt-3 border-t border-[hsl(30_18%_88%)]">
-        <div className="flex items-center gap-3">
-          {/* Consent badge */}
-          <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[10px] font-medium ${CONSENT_COLORS[story.consent_level]}`}>
-            <Shield className="h-2.5 w-2.5" />
-            {CONSENT_LABELS[story.consent_level]}
-          </span>
-
-          {/* Tags */}
-          {story.tags.slice(0, 3).map((tag) => (
-            <span
-              key={tag}
-              className="inline-flex items-center rounded-full bg-[hsl(38_30%_92%)] px-2 py-0.5 text-[10px] font-medium text-[hsl(20_15%_40%)]"
-            >
-              {tag.replace(/_/g, ' ')}
-            </span>
-          ))}
-        </div>
-
-        <div className="flex items-center gap-1.5 text-[10px] text-[hsl(20_8%_52%)]">
-          <User className="h-3 w-3" />
-          <span>Collected by {collectorName}</span>
-          <span className="text-[hsl(30_18%_82%)]">|</span>
-          <span>{formatDate(story.collected_at)}</span>
+          <div className="flex items-center gap-1.5 text-[10px] text-[hsl(20_8%_52%)]">
+            <User className="h-3 w-3" />
+            <span>Collected by {collectorName}</span>
+            <span className="text-[hsl(30_18%_82%)]">|</span>
+            <span>{formatDate(story.collected_at)}</span>
+          </div>
         </div>
       </div>
     </article>
@@ -182,7 +190,7 @@ export default function CommunityStories() {
 
   return (
     <div className="min-h-screen bg-[hsl(38_30%_95%)]">
-      <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
         {/* Section header */}
         <div className="flex items-center justify-between mb-1">
           <div className="flex items-center gap-2">
@@ -236,8 +244,8 @@ export default function CommunityStories() {
                 </span>
               </div>
 
-              {/* Story cards */}
-              <div className="space-y-5">
+              {/* Story cards — masonry quote wall */}
+              <div className="columns-1 md:columns-2 gap-5">
                 {stories.map((story) => (
                   <StoryCard
                     key={story.id}

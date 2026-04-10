@@ -14,6 +14,7 @@ import { CreateStakeholderForm } from '@/components/forms/CreateStakeholderForm'
 import { CreateOrganizationForm } from '@/components/forms/CreateOrganizationForm';
 import { ROLE_LABELS } from '@/types/transitus';
 import type { Stakeholder, TransitusRole } from '@/types/transitus';
+import RoleDistribution from '@/components/charts/RoleDistribution';
 
 // ── Helpers ──
 
@@ -164,13 +165,18 @@ export default function People() {
               />
             </div>
           </div>
-          <h1 className="font-serif text-3xl tracking-tight text-[hsl(20_28%_15%)]">
-            People &amp; Organizations
-          </h1>
-          <p className="mt-2 text-sm leading-relaxed text-[hsl(30_10%_40%)] max-w-2xl">
-            The people at the center of transition work: community leaders, field companions,
-            listeners, investors, and the residents whose testimony shapes the story.
-          </p>
+          <div className="flex items-start gap-6">
+            <div className="flex-1">
+              <h1 className="font-serif text-3xl tracking-tight text-[hsl(20_28%_15%)]">
+                People &amp; Organizations
+              </h1>
+              <p className="mt-2 text-sm leading-relaxed text-[hsl(30_10%_40%)] max-w-2xl">
+                The people at the center of transition work: community leaders, field companions,
+                listeners, investors, and the residents whose testimony shapes the story.
+              </p>
+            </div>
+            <RoleDistribution stakeholders={stakeholders} />
+          </div>
         </div>
 
         {/* Search bar */}

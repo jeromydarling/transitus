@@ -5,8 +5,8 @@
  * shared signals, and cross-place stakeholders.
  */
 
-import { useMemo } from 'react';
-import { Users, MapPin, ExternalLink, Radio, Globe } from 'lucide-react';
+import { useMemo, useState } from 'react';
+import { Users, MapPin, ExternalLink, Radio, Globe, Network } from 'lucide-react';
 import { useTransitusData } from '@/contexts/TransitusDataContext';
 import type { Organization, OrgType } from '@/types/transitus';
 import { SIGNAL_SOURCE_LABELS } from '@/types/transitus';
@@ -49,6 +49,219 @@ function SectionHeader({
       <span className="font-sans text-xs font-semibold uppercase tracking-widest text-[hsl(16_65%_48%)]">
         {label}
       </span>
+    </div>
+  );
+}
+
+// ── Org Connection Graph ──
+
+const ORG_TYPE_COLORS: Record<OrgType, string> = {
+  ej_group: 'hsl(152, 40%, 32%)',
+  church: 'hsl(270, 35%, 48%)',
+  neighborhood_association: 'hsl(198, 50%, 42%)',
+  developer: 'hsl(20, 40%, 45%)',
+  utility: 'hsl(38, 70%, 50%)',
+  labor_group: 'hsl(340, 45%, 48%)',
+  health_system: 'hsl(0, 50%, 50%)',
+  diocese: 'hsl(270, 30%, 42%)',
+  foundation: 'hsl(16, 55%, 48%)',
+  government_agency: 'hsl(210, 40%, 42%)',
+  ngo: 'hsl(198, 45%, 38%)',
+  community_land_trust: 'hsl(152, 30%, 38%)',
+  cooperative: 'hsl(38, 50%, 42%)',
+  school: 'hsl(210, 30%, 50%)',
+  other: 'hsl(20, 12%, 46%)',
+};
+
+function OrgConnectionGraph({
+  organizations,
+  places,
+}: {
+  organizations: Organization[];
+  places: { id: string; name: string }[];
+}) {
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const WIDTH = 600;
+  const HEIGHT = 280;
+  const CX = WIDTH / 2;
+  const CY = HEIGHT / 2;
+  const RX = 240;
+  const RY = 100;
+  const NODE_R = 18;
+
+  const positions = useMemo(
+    () =>
+      organizations.map((org, i) => {
+        const angle = (2 * Math.PI * i) / organizations.length - Math.PI / 2;
+        return { id: org.id, x: CX + RX * Math.cos(angle), y: CY + RY * Math.sin(angle) };
+      }),
+    [organizations],
+  );
+
+  // Edges: orgs share at least one place_id
+  const edges = useMemo(() => {
+    const result: { from: string; to: string; sharedPlaces: string[] }[] = [];
+    for (let i = 0; i < organizations.length; i++) {
+      for (let j = i + 1; j < organizations.length; j++) {
+        const shared = organizations[i].place_ids.filter((p) =>
+          organizations[j].place_ids.includes(p),
+        );
+        if (shared.length > 0) {
+          result.push({ from: organizations[i].id, to: organizations[j].id, sharedPlaces: shared });
+        }
+      }
+    }
+    return result;
+  }, [organizations]);
+
+  const getPos = (id: string) => positions.find((p) => p.id === id)!;
+  const placeNameById = (id: string) => places.find((p) => p.id === id)?.name ?? id;
+
+  const isConnected = (id: string) => {
+    if (!hoveredId) return true;
+    if (id === hoveredId) return true;
+    return edges.some(
+      (e) => (e.from === hoveredId && e.to === id) || (e.to === hoveredId && e.from === id),
+    );
+  };
+
+  // Hovered edge details
+  const hoveredEdges = hoveredId
+    ? edges.filter((e) => e.from === hoveredId || e.to === hoveredId)
+    : [];
+
+  return (
+    <div className="rounded-xl bg-white border border-[hsl(30_18%_82%)] p-4 overflow-auto">
+      <div className="flex items-center gap-2 mb-3">
+        <Network className="h-4 w-4 text-[hsl(16_65%_48%)]" />
+        <span className="font-sans text-xs font-semibold uppercase tracking-widest text-[hsl(16_65%_48%)]">
+          Organization Connections
+        </span>
+        <span className="text-[10px] text-[hsl(20_8%_52%)] ml-2">
+          {edges.length} shared-place link{edges.length !== 1 ? 's' : ''}
+        </span>
+      </div>
+
+      <svg
+        viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
+        className="w-full mx-auto"
+        style={{ maxHeight: '280px' }}
+      >
+        {/* Edges */}
+        {edges.map((edge, i) => {
+          const from = getPos(edge.from);
+          const to = getPos(edge.to);
+          const hl = hoveredId && (edge.from === hoveredId || edge.to === hoveredId);
+          return (
+            <line
+              key={i}
+              x1={from.x}
+              y1={from.y}
+              x2={to.x}
+              y2={to.y}
+              stroke={hl ? 'hsl(16, 65%, 48%)' : 'hsl(30, 18%, 82%)'}
+              strokeWidth={hl ? 2.5 : 1}
+              opacity={!hoveredId ? 0.35 : hl ? 0.85 : 0.06}
+              strokeDasharray={edge.sharedPlaces.length > 1 ? undefined : '5 3'}
+            />
+          );
+        })}
+
+        {/* Center label */}
+        <text
+          x={CX}
+          y={CY - 4}
+          textAnchor="middle"
+          fontSize="10"
+          fill="hsl(20, 25%, 12%, 0.2)"
+          fontFamily="Inter, system-ui, sans-serif"
+        >
+          {organizations.length} organizations
+        </text>
+        <text
+          x={CX}
+          y={CY + 10}
+          textAnchor="middle"
+          fontSize="9"
+          fill="hsl(20, 25%, 12%, 0.15)"
+          fontFamily="Inter, system-ui, sans-serif"
+        >
+          {places.length} shared places
+        </text>
+
+        {/* Org nodes */}
+        {organizations.map((org) => {
+          const pos = getPos(org.id);
+          const color = ORG_TYPE_COLORS[org.org_type] || 'hsl(20, 12%, 46%)';
+          const initials = org.name
+            .replace(/[^A-Z]/g, '')
+            .slice(0, 2) || org.name.slice(0, 2).toUpperCase();
+          const shortName =
+            org.name.length > 18 ? org.name.slice(0, 16) + '\u2026' : org.name;
+
+          return (
+            <g
+              key={org.id}
+              opacity={isConnected(org.id) ? 1 : 0.12}
+              style={{ transition: 'opacity 0.2s' }}
+              onMouseEnter={() => setHoveredId(org.id)}
+              onMouseLeave={() => setHoveredId(null)}
+              cursor="pointer"
+            >
+              <circle
+                cx={pos.x}
+                cy={pos.y}
+                r={NODE_R}
+                fill={color}
+                stroke={hoveredId === org.id ? 'hsl(38, 80%, 55%)' : 'white'}
+                strokeWidth={hoveredId === org.id ? 3 : 2}
+              />
+              <text
+                x={pos.x}
+                y={pos.y + 1}
+                textAnchor="middle"
+                dominantBaseline="middle"
+                fontSize="8"
+                fontWeight="700"
+                fill="white"
+                fontFamily="Inter, system-ui, sans-serif"
+                style={{ pointerEvents: 'none' }}
+              >
+                {initials}
+              </text>
+              <text
+                x={pos.x}
+                y={pos.y + NODE_R + 12}
+                textAnchor="middle"
+                fontSize="8"
+                fill="hsl(20, 25%, 12%, 0.55)"
+                fontFamily="Inter, system-ui, sans-serif"
+                style={{ pointerEvents: 'none' }}
+              >
+                {shortName}
+              </text>
+            </g>
+          );
+        })}
+      </svg>
+
+      {/* Hovered tooltip: show shared places */}
+      {hoveredId && hoveredEdges.length > 0 && (
+        <div className="mt-2 flex flex-wrap gap-2 text-[10px] text-[hsl(20_8%_48%)]">
+          <span className="font-medium text-[hsl(20_10%_30%)]">
+            Shared places:
+          </span>
+          {[...new Set(hoveredEdges.flatMap((e) => e.sharedPlaces))].map((pid) => (
+            <span
+              key={pid}
+              className="inline-flex items-center gap-1 rounded-full bg-[hsl(30_20%_92%)] px-2 py-0.5 font-medium text-[hsl(20_10%_40%)]"
+            >
+              <MapPin className="h-2.5 w-2.5" />
+              {placeNameById(pid)}
+            </span>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
@@ -103,6 +316,13 @@ export default function CoalitionNetwork() {
             people that connect them.
           </p>
         </header>
+
+        {/* ── Organization Connection Graph ── */}
+        {organizations.length > 1 && (
+          <section className="mb-10">
+            <OrgConnectionGraph organizations={organizations} places={places} />
+          </section>
+        )}
 
         {/* ── Organizations by type ── */}
         {Array.from(orgsByType.entries()).map(([orgType, orgs]) => (

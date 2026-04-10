@@ -14,6 +14,7 @@ import { CreateCommitmentForm } from '@/components/forms/CreateCommitmentForm';
 import { EditCommitmentStatusForm } from '@/components/forms/EditCommitmentStatusForm';
 import { COMMITMENT_STATUS_LABELS } from '@/types/transitus';
 import type { Commitment, CommitmentStatus, Place } from '@/types/transitus';
+import CommitmentTimeline from '@/components/charts/CommitmentTimeline';
 
 // ── Accompaniment language for display ──
 
@@ -192,6 +193,11 @@ export default function Commitments() {
             agreements, and institutional commitments. Tracked from proposal through completion
             — with the community's interpretation alongside the official record.
           </p>
+        </div>
+
+        {/* Commitment timeline overview */}
+        <div className="mb-8">
+          <CommitmentTimeline commitments={commitments} />
         </div>
 
         {/* Status filter badges */}

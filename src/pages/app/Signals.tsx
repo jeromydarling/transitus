@@ -13,6 +13,7 @@ import { Radio, MapPin, ExternalLink, Eye, EyeOff, CheckCheck } from 'lucide-rea
 import { useTransitusData } from '@/contexts/TransitusDataContext';
 import { SIGNAL_SOURCE_LABELS } from '@/types/transitus';
 import type { Signal, SignalSource, SignalCategory } from '@/types/transitus';
+import SignalSourceBar from '@/components/charts/SignalSourceBar';
 
 // ── Helpers ──
 
@@ -220,6 +221,11 @@ export default function Signals() {
             {unreadCount} unread signal{unreadCount !== 1 ? 's' : ''}
           </p>
         )}
+
+        {/* Signal source distribution */}
+        <div className="mb-8">
+          <SignalSourceBar signals={signals} />
+        </div>
 
         {/* Filters */}
         <div className="space-y-4 mb-8">

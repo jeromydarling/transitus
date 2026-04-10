@@ -12,6 +12,7 @@ import { BookOpen, MapPin } from 'lucide-react';
 import { useTransitusData } from '@/contexts/TransitusDataContext';
 import { CHAPTER_TYPE_LABELS } from '@/types/transitus';
 import type { Journey, JourneyType, ChapterType } from '@/types/transitus';
+import JourneyTimeline from '@/components/charts/JourneyTimeline';
 
 // ── Helpers ──
 
@@ -109,8 +110,8 @@ function JourneyCard({ journey, getPlaceName }: { journey: Journey; getPlaceName
         {journey.chapters.length} Chapter{journey.chapters.length !== 1 ? 's' : ''}
       </p>
 
-      {/* Chapter timeline */}
-      <ChapterTimeline journey={journey} />
+      {/* Visual chapter timeline */}
+      <JourneyTimeline chapters={journey.chapters} />
     </Link>
   );
 }

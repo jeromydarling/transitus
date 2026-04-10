@@ -10,7 +10,9 @@ import { FileText, MapPin, ChevronDown, ChevronRight, FileDown } from 'lucide-re
 
 import { useTransitusData } from '@/contexts/TransitusDataContext';
 import { generatePlaceBriefPdf } from '@/lib/reports/generatePdf';
+import StaticMap from '@/components/ui/StaticMap';
 import type { Report, ReportType, ReportSection } from '@/types/transitus';
+import type { Place } from '@/types/transitus';
 
 // ── Helpers ──
 
@@ -45,11 +47,24 @@ function formatDate(iso: string): string {
 
 // ── Components ──
 
-function ReportCard({ report, placeName, onDownloadPdf }: { report: Report; placeName: (id: string) => string; onDownloadPdf?: (report: Report) => void }) {
+function ReportCard({ report, placeName, placeObj, onDownloadPdf }: { report: Report; placeName: (id: string) => string; placeObj?: Place; onDownloadPdf?: (report: Report) => void }) {
   const [expanded, setExpanded] = useState(false);
 
   return (
-    <div className="rounded-lg bg-white border border-[hsl(30_18%_82%)] transition-shadow hover:shadow-md">
+    <div className="rounded-lg bg-white border border-[hsl(30_18%_82%)] transition-shadow hover:shadow-md overflow-hidden">
+      {/* Static map header strip for reports with a place */}
+      {placeObj && (
+        <StaticMap
+          lat={placeObj.lat}
+          lng={placeObj.lng}
+          zoom={12}
+          width={200}
+          height={120}
+          style="mapbox/satellite-v9"
+          className="w-full"
+        />
+      )}
+
       {/* Card header — clickable to expand */}
       <button
         type="button"
@@ -186,7 +201,13 @@ export default function Reports() {
         {/* Report cards */}
         <div className="flex flex-col gap-4">
           {sorted.map((report) => (
-            <ReportCard key={report.id} report={report} placeName={placeName} onDownloadPdf={report.place_id ? handleDownloadPdf : undefined} />
+            <ReportCard
+              key={report.id}
+              report={report}
+              placeName={placeName}
+              placeObj={report.place_id ? places.find((p) => p.id === report.place_id) : undefined}
+              onDownloadPdf={report.place_id ? handleDownloadPdf : undefined}
+            />
           ))}
           {sorted.length === 0 && (
             <p className="text-sm text-[hsl(20_8%_52%)] italic">
