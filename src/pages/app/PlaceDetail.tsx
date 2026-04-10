@@ -207,12 +207,14 @@ function placeTypeBadgeLabel(type: Place['place_type']): string {
 function SectionHeader({
   icon: Icon,
   label,
+  id,
 }: {
   icon: React.ComponentType<{ className?: string }>;
   label: string;
+  id?: string;
 }) {
   return (
-    <div className="flex items-center gap-2 mb-4">
+    <div id={id} className="flex items-center gap-2 mb-4 scroll-mt-16">
       <Icon className="h-4 w-4 text-[hsl(16_65%_48%)]" />
       <span className="font-sans text-xs font-semibold uppercase tracking-widest text-[hsl(16_65%_48%)]">
         {label}
@@ -772,7 +774,7 @@ export default function PlaceDetail() {
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
               <Heart className="h-4 w-4 text-[hsl(16_65%_48%)]" />
-              <span className="font-sans text-xs font-semibold uppercase tracking-widest text-[hsl(16_65%_48%)]"id="who-lives" >Who Lives Here</span>
+              <span id="who-lives" className="font-sans text-xs font-semibold uppercase tracking-widest text-[hsl(16_65%_48%)] scroll-mt-16">Who Lives Here</span>
             </div>
             <EditHumanImpactForm place={place} census={census} />
           </div>
@@ -1216,7 +1218,7 @@ export default function PlaceDetail() {
             )}
 
             {/* ── Discussion ── */}
-            <div id="discussion" />
+            <div id="discussion" className="scroll-mt-16" />
             <section>
               <CommentThread entityType="place" entityId={place.id} />
             </section>
