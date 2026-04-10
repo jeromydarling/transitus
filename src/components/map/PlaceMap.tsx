@@ -12,7 +12,7 @@
  */
 
 import { lazy, Suspense, useState, useMemo, useCallback } from 'react';
-import { MapPin, Mountain } from 'lucide-react';
+import { MapPin, Mountain, AlertTriangle, Building2, Users, Briefcase, DollarSign } from 'lucide-react';
 import type { EnvironmentalBurden, ActiveWork } from '@/types/transitus';
 import type { ECHOFacility } from '@/lib/api/echo';
 import { hasMapboxToken } from './MapboxPlaceMap';
@@ -327,52 +327,33 @@ export default function PlaceMap({
           return lines;
         })()}
 
-        {/* Poverty Block Groups — small cells with varying rates */}
-        {activeLayers.has('Poverty') && povertyRate != null && (() => {
-          const cells: React.ReactNode[] = [];
-          const gridR = 3;
-          const cellW = 6;   // SVG units per cell
-          const cellH = 5.5;
-          let seed = 42;
+        {/* Poverty dot-density — each dot ≈ 25 people below poverty line */}
+        {activeLayers.has('Poverty') && povertyRate != null && population != null && (() => {
+          const peopleInPov = Math.round(population * povertyRate / 100);
+          const totalDots = Math.min(200, Math.round(peopleInPov / 25));
+          const dots: React.ReactNode[] = [];
+          let seed = 71;
           const rand = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
 
-          for (let row = -gridR; row <= gridR; row++) {
-            for (let col = -gridR; col <= gridR; col++) {
-              const dist = Math.sqrt(row * row + col * col);
-              if (dist > gridR + 0.5) continue;
-
-              const distFactor = 1 - (dist / (gridR + 1));
-              const variation = (rand() - 0.4) * 18;
-              const cellRate = Math.max(5, Math.min(55, povertyRate + distFactor * 12 + variation));
-              const jx = (rand() - 0.5) * 1.5;
-              const jy = (rand() - 0.5) * 1.2;
-
-              // Color from amber to deep red based on cell rate
-              const hue = Math.max(0, 45 - cellRate * 0.8);
-              const lightness = Math.max(20, 60 - cellRate * 0.7);
-              const opacity = Math.min(0.4, 0.06 + (cellRate / 100) * 0.55);
-
-              cells.push(
-                <rect
-                  key={`pov-${row}-${col}`}
-                  x={CX + col * cellW - cellW / 2 + jx}
-                  y={CY + row * cellH - cellH / 2 + jy}
-                  width={cellW - 0.4}
-                  height={cellH - 0.4}
-                  rx={0.5}
-                  fill={`hsl(${hue} 80% ${lightness}%)`}
-                  opacity={opacity}
-                  stroke={`hsl(${hue} 60% ${lightness - 10}%)`}
-                  strokeWidth="0.15"
-                  strokeOpacity={0.3}
-                  style={{ cursor: 'pointer' }}
-                  onMouseMove={(e) => showTooltip(e, `Block group: ${cellRate.toFixed(1)}% poverty`)}
-                  onMouseLeave={hideTooltip}
-                />
-              );
-            }
+          for (let i = 0; i < totalDots; i++) {
+            // Uniform distribution across the community — not center-biased
+            const angle = rand() * 2 * Math.PI;
+            const radius = Math.sqrt(rand()) * 38;
+            const x = CX + radius * Math.cos(angle);
+            const y = CY + radius * Math.sin(angle) * 0.7;
+            dots.push(
+              <circle
+                key={`pov-${i}`}
+                cx={x} cy={y} r={1}
+                fill="#7c3aed"
+                opacity={0.5}
+                stroke="#5b21b6"
+                strokeWidth="0.2"
+                strokeOpacity={0.3}
+              />
+            );
           }
-          return cells;
+          return dots;
         })()}
 
         {/* Burden Rings */}
@@ -545,145 +526,72 @@ export default function PlaceMap({
         </span>
       </div>
 
-      {/* Poverty data callout — top-left */}
-      {activeLayers.has('Poverty') && povertyRate != null && (
+      {/* Poverty legend — top-left */}
+      {activeLayers.has('Poverty') && povertyRate != null && population != null && (
         <div className="absolute top-3 left-3 bg-black/60 backdrop-blur-sm rounded-lg px-2.5 py-1.5 border border-white/15 shadow-lg">
-          <p className="text-[9px] uppercase tracking-widest text-white/50 font-semibold">Tract Poverty</p>
-          <div className="flex items-baseline gap-1.5 mt-0.5">
-            <span className="text-base font-bold text-white">{povertyRate}%</span>
-            <span className="text-[9px] text-white/40">vs 11.6% US avg</span>
+          <div className="flex items-center gap-1.5 mb-1">
+            <div className="w-2 h-2 rounded-full bg-[#7c3aed]/80" />
+            <span className="text-[9px] text-white/50 font-medium">1 dot ≈ 25 people below poverty line</span>
           </div>
+          <p className="text-xs font-semibold text-white">
+            {Math.round(population * povertyRate / 100).toLocaleString()} people ({povertyRate}%)
+          </p>
           {medianIncome != null && (
-            <p className="text-[10px] text-white/50 mt-0.5">
-              Median: ${medianIncome.toLocaleString()}
-            </p>
+            <p className="text-[9px] text-white/40 mt-0.5">Median income: ${medianIncome.toLocaleString()}</p>
           )}
         </div>
       )}
 
-      {/* Controls — top-right */}
-      <div className="absolute top-3 right-3 flex flex-col gap-1.5">
-        {/* 3D terrain toggle */}
-        <button
-          onClick={() => setShow3D(!show3D)}
-          className={`flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-[11px] font-medium border transition-all duration-200 ${
-            show3D
-              ? 'bg-[hsl(16_65%_48%)]/80 text-white border-white/20 shadow-md'
-              : 'bg-black/30 text-white/80 border-white/10 hover:bg-black/40'
-          } backdrop-blur-sm`}
+      {/* Layer control panel — top-right */}
+      <div className="absolute top-3 right-3 bg-black/60 backdrop-blur-md rounded-xl border border-white/15 shadow-xl overflow-hidden" style={{ minWidth: 175 }}>
+        <div className="px-3 py-1.5 border-b border-white/10">
+          <p className="text-[9px] font-semibold uppercase tracking-widest text-white/50">Map Layers</p>
+        </div>
+        {/* 3D terrain */}
+        <button onClick={() => setShow3D(!show3D)}
+          className="w-full flex items-center gap-2.5 px-3 py-2 transition-all hover:bg-white/5 text-left border-b border-white/5"
         >
-          <Mountain className="h-3 w-3" />
-          3D Terrain
+          <div className={`flex items-center justify-center w-7 h-7 rounded-lg transition-all ${show3D ? 'bg-white/20' : 'bg-white/5'}`}>
+            <Mountain className="h-3.5 w-3.5" style={{ color: show3D ? '#c2553a' : 'rgba(255,255,255,0.3)' }} />
+          </div>
+          <div className="flex-1">
+            <p className={`text-xs font-medium leading-tight ${show3D ? 'text-white' : 'text-white/40'}`}>3D Terrain</p>
+          </div>
+          <div className={`w-3 h-3 rounded-full border-2 transition-all ${show3D ? 'border-white/60 bg-white/30' : 'border-white/15'}`} />
         </button>
-
-        {/* Layer toggles */}
-        {(['Poverty', 'Burdens', 'Facilities', 'People', 'Active Work'] as LayerName[]).filter(l =>
-          l !== 'Poverty' || povertyRate != null
-        ).map((layer) => {
-          const isActive = activeLayers.has(layer);
+        {/* Layer rows */}
+        {([
+          { key: 'Poverty' as LayerName, icon: DollarSign, label: 'Poverty', stat: population && povertyRate ? `${Math.round(population * povertyRate / 100).toLocaleString()} people · ${povertyRate}%` : null, color: '#7c3aed', show: povertyRate != null },
+          { key: 'Burdens' as LayerName, icon: AlertTriangle, label: 'Env. Burdens', stat: `${environmental_burdens.length} identified`, color: '#dc2626', show: environmental_burdens.length > 0 },
+          { key: 'Facilities' as LayerName, icon: Building2, label: 'Facilities', stat: `${facilities.length} EPA-tracked`, color: '#ea580c', show: facilities.length > 0 },
+          { key: 'People' as LayerName, icon: Users, label: 'Stakeholders', stat: `${stakeholderLocations.length} connected`, color: '#2d6a4f', show: stakeholderLocations.length > 0 },
+          { key: 'Active Work' as LayerName, icon: Briefcase, label: 'Active Work', stat: `${activeWork.length} items`, color: '#c2553a', show: activeWork.length > 0 },
+        ]).filter(l => l.show).map(l => {
+          const active = activeLayers.has(l.key);
           return (
-            <button
-              key={layer}
-              onClick={() => toggleLayer(layer)}
-              className={`flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-[11px] font-medium border transition-all duration-200 ${
-                isActive
-                  ? 'bg-white/20 text-white border-white/25'
-                  : 'bg-black/20 text-white/50 border-white/5 hover:bg-black/30 hover:text-white/70'
-              } backdrop-blur-sm`}
+            <button key={l.key} onClick={() => toggleLayer(l.key)}
+              className="w-full flex items-center gap-2.5 px-3 py-2 transition-all hover:bg-white/5 text-left border-b border-white/5 last:border-b-0"
             >
-              {layer === 'Poverty' && povertyRate != null ? `Poverty ${povertyRate}%` : layer}
+              <div className={`flex items-center justify-center w-7 h-7 rounded-lg transition-all ${active ? 'bg-white/20' : 'bg-white/5'}`}>
+                <l.icon className="h-3.5 w-3.5" style={{ color: active ? l.color : 'rgba(255,255,255,0.3)' }} />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className={`text-xs font-medium leading-tight transition-colors ${active ? 'text-white' : 'text-white/40'}`}>{l.label}</p>
+                {l.stat && <p className={`text-[9px] leading-tight mt-0.5 transition-colors ${active ? 'text-white/50' : 'text-white/20'}`}>{l.stat}</p>}
+              </div>
+              <div className={`w-3 h-3 rounded-full border-2 transition-all ${active ? 'border-white/60 bg-white/30' : 'border-white/15'}`} />
             </button>
           );
         })}
-      </div>
-
-      {/* Bottom-right: Data legend */}
-      <div className="absolute bottom-3 right-3 bg-black/30 backdrop-blur-sm rounded-md px-3 py-2 border border-white/10 max-w-[340px]">
-        <p className="text-[9px] uppercase tracking-widest text-white/50 mb-1.5 font-semibold">
-          Legend
-        </p>
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-          {/* Burden severity */}
-          {activeLayers.has('Burdens') && environmental_burdens.length > 0 && (
-            <>
-              {(['critical', 'high', 'moderate', 'low'] as const).map((level) => {
-                const count = environmental_burdens.filter((b) => b.severity === level).length;
-                if (count === 0) return null;
-                return (
-                  <div key={`leg-b-${level}`} className="flex items-center gap-1">
-                    <span
-                      className="inline-block w-2 h-2 rounded-full border border-white/30"
-                      style={{ backgroundColor: SEVERITY_COLORS[level] }}
-                    />
-                    <span className="text-[9px] text-white/70 capitalize">
-                      {level} ({count})
-                    </span>
-                  </div>
-                );
-              })}
-            </>
-          )}
-
-          {/* Facility compliance */}
-          {activeLayers.has('Facilities') && facilities.length > 0 && (
-            <>
-              {(
-                ['significant_violation', 'violation', 'in_compliance'] as ECHOFacility['compliance_status'][]
-              ).map((status) => {
-                const count = facilities.filter((f) => f.compliance_status === status).length;
-                if (count === 0) return null;
-                return (
-                  <div key={`leg-f-${status}`} className="flex items-center gap-1">
-                    <span
-                      className="inline-block w-1.5 h-1.5 rounded-full"
-                      style={{ backgroundColor: COMPLIANCE_COLORS[status] }}
-                    />
-                    <span className="text-[9px] text-white/70">
-                      {COMPLIANCE_LABELS[status]} ({count})
-                    </span>
-                  </div>
-                );
-              })}
-            </>
-          )}
-
-          {/* Active work status */}
-          {activeLayers.has('Active Work') && activeWork.length > 0 && (
-            <>
-              {(['upcoming', 'in_progress', 'completed'] as ActiveWork['status'][]).map(
-                (status) => {
-                  const count = activeWork.filter((w) => w.status === status).length;
-                  if (count === 0) return null;
-                  return (
-                    <div key={`leg-w-${status}`} className="flex items-center gap-1">
-                      <span
-                        className="inline-block w-2 h-2 rotate-45"
-                        style={{ backgroundColor: WORK_STATUS_COLORS[status] }}
-                      />
-                      <span className="text-[9px] text-white/70">
-                        {WORK_STATUS_LABELS[status]} ({count})
-                      </span>
-                    </div>
-                  );
-                },
-              )}
-            </>
-          )}
-
-          {/* Stakeholder count */}
-          {activeLayers.has('People') && stakeholderLocations.length > 0 && (
-            <div className="flex items-center gap-1">
-              <span
-                className="inline-block w-2 h-2 rounded-full"
-                style={{ backgroundColor: 'hsl(198 55% 42%)' }}
-              />
-              <span className="text-[9px] text-white/70">
-                {stakeholderLocations.length} stakeholder
-                {stakeholderLocations.length !== 1 ? 's' : ''}
-              </span>
+        {/* Dot legend when poverty active */}
+        {activeLayers.has('Poverty') && povertyRate != null && (
+          <div className="px-3 py-1.5 border-t border-white/10 bg-white/5">
+            <div className="flex items-center gap-1.5">
+              <div className="w-2 h-2 rounded-full bg-[#7c3aed]/80" />
+              <span className="text-[9px] text-white/50">1 dot ≈ 25 people below poverty line</span>
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );

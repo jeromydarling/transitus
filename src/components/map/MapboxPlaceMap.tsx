@@ -53,60 +53,37 @@ interface PopupInfo {
 }
 
 /**
- * Build a grid of census-block-group–sized cells with varying poverty rates.
- * Cells closer to center (industrial core) get higher rates.
- * Uses a deterministic seeded random so the grid is stable across renders.
+ * Dot-density poverty visualization.
+ * Each dot ≈ 25 people living below the poverty line.
+ * Distributed uniformly across the residential area — no artificial clustering
+ * toward pollution sources. The overlap with environmental burdens is real,
+ * not manufactured: these communities were built beside industrial corridors.
  */
-function buildPovertyBlockGroups(
-  centerLng: number, centerLat: number, tractRate: number,
+function buildPovertyDots(
+  centerLng: number, centerLat: number,
+  population: number, povertyPct: number,
 ) {
-  // ~5x5 grid of blocks, each ~200m × 200m (roughly census block group size in dense urban)
-  const cellSizeLat = 0.0018;  // ~200m
-  const cellSizeLng = 0.0024;  // ~200m adjusted for longitude
-  const gridRadius = 3;        // -3 to +3 = 7×7 grid, skip corners for organic shape
+  const peopleInPoverty = Math.round(population * povertyPct / 100);
+  const dotsPerPerson = 25;
+  const totalDots = Math.min(200, Math.round(peopleInPoverty / dotsPerPerson));
 
   const features: any[] = [];
-  let seed = 42;
-  const seededRandom = () => { seed = (seed * 16807 + 0) % 2147483647; return seed / 2147483647; };
+  let seed = 71;
+  const rand = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
 
-  for (let row = -gridRadius; row <= gridRadius; row++) {
-    for (let col = -gridRadius; col <= gridRadius; col++) {
-      // Skip corners for a more organic shape
-      const dist = Math.sqrt(row * row + col * col);
-      if (dist > gridRadius + 0.5) continue;
+  for (let i = 0; i < totalDots; i++) {
+    // Uniform distribution across the community area (~1km radius)
+    // Not center-biased — let the data speak for itself
+    const angle = rand() * 2 * Math.PI;
+    const radius = Math.sqrt(rand()) * 0.007; // sqrt for uniform area coverage
+    const dotLng = centerLng + radius * Math.cos(angle) * 1.3;
+    const dotLat = centerLat + radius * Math.sin(angle);
 
-      // Poverty is higher near center (industrial core), lower at edges
-      const distFactor = 1 - (dist / (gridRadius + 1));
-      const variation = (seededRandom() - 0.4) * 18; // asymmetric — skews higher
-      const cellRate = Math.max(5, Math.min(55,
-        tractRate + (distFactor * 12) + variation
-      ));
-
-      const baseLat = centerLat + row * cellSizeLat;
-      const baseLng = centerLng + col * cellSizeLng;
-      // Slight jitter so blocks don't look perfectly gridded
-      const jLat = (seededRandom() - 0.5) * 0.0003;
-      const jLng = (seededRandom() - 0.5) * 0.0004;
-
-      features.push({
-        type: 'Feature',
-        geometry: {
-          type: 'Polygon',
-          coordinates: [[
-            [baseLng + jLng, baseLat + jLat],
-            [baseLng + cellSizeLng + jLng, baseLat + jLat],
-            [baseLng + cellSizeLng + jLng, baseLat + cellSizeLat + jLat],
-            [baseLng + jLng, baseLat + cellSizeLat + jLat],
-            [baseLng + jLng, baseLat + jLat],
-          ]],
-        },
-        properties: {
-          rate: Math.round(cellRate * 10) / 10,
-          // Color intensity: interpolate from amber → deep red
-          opacity: Math.min(0.45, 0.08 + (cellRate / 100) * 0.6),
-        },
-      });
-    }
+    features.push({
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: [dotLng, dotLat] },
+      properties: { id: i },
+    });
   }
   return { type: 'FeatureCollection', features };
 }
@@ -190,11 +167,13 @@ export default function MapboxPlaceMap({
     return { type: 'FeatureCollection', features };
   }, [environmental_burdens, lat, lng]);
 
-  // Poverty block groups — grid of small census-block-sized cells
-  const povertyGeoJson = useMemo(() => {
-    if (povertyRate == null) return null;
-    return buildPovertyBlockGroups(lng, lat, povertyRate);
-  }, [lat, lng, povertyRate]);
+  // Poverty dot-density — each dot ≈ 25 people below poverty line
+  const povertyDotsGeoJson = useMemo(() => {
+    if (povertyRate == null || !population) return null;
+    return buildPovertyDots(lng, lat, population, povertyRate);
+  }, [lat, lng, povertyRate, population]);
+
+  const peopleInPoverty = population && povertyRate ? Math.round(population * povertyRate / 100) : 0;
 
   const mapRef = useRef<MapRef>(null);
 
@@ -261,41 +240,22 @@ export default function MapboxPlaceMap({
           </Source>
         )}
 
-        {/* Poverty block groups — census-block–sized cells with per-cell rates */}
-        {showLayers.poverty && povertyGeoJson && povertyRate != null && (
-          <>
-            <Source id="poverty-blocks" type="geojson" data={povertyGeoJson}>
-              <Layer
-                id="poverty-fill"
-                type="fill"
-                paint={{
-                  'fill-color': [
-                    'interpolate', ['linear'], ['get', 'rate'],
-                    5, '#fef3c7',     // very low — pale amber
-                    15, '#f59e0b',    // moderate — amber
-                    25, '#ea580c',    // high — orange
-                    35, '#dc2626',    // very high — red
-                    50, '#7f1d1d',    // extreme — deep red
-                  ],
-                  'fill-opacity': ['get', 'opacity'],
-                }}
-              />
-              <Layer
-                id="poverty-outline"
-                type="line"
-                paint={{
-                  'line-color': [
-                    'interpolate', ['linear'], ['get', 'rate'],
-                    5, '#d97706',
-                    25, '#dc2626',
-                    50, '#7f1d1d',
-                  ],
-                  'line-width': 0.5,
-                  'line-opacity': 0.3,
-                }}
-              />
-            </Source>
-          </>
+        {/* Poverty dot-density — each dot ≈ 25 people below poverty line */}
+        {showLayers.poverty && povertyDotsGeoJson && (
+          <Source id="poverty-dots" type="geojson" data={povertyDotsGeoJson}>
+            <Layer
+              id="poverty-dots-layer"
+              type="circle"
+              paint={{
+                'circle-radius': 3.5,
+                'circle-color': '#7c3aed',
+                'circle-opacity': 0.55,
+                'circle-stroke-width': 0.5,
+                'circle-stroke-color': '#5b21b6',
+                'circle-stroke-opacity': 0.3,
+              }}
+            />
+          </Source>
         )}
 
         {/* Burden radius rings as circle markers */}
@@ -416,22 +376,44 @@ export default function MapboxPlaceMap({
         ))}
       </div>
 
-      {/* Layer toggles */}
-      <div className="absolute bottom-3 right-3 flex flex-col gap-1">
+      {/* Layer control panel */}
+      <div className="absolute top-14 right-3 bg-black/60 backdrop-blur-md rounded-xl border border-white/15 shadow-xl overflow-hidden" style={{ minWidth: 180 }}>
+        <div className="px-3 py-2 border-b border-white/10">
+          <p className="text-[9px] font-semibold uppercase tracking-widest text-white/50">Map Layers</p>
+        </div>
         {([
-          { key: 'poverty' as const, label: 'Poverty', icon: DollarSign, count: povertyRate != null ? 1 : 0 },
-          { key: 'burdens' as const, label: 'Burdens', icon: AlertTriangle, count: environmental_burdens.length },
-          { key: 'facilities' as const, label: 'Facilities', icon: Building2, count: facilities.length },
-          { key: 'people' as const, label: 'People', icon: Users, count: stakeholderLocations.length },
-          { key: 'work' as const, label: 'Work', icon: Briefcase, count: activeWork.length },
-        ]).filter(l => l.count > 0).map(l => (
-          <button key={l.key} onClick={() => toggleLayer(l.key)}
-            className={`flex items-center gap-1.5 px-2 py-1 rounded text-[10px] font-medium transition-all ${showLayers[l.key] ? 'bg-white/90 text-[hsl(20_25%_12%)] shadow-sm' : 'bg-black/30 text-white/50'}`}
-          >
-            <l.icon className="h-3 w-3" />
-            {l.label}{l.key === 'poverty' && povertyRate != null ? ` ${povertyRate}%` : ` (${l.count})`}
-          </button>
-        ))}
+          { key: 'poverty' as const, icon: DollarSign, label: 'Poverty', stat: povertyRate != null ? `${peopleInPoverty.toLocaleString()} people · ${povertyRate}%` : null, color: '#7c3aed', show: povertyRate != null },
+          { key: 'burdens' as const, icon: AlertTriangle, label: 'Env. Burdens', stat: `${environmental_burdens.length} identified`, color: '#dc2626', show: environmental_burdens.length > 0 },
+          { key: 'facilities' as const, icon: Building2, label: 'Facilities', stat: `${facilities.length} EPA-tracked`, color: '#ea580c', show: facilities.length > 0 },
+          { key: 'people' as const, icon: Users, label: 'Stakeholders', stat: `${stakeholderLocations.length} connected`, color: '#2d6a4f', show: stakeholderLocations.length > 0 },
+          { key: 'work' as const, icon: Briefcase, label: 'Active Work', stat: `${activeWork.length} items`, color: '#c2553a', show: activeWork.length > 0 },
+        ]).filter(l => l.show).map(l => {
+          const active = showLayers[l.key];
+          return (
+            <button key={l.key} onClick={() => toggleLayer(l.key)}
+              className="w-full flex items-center gap-2.5 px-3 py-2 transition-all hover:bg-white/5 text-left border-b border-white/5 last:border-b-0"
+            >
+              <div className={`flex items-center justify-center w-7 h-7 rounded-lg transition-all ${active ? 'bg-white/20' : 'bg-white/5'}`}>
+                <l.icon className="h-3.5 w-3.5" style={{ color: active ? l.color : 'rgba(255,255,255,0.3)' }} />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className={`text-xs font-medium leading-tight transition-colors ${active ? 'text-white' : 'text-white/40'}`}>{l.label}</p>
+                {l.stat && <p className={`text-[9px] leading-tight mt-0.5 transition-colors ${active ? 'text-white/50' : 'text-white/20'}`}>{l.stat}</p>}
+              </div>
+              <div className={`w-3 h-3 rounded-full border-2 transition-all ${active ? 'border-white/60 bg-white/30' : 'border-white/15'}`} />
+            </button>
+          );
+        })}
+        {/* Dot-density legend when poverty is on */}
+        {showLayers.poverty && povertyRate != null && (
+          <div className="px-3 py-2 border-t border-white/10 bg-white/5">
+            <div className="flex items-center gap-1.5">
+              <div className="w-2 h-2 rounded-full bg-[#7c3aed]/80" />
+              <span className="text-[9px] text-white/50">1 dot ≈ 25 people below poverty line</span>
+            </div>
+            <p className="text-[9px] text-white/30 mt-0.5">US avg poverty rate: 11.6%</p>
+          </div>
+        )}
       </div>
     </div>
   );
