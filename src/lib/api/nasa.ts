@@ -31,8 +31,8 @@ export interface GIBSLayer {
 /** Fetch satellite imagery for a location */
 export async function fetchEarthImagery(lat: number, lng: number, date?: string): Promise<NASAEarthImagery> {
   const d = date || '2024-01-15';
-  const url = `https://api.nasa.gov/planetary/earth/imagery?lon=${lng}&lat=${lat}&date=${d}&dim=0.1&api_key=DEMO_KEY`;
-  // This URL works directly as an image src with DEMO_KEY
+  const apiKey = import.meta.env.VITE_NASA_API_KEY || 'DEMO_KEY';
+  const url = `https://api.nasa.gov/planetary/earth/imagery?lon=${lng}&lat=${lat}&date=${d}&dim=0.1&api_key=${apiKey}`;
   return {
     id: `earth-${lat}-${lng}`,
     date: d,
