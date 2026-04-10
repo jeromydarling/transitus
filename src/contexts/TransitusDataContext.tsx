@@ -111,7 +111,7 @@ const TransitusDataContext = createContext<TransitusDataContextType | null>(null
 // ── Persistence helpers ──
 
 const STORAGE_KEY = 'transitus_data';
-const STORAGE_VERSION = 5; // Bump to force stale localStorage refresh
+const STORAGE_VERSION = 6; // Bump to force stale localStorage refresh
 
 function loadFromStorage(): Partial<TransitusDataState> | null {
   try {
