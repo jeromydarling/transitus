@@ -111,7 +111,7 @@ const TransitusDataContext = createContext<TransitusDataContextType | null>(null
 // ── Persistence helpers ──
 
 const STORAGE_KEY = 'transitus_data';
-const STORAGE_VERSION = 2; // Increment when schema changes
+const STORAGE_VERSION = 4; // Bump to force stale localStorage refresh
 
 function loadFromStorage(): Partial<TransitusDataState> | null {
   try {
@@ -153,16 +153,19 @@ function genId(prefix: string): string {
 export function TransitusDataProvider({ children }: { children: ReactNode }) {
   const stored = loadFromStorage();
 
-  const [places, setPlaces] = useState<Place[]>(stored?.places || MOCK_PLACES);
-  const [stakeholders, setStakeholders] = useState<Stakeholder[]>(stored?.stakeholders || MOCK_STAKEHOLDERS);
-  const [organizations, setOrganizations] = useState<Organization[]>(stored?.organizations || MOCK_ORGS);
-  const [commitments, setCommitments] = useState<Commitment[]>(stored?.commitments || MOCK_COMMITMENTS);
-  const [fieldNotes, setFieldNotes] = useState<FieldNote[]>(stored?.fieldNotes || MOCK_FIELD_NOTES);
-  const [signals, setSignals] = useState<Signal[]>(stored?.signals || MOCK_SIGNALS);
-  const [journeys, setJourneys] = useState<Journey[]>(stored?.journeys || MOCK_JOURNEYS);
-  const [library] = useState<LibraryItem[]>(stored?.library || MOCK_LIBRARY);
-  const [reports] = useState<Report[]>(stored?.reports || MOCK_REPORTS);
-  const [communityStories, setCommunityStories] = useState<CommunityStory[]>(stored?.communityStories || MOCK_COMMUNITY_STORIES);
+  // Use stored data only if the array has items — empty arrays fall back to mock
+  const or = <T,>(stored: T[] | undefined, mock: T[]): T[] => (stored && stored.length > 0) ? stored : mock;
+
+  const [places, setPlaces] = useState<Place[]>(or(stored?.places, MOCK_PLACES));
+  const [stakeholders, setStakeholders] = useState<Stakeholder[]>(or(stored?.stakeholders, MOCK_STAKEHOLDERS));
+  const [organizations, setOrganizations] = useState<Organization[]>(or(stored?.organizations, MOCK_ORGS));
+  const [commitments, setCommitments] = useState<Commitment[]>(or(stored?.commitments, MOCK_COMMITMENTS));
+  const [fieldNotes, setFieldNotes] = useState<FieldNote[]>(or(stored?.fieldNotes, MOCK_FIELD_NOTES));
+  const [signals, setSignals] = useState<Signal[]>(or(stored?.signals, MOCK_SIGNALS));
+  const [journeys, setJourneys] = useState<Journey[]>(or(stored?.journeys, MOCK_JOURNEYS));
+  const [library] = useState<LibraryItem[]>(or(stored?.library, MOCK_LIBRARY));
+  const [reports] = useState<Report[]>(or(stored?.reports, MOCK_REPORTS));
+  const [communityStories, setCommunityStories] = useState<CommunityStory[]>(or(stored?.communityStories, MOCK_COMMUNITY_STORIES));
   const [nriMessages, setNriMessages] = useState<NRIChatMessage[]>(stored?.nriMessages || []);
   const [readSignalIds, setReadSignalIds] = useState<Set<string>>(
     stored?.readSignalIds instanceof Set ? stored.readSignalIds : new Set()
