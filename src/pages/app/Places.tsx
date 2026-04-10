@@ -62,7 +62,6 @@ function PlaceCard({ place }: { place: Place }) {
         width={400}
         height={200}
         style="transitu/cmns7i5r4000001si3upk9hai"
-        style="mapbox/satellite-v9"
         className="w-full"
       />
 
