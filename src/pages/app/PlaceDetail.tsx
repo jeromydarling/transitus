@@ -57,6 +57,7 @@ import {
 } from '@/lib/api';
 
 import { generatePlaceBriefPdf } from '@/lib/reports/generatePdf';
+import CommentThread from '@/components/comments/CommentThread';
 
 import {
   ROLE_LABELS,
@@ -1196,6 +1197,11 @@ export default function PlaceDetail() {
                 </div>
               </section>
             )}
+
+            {/* ── Discussion ── */}
+            <section>
+              <CommentThread entityType="place" entityId={place.id} />
+            </section>
           </div>
 
           {/* ── Sidebar ── */}

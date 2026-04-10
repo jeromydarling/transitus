@@ -17,9 +17,11 @@ import {
   Heart,
   Compass,
   Sparkles,
+  Mail,
 } from 'lucide-react';
 
 import { MOCK_DASHBOARD } from '@/lib/mockData';
+import EmailSuggestionsInbox from '@/components/email/EmailSuggestionsInbox';
 import { useTransitusData } from '@/contexts/TransitusDataContext';
 import PersonAvatar from '@/components/ui/PersonAvatar';
 import ActivitySparkline from '@/components/charts/ActivitySparkline';
@@ -396,6 +398,11 @@ export default function Home() {
             ))}
           </div>
         </section>
+
+        {/* ── Email Intelligence ── */}
+        <EmailSuggestionsInbox
+          sectionHeader={<SectionHeader icon={Mail} label="Email Intelligence" />}
+        />
 
         {/* ── Community Voices ── */}
         <section className="mb-10">

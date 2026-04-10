@@ -8,13 +8,22 @@
 import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { slugify, placeSlug } from '@/lib/slugify';
-import { Handshake, Filter, MapPin, CalendarClock, MessageSquareQuote, Plus } from 'lucide-react';
+import { Handshake, Filter, MapPin, CalendarClock, MessageSquareQuote, MessageSquare, Plus } from 'lucide-react';
 import { useTransitusData } from '@/contexts/TransitusDataContext';
 import { CreateCommitmentForm } from '@/components/forms/CreateCommitmentForm';
 import { EditCommitmentStatusForm } from '@/components/forms/EditCommitmentStatusForm';
 import { COMMITMENT_STATUS_LABELS } from '@/types/transitus';
 import type { Commitment, CommitmentStatus, Place } from '@/types/transitus';
 import CommitmentTimeline from '@/components/charts/CommitmentTimeline';
+import CommentThread, { getCommentCount } from '@/components/comments/CommentThread';
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+  SheetTrigger,
+} from '@/components/ui/sheet';
 
 // ── Accompaniment language for display ──
 
@@ -136,6 +145,29 @@ function CommitmentCard({ commitment, placeNameById, orgNameById, places }: { co
           <span>Renewal: {formatDate(commitment.renewal_date)}</span>
         </div>
       )}
+
+      {/* Comment badge + sheet */}
+      <div className="mt-3 pt-3 border-t border-[hsl(30_18%_88%)]">
+        <Sheet>
+          <SheetTrigger asChild>
+            <button className="inline-flex items-center gap-1.5 text-xs text-[hsl(30_10%_50%)] hover:text-[hsl(16_65%_48%)] transition-colors">
+              <MessageSquare className="h-3 w-3" />
+              <span>{getCommentCount('commitment', commitment.id)} comments</span>
+            </button>
+          </SheetTrigger>
+          <SheetContent side="right" className="w-full sm:max-w-md overflow-y-auto bg-[hsl(38_30%_95%)]">
+            <SheetHeader className="mb-4">
+              <SheetTitle className="font-serif text-lg text-[hsl(20_28%_15%)]">
+                {commitment.title}
+              </SheetTitle>
+              <SheetDescription className="text-xs text-[hsl(30_10%_50%)]">
+                Discussion thread for this commitment
+              </SheetDescription>
+            </SheetHeader>
+            <CommentThread entityType="commitment" entityId={commitment.id} />
+          </SheetContent>
+        </Sheet>
+      </div>
     </div>
   );
 }
