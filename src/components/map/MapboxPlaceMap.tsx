@@ -187,7 +187,7 @@ export default function MapboxPlaceMap({
     <div className={`relative rounded-lg overflow-hidden border border-[hsl(30_18%_82%)] ${className}`} style={{ minHeight: '375px' }}>
       <Map
         ref={mapRef}
-        initialViewState={{ longitude: lng, latitude: lat, zoom: 15, pitch: styleConfig[mapStyle].pitch, bearing: styleConfig[mapStyle].pitch > 0 ? -15 : 0 }}
+        initialViewState={{ longitude: lng, latitude: lat, zoom: 13.5, pitch: styleConfig[mapStyle].pitch, bearing: styleConfig[mapStyle].pitch > 0 ? -15 : 0 }}
         style={{ width: '100%', height: '100%' }}
         mapStyle={styleConfig[mapStyle].url}
         mapboxAccessToken={MAPBOX_TOKEN}
