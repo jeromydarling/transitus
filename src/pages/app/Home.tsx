@@ -229,18 +229,16 @@ function FieldNoteCard({ note, authorName, placeNameById }: { note: FieldNote; a
       className="rounded-lg bg-white border border-[hsl(30_18%_82%)] hover:shadow-md transition-shadow block overflow-hidden"
     >
       {/* Colored type header */}
-      <div className="px-4 py-2 flex items-center justify-between" style={{ backgroundColor: color }}>
+      <div className="px-4 py-2" style={{ backgroundColor: color }}>
         <span className="text-[10px] font-semibold uppercase tracking-wider text-white">
           {FIELD_NOTE_TYPE_LABELS[note.note_type]}
         </span>
-        <span className="flex items-center gap-1 text-[10px] text-white/70">
-          <MapPin className="h-2.5 w-2.5" />
-          {placeNameById(note.place_id).length > 25
-            ? placeNameById(note.place_id).slice(0, 25) + '\u2026'
-            : placeNameById(note.place_id)}
-        </span>
       </div>
       <div className="p-4">
+      <span className="flex items-center gap-1 text-[10px] text-[hsl(20_8%_52%)] mb-2">
+        <MapPin className="h-2.5 w-2.5" />
+        {placeNameById(note.place_id)}
+      </span>
       <p className="text-sm text-[hsl(20_10%_25%)] line-clamp-3 leading-relaxed">
         {note.content}
       </p>
