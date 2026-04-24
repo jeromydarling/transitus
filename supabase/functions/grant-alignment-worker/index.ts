@@ -8,7 +8,7 @@
  * Input: { run_id, pairs: [{ org_id, grant_id }] }
  * Output: Writes to grant_alignment table, returns scores.
  */
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.2";
 import { authenticateWorkerRequest, jsonOk, jsonError, corsHeaders } from "../_shared/workerAuth.ts";
 import { callLlm } from "../_shared/llmGateway.ts";
 

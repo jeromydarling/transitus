@@ -2,7 +2,7 @@
  * relatio-job-cancel — Cancels a queued/running import job (admin-only).
  * POST { job_id }
  */
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",

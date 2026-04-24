@@ -2,7 +2,7 @@
  * relatio-job-create — Creates a new import job (admin-only).
  * POST { tenant_id, connector_key, scope, settings? }
  */
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",

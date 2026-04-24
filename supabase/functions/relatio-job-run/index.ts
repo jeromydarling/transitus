@@ -5,7 +5,7 @@
  * Processes in phases: A (orgs) → B (contacts) → C (activities) → D (tasks).
  * Uses relatio_object_map for idempotency.
  */
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",

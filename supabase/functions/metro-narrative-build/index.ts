@@ -1,4 +1,4 @@
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.2";
 import { stripPrivateFields } from "../_shared/sanitize-story-inputs.ts";
 import { normalizeTopicCounts, computeDrift } from "../_shared/drift-engine.ts";
 

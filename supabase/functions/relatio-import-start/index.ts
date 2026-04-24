@@ -2,7 +2,7 @@
  * relatio-import-start — Starts a migration job for a one-way import.
  * POST body: { tenant_id, integration_key }
  */
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",

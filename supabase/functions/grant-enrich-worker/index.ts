@@ -8,7 +8,7 @@
  * Input: { run_id, grant_id, source_url, grant_name?, funder_name? }
  * Output: Updated discovered_items with extracted details
  */
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.2";
 import { authenticateWorkerRequest, jsonOk, jsonError, corsHeaders } from "../_shared/workerAuth.ts";
 import { callLlm } from "../_shared/llmGateway.ts";
 import { firecrawlScrape, normalizeFirecrawlUrl } from "../_shared/firecrawlClient.ts";
