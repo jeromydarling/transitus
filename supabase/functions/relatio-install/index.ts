@@ -2,7 +2,7 @@
  * relatio-install — Creates a connector installation for a tenant (admin-only).
  * POST { tenant_id, connector_key, environment, auth_type }
  */
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",

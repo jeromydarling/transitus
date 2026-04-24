@@ -2,7 +2,7 @@
  * relatio-connect — Creates or reconnects an integration installation for a tenant.
  * POST body: { tenant_id, integration_key, config? }
  */
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",

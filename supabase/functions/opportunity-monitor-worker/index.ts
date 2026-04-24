@@ -8,7 +8,7 @@
  * Input: { run_id, opportunity_id?, org_name?, monitor_urls[], previous_hashes[] }
  * Output: signals_inserted count
  */
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.2";
 import { authenticateWorkerRequest, jsonOk, jsonError, corsHeaders } from "../_shared/workerAuth.ts";
 import { callLlm } from "../_shared/llmGateway.ts";
 import { firecrawlScrape, normalizeFirecrawlUrl } from "../_shared/firecrawlClient.ts";

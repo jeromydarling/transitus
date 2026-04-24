@@ -2,7 +2,7 @@
  * relatio-list — Returns all active integrations from the catalog.
  * No tenant context needed; just authenticated.
  */
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",

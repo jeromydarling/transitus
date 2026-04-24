@@ -5,7 +5,7 @@
  * Dedupe: orgs by domain/external_id, contacts by email/external_id.
  * Writes relatio_sync_items log.
  */
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
